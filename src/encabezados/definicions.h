@@ -9,6 +9,18 @@
 
 // ----------------  Definicions CAMARA -------------------------- //
 
+// Tipos de camara
+#define CAMARA_XERAL 2
+#define CAMARA_TERCEIRA_PERSOA 3
+
+// Tipos de movementos da camara
+#define XIRO_CAMARA_DEREITA 1
+#define XIRO_CAMARA_ESQUERDA 2
+#define XIRO_CAMARA_ARRIBA 3
+#define XIRO_CAMARA_ABAIXO 4
+#define ACERCAR_CAMARA 5
+#define AFASTAR_CAMARA 6
+
 // Definimos os planos NEAR e FAR da camara
 #define NEAR 0.1f
 #define FAR 60.0f
@@ -22,3 +34,4 @@
 
 // Definimos os incrementos ao xirar a camara
 #define INCREMENTO_XIRO_CAMARA_XERAL UNIDADE_GRAO_EN_RADIANS
+

@@ -10,6 +10,7 @@
 
 #include "encabezados/lecturaShader_0_9.h"
 #include "encabezados/Camara.hpp"
+#include "encabezados/Renderizador.hpp"
 #include "encabezados/FigurasXeometricas.hpp"
 #include "encabezados/Obxecto.hpp"
 #include "encabezados/Suelo.hpp"
@@ -19,6 +20,9 @@
 // Tamanhos iniciais da venta
 const unsigned int Camara::SCR_WIDTH = 800;
 const unsigned int Camara::SCR_HEIGHT = 800;
+
+// Obxecto que renderiza a escena
+Renderizador* renderizador = new Renderizador();
 
 // Variable que controla a camara
 Camara camara = Camara(5.0f, PI / 2.0f, (float)PI / 4.0f);
@@ -38,6 +42,7 @@ int main()
 	shaderProgram = setShaders("recursos/shaders/shader.vert", "recursos/shaders/shader.frag");
 
 	// Establecemos o shader que usa a camara
+	renderizador->shaderProgram = shaderProgram;
 	camara.shaderProgram = shaderProgram;
 
 	// Obten a ubicación das matrices de vista e proxeccion no programa de shader
@@ -55,7 +60,7 @@ int main()
 	// Creamos as instancias dos obxectos
 	float escala = 0.5f;
 	Obxecto* personaxePrincipal = new Obxecto(glm::vec3(0, ALTURA_Y + escala / 2.0f, 0), glm::vec3(escala, escala, escala), shaderProgram, fg);
-
+	renderizador->introducirElementoEscena(personaxePrincipal);
 
 	// Lazo da venta mentres non se peche
 	while (!glfwWindowShouldClose(window))
@@ -82,7 +87,7 @@ int main()
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		suelo->renderizarSuelo();
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		personaxePrincipal->renderizarObxecto();
+		renderizador->renderizarEscena();
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

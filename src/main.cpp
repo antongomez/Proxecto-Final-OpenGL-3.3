@@ -24,9 +24,6 @@ const unsigned int Camara::SCR_HEIGHT = 800;
 // Obxecto que renderiza a escena
 Renderizador* renderizador = new Renderizador();
 
-// Variable que controla a camara
-Camara camara = Camara(5.0f, PI / 2.0f, (float)PI / 4.0f);
-
 GLuint shaderProgram;
 
 GLFWwindow* crearVenta();
@@ -42,8 +39,7 @@ int main()
 	shaderProgram = setShaders("recursos/shaders/shader.vert", "recursos/shaders/shader.frag");
 
 	// Establecemos o shader que usa a camara
-	renderizador->shaderProgram = shaderProgram;
-	camara.shaderProgram = shaderProgram;
+	renderizador->setShaderProgram(shaderProgram);	
 
 	// Obten a ubicación das matrices de vista e proxeccion no programa de shader
 	GLuint viewLoc = glGetUniformLocation(shaderProgram, "view");
@@ -70,10 +66,7 @@ int main()
 		// Limpamos o buffer de profundidade e cor en cada iteracion
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		// Colocamos a camara
-		camara.vistaXeral(personaxePrincipal->posicion);
-		// Actualizamos a matriz de proxeccion
-		camara.actualizarMatrizProxeccion();
+		renderizador->establecerCamara(CAMARA_XERAL, personaxePrincipal->posicion);
 
 		glUseProgram(shaderProgram);
 
@@ -110,10 +103,9 @@ void processInput(GLFWwindow* window)
 // Implementación de la función de callback para cambiar el tamaño de la ventana
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-	glViewport(0, 0, width, height);
-	camara.width = width;
-	camara.height = height;
-	camara.actualizarMatrizProxeccion();
+	if (renderizador != NULL) {
+		renderizador->reescalarVenta(window, width, height);
+	}
 }
 
 
@@ -123,42 +115,32 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 
 	// Tecla dereita: xiro da camara en vistaXeral a dereita
 	if (key == 262) {
-		camara.alpha += INCREMENTO_XIRO_CAMARA_XERAL;
-		if (camara.alpha >= (float)(2.0 * PI)) {
-			camara.alpha -= (float)(2.0 * PI);
-		}
+		renderizador->moverCamara(XIRO_CAMARA_DEREITA);
 	}
 
 	// Tecla esquerda: xiro da camara en vistaXeral a esquerda
 	if (key == 263) {
-		camara.alpha -= INCREMENTO_XIRO_CAMARA_XERAL;
-		if (camara.alpha <= (float)(-2.0f * PI)) {
-			camara.alpha += (float)(2.0f * PI);
-		}
+		renderizador->moverCamara(XIRO_CAMARA_ESQUERDA);
 	}
 
 	// Tecla arriba: xiro da camara en vistaXeral na vertical cara arriba
 	if (key == 265) {
-		// Limite superior de 90 grados
-		camara.beta = fmin(camara.beta + INCREMENTO_XIRO_CAMARA_XERAL, PI / 2.0f - UNIDADE_GRAO_EN_RADIANS);
-
+		renderizador->moverCamara(XIRO_CAMARA_ARRIBA);
 	}
 
 	// Tecla abaixo: xiro da camara en vistaXeral na vertical cara abaixo
 	if (key == 264) {
-		// Limite superior de 90 grados
-		camara.beta = fmax(camara.beta - INCREMENTO_XIRO_CAMARA_XERAL, 0.0f + UNIDADE_GRAO_EN_RADIANS);
-
+		renderizador->moverCamara(XIRO_CAMARA_ABAIXO);
 	}
 
 	// Tecla +: achegase a camara en vistaXeral
 	if (key == 93 && action != GLFW_RELEASE) {
-		camara.radio = fmax(camara.radio - INCREMENTO_RADIO_CAMARA_XERAL, MIN_DIST_CAMARA_XERAL);
+		renderizador->moverCamara(ACERCAR_CAMARA);
 	}
 
 	// Tecla -: afastase a camara en vistaXeral
 	if (key == 47 && action != GLFW_RELEASE) {
-		camara.radio = fmin(camara.radio + INCREMENTO_RADIO_CAMARA_XERAL, MAX_DIST_CAMARA_XERAL);
+		renderizador->moverCamara(AFASTAR_CAMARA);
 	}
 }
 

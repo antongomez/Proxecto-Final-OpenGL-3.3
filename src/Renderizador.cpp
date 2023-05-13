@@ -3,12 +3,11 @@
 
 Renderizador::Renderizador() {
 	this->shaderProgram = shaderProgram;
-
 	this->camara = new Camara(5.0f, PI / 2.0f, (float)PI / 4.0f);
 }
 
-void Renderizador::setShaderProgram(unsigned int shaderProgram) {
-	camara->shaderProgram;
+void Renderizador::setShaderProgram(GLuint shaderProgram) {
+	this->camara->shaderProgram = shaderProgram;
 	this->shaderProgram = shaderProgram;
 }
 

@@ -13,7 +13,7 @@ public:
 	std::vector<Obxecto*> escena;
 	Camara *camara;
 
-	unsigned int shaderProgram;
+	GLuint shaderProgram;
 
 	// Construtores
 	Renderizador();

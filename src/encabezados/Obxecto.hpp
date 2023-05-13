@@ -21,7 +21,5 @@ public:
 
 	// Metodos
 	void renderizarObxecto();
-
-private:
-	void calcularMatrizModelo();
+	virtual void calcularMatrizModelo();
 };

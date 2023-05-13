@@ -35,3 +35,8 @@
 // Definimos os incrementos ao xirar a camara
 #define INCREMENTO_XIRO_CAMARA_XERAL UNIDADE_GRAO_EN_RADIANS
 
+// ----------------  Definicions MOVEMENTOS -------------------------- //
+#define VELOCIDADE_BASE_ENEMIGOS 0.2f
+#define VELOCIDADE_BASE_PERSONAXE 1.0f
+
+# define INCREMENTO_XIRO_PERSONAXE 3.0f*UNIDADE_GRAO_EN_RADIANS

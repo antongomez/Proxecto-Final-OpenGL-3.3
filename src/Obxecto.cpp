@@ -20,7 +20,7 @@ void Obxecto::calcularMatrizModelo() {
 
 void Obxecto::renderizarObxecto() {
 	// Recalculamos a matriz do modelo para aplicar as transformacions
-	Obxecto::calcularMatrizModelo();
+	calcularMatrizModelo();
 	
 	unsigned int transformLoc = glGetUniformLocation(shaderProgram, "transform");
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(matrizModelo));

@@ -7,6 +7,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <math.h>
+#include <random>
+#include <vector>
 
 #include "encabezados/lecturaShader_0_9.h"
 #include "encabezados/Camara.hpp"
@@ -14,6 +16,8 @@
 #include "encabezados/FigurasXeometricas.hpp"
 #include "encabezados/Obxecto.hpp"
 #include "encabezados/Suelo.hpp"
+#include "encabezados/Enemigo.hpp"
+#include "encabezados/PersonaxePrincipal.hpp"
 
 #include "encabezados/definicions.h"
 
@@ -21,8 +25,15 @@
 const unsigned int Camara::SCR_WIDTH = 800;
 const unsigned int Camara::SCR_HEIGHT = 800;
 
+// Obxecto que se encarga de debuxar cubos, cadrados, esferas
+FigurasXeometricas* fg;
+
 // Obxecto que renderiza a escena
 Renderizador* renderizador = new Renderizador();
+
+// Lista de enemigos
+PersonaxePrincipal* personaxePrincipal;
+std::vector<Enemigo*> enemigos;
 
 GLuint shaderProgram;
 
@@ -30,6 +41,7 @@ GLFWwindow* crearVenta();
 void processInput(GLFWwindow* window);
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void xerarInimigos(int numEnemigos, float distmin, float distmax);
 
 int main()
 {
@@ -39,14 +51,14 @@ int main()
 	shaderProgram = setShaders("recursos/shaders/shader.vert", "recursos/shaders/shader.frag");
 
 	// Establecemos o shader que usa a camara
-	renderizador->setShaderProgram(shaderProgram);	
+	renderizador->setShaderProgram(shaderProgram);
 
 	// Obten a ubicación das matrices de vista e proxeccion no programa de shader
 	GLuint viewLoc = glGetUniformLocation(shaderProgram, "view");
 	GLuint projectionLoc = glGetUniformLocation(shaderProgram, "projection");
 
 	// Debuxamos as figuras xeometricass
-	FigurasXeometricas* fg = new FigurasXeometricas();
+	fg = new FigurasXeometricas();
 
 	// Creamos a instancia do chan
 	float limitesx[2] = { -10.0, 10.0 };
@@ -55,16 +67,34 @@ int main()
 
 	// Creamos as instancias dos obxectos
 	float escala = 0.5f;
-	Obxecto* personaxePrincipal = new Obxecto(glm::vec3(0, ALTURA_Y + escala / 2.0f, 0), glm::vec3(escala, escala, escala), shaderProgram, fg);
+	personaxePrincipal = new PersonaxePrincipal(glm::vec3(0, ALTURA_Y + escala / 2.0f, 0), glm::vec3(escala, escala, escala), shaderProgram, fg, 0);
 	renderizador->introducirElementoEscena(personaxePrincipal);
+
+	// Xeramos os enemigos e os obxectos da escena
+	xerarInimigos(1, 5, 10);
+
+	// Variables para o control do tempo
+	double tempoAnterior = 0;
 
 	// Lazo da venta mentres non se peche
 	while (!glfwWindowShouldClose(window))
 	{
+
+		// Xestion do tempo
+		double tempoActual = glfwGetTime();
+		double tempoTranscurrido = tempoActual - tempoAnterior;
+		tempoAnterior = tempoActual;
+
 		processInput(window);
 
 		// Limpamos o buffer de profundidade e cor en cada iteracion
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		for (int i = 0; i < enemigos.size(); i++) {
+			enemigos[i]->moverEnemigo(tempoTranscurrido);
+		}
+
+		personaxePrincipal->moverPersonaxe(tempoTranscurrido);
 
 		renderizador->establecerCamara(CAMARA_XERAL, personaxePrincipal->posicion);
 
@@ -92,6 +122,30 @@ int main()
 	return 0;
 }
 
+void xerarInimigos(int numEnemigos, float mindist, float maxdist) {
+	float escala = 0.4f;
+
+	std::random_device rd;
+	std::mt19937 generator(rd());
+
+	// Definir una distribución para generar números reales en un rango
+	std::uniform_real_distribution<double> distribucionRadio(mindist, maxdist);
+	std::uniform_real_distribution<double> distribucionAngulo(0, 2 * PI);
+
+	for (int i = 0; i < numEnemigos; i++) {
+		float radio = (float)distribucionRadio(generator);
+		float angulo = (float)distribucionAngulo(generator);
+
+		glm::vec3 posicion(radio * glm::sin(angulo), ALTURA_Y + escala / 2.0f, radio * glm::cos(angulo));
+		glm::vec3 escala(0.4f);
+
+		Enemigo* enemigo = new Enemigo(posicion, escala, shaderProgram, fg, 1, personaxePrincipal);
+
+		renderizador->introducirElementoEscena(enemigo);
+		enemigos.push_back(enemigo);
+	}
+}
+
 
 void processInput(GLFWwindow* window)
 {
@@ -112,6 +166,40 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 // Funcion que controla as teclas
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	std::cout << key << std::endl;
+
+	// Tecla d: xiro do personaxe a dereita
+	if (key == 68 && action != GLFW_RELEASE) {
+		personaxePrincipal->angulo -= INCREMENTO_XIRO_PERSONAXE;
+	}
+
+	// Tecla a: xiro do personaxe a esquerda
+	if (key == 65 && action != GLFW_RELEASE) {
+		personaxePrincipal->angulo += INCREMENTO_XIRO_PERSONAXE;
+	}
+
+	// Tecla w: desprazarse cara diante
+	if (key == 87) {
+
+		if (action == GLFW_PRESS) {
+			personaxePrincipal->moverse = true;
+		}
+
+		if (action == GLFW_RELEASE) {
+			personaxePrincipal->moverse = false;
+		}
+	}
+
+	// Tecla s: desprazarse cara atras
+	if (key == 83) {
+
+		if (action == GLFW_PRESS) {
+			personaxePrincipal->moverse = true;
+		}
+
+		if (action == GLFW_RELEASE) {
+			personaxePrincipal->moverse = false;
+		}
+	}
 
 	// Tecla dereita: xiro da camara en vistaXeral a dereita
 	if (key == 262) {
@@ -142,6 +230,8 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
 	if (key == 47 && action != GLFW_RELEASE) {
 		renderizador->moverCamara(AFASTAR_CAMARA);
 	}
+
+
 }
 
 

@@ -8,8 +8,8 @@
 #include <glad.h>
 
 PersonaxePrincipal::PersonaxePrincipal(glm::vec3 posicion, glm::vec3 escalado, 
-	unsigned int shaderProgram, FigurasXeometricas* fg, float angulo) : 
-	Obxecto(posicion, escalado, shaderProgram, fg){
+	unsigned int shaderProgram, int tipoFigura, float angulo) : 
+	Obxecto(posicion, escalado, shaderProgram, tipoFigura){
 	this->angulo = angulo;
 	this->moverse = false;
 }

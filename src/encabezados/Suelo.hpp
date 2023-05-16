@@ -21,7 +21,7 @@ public:
 	FigurasXeometricas* fg;
 
 	// Construtores
-	Suelo(float posicionx, float posicionz, float escala, float limitesx[], float limitesz[], unsigned int shaderProgram, FigurasXeometricas* fg);
+	Suelo(float posicionx, float posicionz, float escala, float limitesx[], float limitesz[], unsigned int shaderProgram, int tipoFigura);
 
 	// Metodos
 	void renderizarSuelo();

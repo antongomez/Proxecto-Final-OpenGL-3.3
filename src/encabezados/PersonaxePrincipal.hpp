@@ -10,7 +10,7 @@ public:
 	bool moverse;
 
 	// Construtores
-	PersonaxePrincipal(glm::vec3 posicion, glm::vec3 escalado, unsigned int shaderProgram, FigurasXeometricas* fg, float angulo);
+	PersonaxePrincipal(glm::vec3 posicion, glm::vec3 escalado, unsigned int shaderProgram, int tipoFigura, float angulo);
 
 	// Metodos
 	void moverPersonaxe(double tempoTranscurrido);

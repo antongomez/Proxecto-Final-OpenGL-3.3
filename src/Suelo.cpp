@@ -5,7 +5,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glad.h>
 
-Suelo::Suelo(float posicionx, float posicionz, float escala, float limitesx[], float limitesz[], unsigned int shaderProgram, FigurasXeometricas* fg) {
+Suelo::Suelo(float posicionx, float posicionz, float escala, float limitesx[], float limitesz[], unsigned int shaderProgram, int tipoFigura) {
 	this->posicionx = posicionx;
 	this->posicionz = posicionz;
 	this->escala = escala;
@@ -17,7 +17,7 @@ Suelo::Suelo(float posicionx, float posicionz, float escala, float limitesx[], f
 
 	this->shaderProgram = shaderProgram;
 
-	this->fg = fg;
+	this->fg = new FigurasXeometricas(tipoFigura);
 }
 
 void Suelo::renderizarSuelo() {
@@ -34,7 +34,7 @@ void Suelo::renderizarSuelo() {
 			unsigned int transformLoc = glGetUniformLocation(shaderProgram, "transform");
 			glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(matrizModelo));
 
-			fg->renderizarCadrado();
+			fg->renderizar();
 		}
 	}
 }

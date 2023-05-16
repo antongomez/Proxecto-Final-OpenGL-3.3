@@ -25,8 +25,7 @@
 const unsigned int Camara::SCR_WIDTH = 800;
 const unsigned int Camara::SCR_HEIGHT = 800;
 
-// Obxecto que se encarga de debuxar cubos, cadrados, esferas
-FigurasXeometricas* fg;
+// Obxectos que se encarga de debuxar cubos, cadrados, e figuras mais complexas
 
 // Obxecto que renderiza a escena
 Renderizador* renderizador = new Renderizador();
@@ -34,6 +33,9 @@ Renderizador* renderizador = new Renderizador();
 // Lista de enemigos
 PersonaxePrincipal* personaxePrincipal;
 std::vector<Enemigo*> enemigos;
+
+// So debuxamos os eixos no main. O resto das figuras xeometricas debuxanse nas clases que as utilizan
+FigurasXeometricas* fgEixos;
 
 GLuint shaderProgram;
 
@@ -57,21 +59,20 @@ int main()
 	GLuint viewLoc = glGetUniformLocation(shaderProgram, "view");
 	GLuint projectionLoc = glGetUniformLocation(shaderProgram, "projection");
 
-	// Debuxamos as figuras xeometricass
-	fg = new FigurasXeometricas();
+	fgEixos = new FigurasXeometricas(FIGURA_EIXOS);
 
 	// Creamos a instancia do chan
 	float limitesx[2] = { -10.0, 10.0 };
 	float limitesz[2] = { -10.0, 10.0 };
-	Suelo* suelo = new Suelo(0, 0, 2.0f, limitesx, limitesz, shaderProgram, fg);
+	Suelo* suelo = new Suelo(0, 0, 2.0f, limitesx, limitesz, shaderProgram, FIGURA_CADRADO);
 
 	// Creamos as instancias dos obxectos
 	float escala = 0.5f;
-	personaxePrincipal = new PersonaxePrincipal(glm::vec3(0, ALTURA_Y + escala / 2.0f, 0), glm::vec3(escala, escala, escala), shaderProgram, fg, 0);
+	personaxePrincipal = new PersonaxePrincipal(glm::vec3(0, ALTURA_Y + escala / 2.0f, 0), glm::vec3(escala, escala, escala), shaderProgram, FIGURA_CUBO, 0);
 	renderizador->introducirElementoEscena(personaxePrincipal);
 
 	// Xeramos os enemigos e os obxectos da escena
-	xerarInimigos(1, 5, 10);
+	xerarInimigos(20, 5, 10);
 
 	// Variables para o control do tempo
 	double tempoAnterior = 0;
@@ -103,7 +104,7 @@ int main()
 		// Debuxamos os eixos
 		unsigned int transformLoc = glGetUniformLocation(shaderProgram, "transform");
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(glm::mat4()));
-		fg->renderizarEixos();
+		fgEixos->renderizar();
 
 
 		// Renderizamos os obxectos
@@ -116,7 +117,7 @@ int main()
 		glfwPollEvents();
 	}
 
-	delete fg;
+	delete fgEixos;
 
 	glfwTerminate();
 	return 0;
@@ -139,7 +140,7 @@ void xerarInimigos(int numEnemigos, float mindist, float maxdist) {
 		glm::vec3 posicion(radio * glm::sin(angulo), ALTURA_Y + escala / 2.0f, radio * glm::cos(angulo));
 		glm::vec3 escala(0.4f);
 
-		Enemigo* enemigo = new Enemigo(posicion, escala, shaderProgram, fg, 1, personaxePrincipal);
+		Enemigo* enemigo = new Enemigo(posicion, escala, shaderProgram, FIGURA_CUBO, 1, personaxePrincipal);
 
 		renderizador->introducirElementoEscena(enemigo);
 		enemigos.push_back(enemigo);

@@ -17,7 +17,7 @@ public:
 	FigurasXeometricas* fg;
 
 	// Construtores
-	Obxecto(glm::vec3 posicion, glm::vec3 escalado, unsigned int shaderProgram, FigurasXeometricas* fg);
+	Obxecto(glm::vec3 posicion, glm::vec3 escalado, unsigned int shaderProgram, int tipoFigura);
 
 	// Metodos
 	void renderizarObxecto();

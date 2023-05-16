@@ -5,11 +5,11 @@
 
 #include <glad.h>
 
-Obxecto::Obxecto(glm::vec3 posicion, glm::vec3 escalado, unsigned int shaderProgram, FigurasXeometricas* fg) {
+Obxecto::Obxecto(glm::vec3 posicion, glm::vec3 escalado, unsigned int shaderProgram, int tipoFigura) {
 	this->posicion = posicion;
 	this->escalado = escalado;
 	this->shaderProgram = shaderProgram;
-	this->fg = fg;
+	this->fg = new FigurasXeometricas(tipoFigura);
 }
 
 void Obxecto::calcularMatrizModelo() {
@@ -25,6 +25,6 @@ void Obxecto::renderizarObxecto() {
 	unsigned int transformLoc = glGetUniformLocation(shaderProgram, "transform");
 	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(matrizModelo));
 
-	fg->renderizarCubo();
+	fg->renderizar();
 	
 }

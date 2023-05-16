@@ -40,3 +40,10 @@
 #define VELOCIDADE_BASE_PERSONAXE 1.0f
 
 # define INCREMENTO_XIRO_PERSONAXE 3.0f*UNIDADE_GRAO_EN_RADIANS
+
+
+// ----------------  Definicions TIPOS FIGURAS -------------------------- //
+#define FIGURA_EIXOS 0
+#define FIGURA_CADRADO 1
+#define FIGURA_CUBO 2
+#define FIGURA_INIMIGO 3

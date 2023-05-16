@@ -6,7 +6,7 @@
 
 #include <glad.h>
 
-Enemigo::Enemigo(glm::vec3 posicion, glm::vec3 escalado, unsigned int shaderProgram, FigurasXeometricas* fg, int nivel, Obxecto* target) : Obxecto(posicion, escalado, shaderProgram, fg) {
+Enemigo::Enemigo(glm::vec3 posicion, glm::vec3 escalado, unsigned int shaderProgram, int tipoFigura, int nivel, Obxecto* target) : Obxecto(posicion, escalado, shaderProgram, tipoFigura) {
 	this->nivel = nivel;
 	this->target = target;
 }

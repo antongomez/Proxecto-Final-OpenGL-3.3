@@ -1,4 +1,5 @@
 #include "encabezados/FigurasXeometricas.hpp"
+#include "encabezados/definicions.h"
 
 #include <glad.h>
 
@@ -6,18 +7,52 @@
 #define M_PI 3.14159265358979323846
 #endif
 
-FigurasXeometricas::FigurasXeometricas() {
-	debuxaEixos();
-	debuxaCadrado();
-	debuxaCubo();
+FigurasXeometricas::FigurasXeometricas(int tipo) {
+	this->tipo = tipo;
+	// Debuxamos o tipo de figura (xeometrica, inimigo,...) que corresponda
+	debuxar();
 }
 
 FigurasXeometricas::~FigurasXeometricas() {
-	glDeleteVertexArrays(1, &VAOEixos);
-	glDeleteVertexArrays(1, &VAOCadrado);
-	glDeleteVertexArrays(1, &VAOCubo);
+	glDeleteVertexArrays(1, &VAO);
 }
 
+void FigurasXeometricas::debuxar() {
+	switch (tipo) {
+	case FIGURA_EIXOS:
+		debuxaEixos();
+		break;
+	case FIGURA_CADRADO:
+		debuxaCadrado();
+		break;
+	case FIGURA_CUBO:
+		debuxaCubo();
+		break;
+	case FIGURA_INIMIGO:
+		debuxaFiguraCargada();
+		break;
+	default:	// Por defecto debuxamos un cubo
+		debuxaCubo();
+		break;
+	}
+}
+
+void FigurasXeometricas::renderizar() {
+	switch (tipo) {
+	case FIGURA_EIXOS:
+		renderizarEixos();
+		break;
+	case FIGURA_CADRADO:
+		renderizarCadrado();
+		break;
+	case FIGURA_CUBO:
+		renderizarCubo();
+		break;
+	case FIGURA_INIMIGO:
+		renderizarFiguraCargada();
+		break;
+	}
+}
 
 
 void FigurasXeometricas::debuxaEixos() {
@@ -39,11 +74,11 @@ void FigurasXeometricas::debuxaEixos() {
 		0, 4
 	};
 
-	glGenVertexArrays(1, &VAOEixos);
+	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
 
-	glBindVertexArray(VAOEixos);
+	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
@@ -68,7 +103,7 @@ void FigurasXeometricas::debuxaEixos() {
 }
 
 void FigurasXeometricas::renderizarEixos() {
-	glBindVertexArray(VAOEixos);
+	glBindVertexArray(VAO);
 	glDrawElements(GL_LINES, 8, GL_UNSIGNED_INT, 0);
 }
 
@@ -87,9 +122,9 @@ void FigurasXeometricas::debuxaCadrado() {
 
 	};
 
-	glGenVertexArrays(1, &VAOCadrado);
+	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
-	glBindVertexArray(VAOCadrado);
+	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
@@ -117,7 +152,7 @@ void FigurasXeometricas::debuxaCadrado() {
 }
 
 void FigurasXeometricas::renderizarCadrado() {
-	glBindVertexArray(VAOCadrado);
+	glBindVertexArray(VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
@@ -165,11 +200,11 @@ void FigurasXeometricas::debuxaCubo() {
 
 	};
 
-	glGenVertexArrays(1, &VAOCubo);
+	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
 
-	glBindVertexArray(VAOCubo);
+	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
@@ -197,38 +232,14 @@ void FigurasXeometricas::debuxaCubo() {
 }
 
 void FigurasXeometricas::renderizarCubo() {
-	glBindVertexArray(VAOCubo);
+	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 }
 
-//void FigurasXeometricas::debuxaEsfera() {
-//	unsigned int VBO;
-//
-//	extern float vertices_esfera[8640];
-//
-//	glGenVertexArrays(1, &VAOEsfera);
-//	glGenBuffers(1, &VBO);
-//	// bind the Vertex Array Object first.
-//	glBindVertexArray(VAOEsfera);
-//
-//	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-//	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices_esfera), vertices_esfera, GL_STATIC_DRAW);
-//
-//	// Vertices
-//	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
-//	glEnableVertexAttribArray(0);
-//
-//	// Normais
-//	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-//	glEnableVertexAttribArray(2);
-//
-//	// Texturas
-//	// Realmente tal y como esta escrito, el shader lo va a interpretar como color
-//	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-//	glEnableVertexAttribArray(1);
-//
-//	glBindBuffer(GL_ARRAY_BUFFER, 0);
-//	glBindVertexArray(0);
-//	glDeleteBuffers(1, &VBO);
-//
-//}
+void FigurasXeometricas::debuxaFiguraCargada() {
+	
+}
+
+void FigurasXeometricas::renderizarFiguraCargada() {
+	
+}

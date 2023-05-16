@@ -5,23 +5,30 @@ class FigurasXeometricas
 public:
 
 	//Atributos
-	unsigned int VAOEixos;
-	unsigned int VAOCadrado;
-	unsigned int VAOCubo;
-	unsigned int VAOEsfera;
+	unsigned int VAO;
+	int tipo;
 
 	// Construtores
-	FigurasXeometricas();
+	FigurasXeometricas(int tipo);
 	// Destrutor
 	~FigurasXeometricas();
 
 	// Metodos
+	void debuxar();
+	void renderizar();
+
+private:
+
 	void debuxaEixos();
 	void renderizarEixos();
+
 	void debuxaCadrado();
 	void renderizarCadrado();
+
 	void debuxaCubo();
 	void renderizarCubo();
-	//void debuxaEsfera();
+
+	void debuxaFiguraCargada();
+	void renderizarFiguraCargada();
 	
 };

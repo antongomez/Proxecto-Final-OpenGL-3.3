@@ -10,7 +10,7 @@ public:
 	Obxecto* target;	// Obxecto ao que se achega o enemigo
 
 	// Construtores
-	Enemigo(glm::vec3 posicion, glm::vec3 escalado, unsigned int shaderProgram, FigurasXeometricas* fg, int nivel, Obxecto* target);
+	Enemigo(glm::vec3 posicion, glm::vec3 escalado, unsigned int shaderProgram, int tipoFigura, int nivel, Obxecto* target);
 
 	// Metodos
 	void moverEnemigo(double tempoTranscurrido);

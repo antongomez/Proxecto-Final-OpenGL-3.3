@@ -17,7 +17,7 @@ Suelo::Suelo(float posicionx, float posicionz, float escala, float limitesx[], f
 
 	this->shaderProgram = shaderProgram;
 
-	this->fg = new FigurasXeometricas(tipoFigura);
+	this->fg = new Figura(tipoFigura);
 }
 
 void Suelo::renderizarSuelo() {

@@ -1,6 +1,6 @@
 #pragma once 
 
-#include "FigurasXeometricas.hpp"
+#include "Figura.hpp"
 
 #include <glm/glm.hpp>
 
@@ -18,7 +18,7 @@ public:
 
 	unsigned int shaderProgram;
 
-	FigurasXeometricas* fg;
+	Figura* fg;
 
 	// Construtores
 	Suelo(float posicionx, float posicionz, float escala, float limitesx[], float limitesz[], unsigned int shaderProgram, int tipoFigura);

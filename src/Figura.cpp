@@ -1,4 +1,4 @@
-#include "encabezados/FigurasXeometricas.hpp"
+#include "encabezados/Figura.hpp"
 #include "encabezados/definicions.h"
 
 #include <glad.h>
@@ -8,23 +8,25 @@
 
 #include <iostream>
 
-FigurasXeometricas::FigurasXeometricas(int tipo) {
+// Construtor para as figuras xeometricas
+Figura::Figura(int tipo) {
 	this->tipo = tipo;
-	// Debuxamos o tipo de figura (xeometrica, inimigo,...) que corresponda
+	// Debuxamos o tipo de figura xeometrica que corresponda
 	debuxar();
 }
 
-FigurasXeometricas::FigurasXeometricas(int tipo, std::string inputOBJfile) {
+// Construtor para as figuras cargadas
+Figura::Figura(int tipo, std::string inputOBJfile) {
 	this->tipo = tipo;
 	cargarModelo(inputOBJfile);
 	debuxaFiguraCargada();
 }
 
-FigurasXeometricas::~FigurasXeometricas() {
+Figura::~Figura() {
 	glDeleteVertexArrays(1, VAO);
 }
 
-void FigurasXeometricas::debuxar() {
+void Figura::debuxar() {
 	// Neste caso so utilizaremos un VAO
 	VAO = (unsigned int*)malloc(sizeof(unsigned int));
 
@@ -44,7 +46,7 @@ void FigurasXeometricas::debuxar() {
 	}
 }
 
-void FigurasXeometricas::renderizar() {
+void Figura::renderizar() {
 	switch (tipo) {
 	case FIGURA_EIXOS:
 		renderizarEixos();
@@ -62,7 +64,7 @@ void FigurasXeometricas::renderizar() {
 }
 
 
-void FigurasXeometricas::debuxaEixos() {
+void Figura::debuxaEixos() {
 	unsigned int VBO, EBO;
 	// set up vertex data (and buffer(s)) and configure vertex attributes
 	// ------------------------------------------------------------------
@@ -109,12 +111,12 @@ void FigurasXeometricas::debuxaEixos() {
 	glDeleteBuffers(1, &EBO);
 }
 
-void FigurasXeometricas::renderizarEixos() {
+void Figura::renderizarEixos() {
 	glBindVertexArray(*VAO);
 	glDrawElements(GL_LINES, 8, GL_UNSIGNED_INT, 0);
 }
 
-void FigurasXeometricas::debuxaCadrado() {
+void Figura::debuxaCadrado() {
 	unsigned int VBO;
 
 
@@ -158,12 +160,12 @@ void FigurasXeometricas::debuxaCadrado() {
 
 }
 
-void FigurasXeometricas::renderizarCadrado() {
+void Figura::renderizarCadrado() {
 	glBindVertexArray(*VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
-void FigurasXeometricas::debuxaCubo() {
+void Figura::debuxaCubo() {
 	unsigned int VBO, EBO;
 
 	float n = 0.577350f;	// Este valor es 1/sqrt(3)
@@ -238,12 +240,12 @@ void FigurasXeometricas::debuxaCubo() {
 	glDeleteBuffers(1, &EBO);
 }
 
-void FigurasXeometricas::renderizarCubo() {
+void Figura::renderizarCubo() {
 	glBindVertexArray(*VAO);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 }
 
-void FigurasXeometricas::cargarModelo(std::string inputOBJfile) {
+void Figura::cargarModelo(std::string inputOBJfile) {
 	tinyobj::ObjReaderConfig reader_config;
 
 	// Atopa a ultima aparicion do caracter '/'
@@ -309,7 +311,7 @@ void FigurasXeometricas::cargarModelo(std::string inputOBJfile) {
 	}
 }
 
-void FigurasXeometricas::debuxaFiguraCargada() {
+void Figura::debuxaFiguraCargada() {
 	// Reservamos memoria para debuxar as caras do obxecto unha a unha
 	int numMateriais = vertices.size();
 
@@ -347,7 +349,7 @@ void FigurasXeometricas::debuxaFiguraCargada() {
 	}
 }
 
-void FigurasXeometricas::renderizarFiguraCargada() {
+void Figura::renderizarFiguraCargada() {
 
 	for (std::map<int, std::vector<glm::vec3>>::iterator iter = vertices.begin();
 		iter != vertices.end();

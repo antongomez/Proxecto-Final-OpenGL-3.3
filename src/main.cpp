@@ -13,7 +13,7 @@
 #include "encabezados/lecturaShader_0_9.h"
 #include "encabezados/Camara.hpp"
 #include "encabezados/Renderizador.hpp"
-#include "encabezados/FigurasXeometricas.hpp"
+#include "encabezados/Figura.hpp"
 #include "encabezados/Obxecto.hpp"
 #include "encabezados/Suelo.hpp"
 #include "encabezados/Enemigo.hpp"
@@ -35,7 +35,7 @@ PersonaxePrincipal* personaxePrincipal;
 std::vector<Enemigo*> enemigos;
 
 // So debuxamos os eixos no main. O resto das figuras xeometricas debuxanse nas clases que as utilizan
-FigurasXeometricas* fgEixos;
+Figura* fgEixos;
 
 GLuint shaderProgram;
 
@@ -61,7 +61,7 @@ int main()
 
 	glUseProgram(shaderProgram);
 
-	fgEixos = new FigurasXeometricas(FIGURA_EIXOS);
+	fgEixos = new Figura(FIGURA_EIXOS);
 
 	// Creamos a instancia do chan
 	float limitesx[2] = { -10.0, 10.0 };

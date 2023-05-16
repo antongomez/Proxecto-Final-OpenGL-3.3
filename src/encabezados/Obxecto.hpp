@@ -1,6 +1,6 @@
 #pragma once 
 
-#include "FigurasXeometricas.hpp"
+#include "Figura.hpp"
 
 #include <glm/glm.hpp>
 
@@ -11,7 +11,7 @@ public:
 	glm::vec3 posicion; // Determina a traslacion para posicionar ao obxecto
 	glm::vec3 escalado; // Determina o escalado para redimensionar o obxecto
 	glm::mat4 matrizModelo; // Matriz que representa a transformacion linear que se aplica sobre o obxecto
-	FigurasXeometricas* fg; // Obxecto que se encarga de debuxar
+	Figura* fg; // Obxecto que se encarga de debuxar
 
 	unsigned int shaderProgram;
 

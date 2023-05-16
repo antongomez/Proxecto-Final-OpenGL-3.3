@@ -6,7 +6,7 @@
 #include <map>
 #include <string>
 
-class FigurasXeometricas
+class Figura
 {
 public:
 
@@ -17,10 +17,10 @@ public:
 	std::map<int, std::vector<glm::vec3>> normais;
 
 	// Construtores
-	FigurasXeometricas(int tipo);
-	FigurasXeometricas(int tipo, std::string inputOBJfile);
+	Figura(int tipo);
+	Figura(int tipo, std::string inputOBJfile);
 	// Destrutor
-	~FigurasXeometricas();
+	~Figura();
 
 	// Metodos
 	void debuxar();

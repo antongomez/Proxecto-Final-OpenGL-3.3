@@ -9,7 +9,7 @@ Obxecto::Obxecto(glm::vec3 posicion, glm::vec3 escalado, unsigned int shaderProg
 	this->posicion = posicion;
 	this->escalado = escalado;
 	this->shaderProgram = shaderProgram;
-	this->fg = new FigurasXeometricas(tipoFigura);
+	this->fg = new Figura(tipoFigura);
 }
 
 Obxecto::Obxecto(glm::vec3 posicion, glm::vec3 escalado, unsigned int shaderProgram) {

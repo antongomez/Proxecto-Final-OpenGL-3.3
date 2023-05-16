@@ -61,7 +61,7 @@ int main()
 
 	glUseProgram(shaderProgram);
 
-	fgEixos = new Figura(FIGURA_EIXOS);
+	fgEixos = new Figura(FIGURA_EIXOS, shaderProgram);
 
 	// Creamos a instancia do chan
 	float limitesx[2] = { -10.0, 10.0 };

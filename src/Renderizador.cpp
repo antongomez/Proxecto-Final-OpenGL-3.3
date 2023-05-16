@@ -1,6 +1,8 @@
 #include "encabezados/Renderizador.hpp"
 #include "encabezados/definicions.h"
 
+#include <glm/gtc/type_ptr.hpp>
+
 Renderizador::Renderizador() {
 	this->shaderProgram = shaderProgram;
 	this->camara = new Camara(20.0f, PI / 2.0f, (float)PI / 4.0f);
@@ -26,7 +28,19 @@ void Renderizador::establecerCamara(int tipoCamara, glm::vec3 target) {
 }
 
 void Renderizador::renderizarEscena() {
+	// Cor da luz que ilumina os obxectos
+	glm::vec3 corLuz(1.0f, 1.0f, 1.0f);
+
 	for (int i = 0; i < escena.size();i++) {
+
+		// Establecemos a cor da luz
+		unsigned int cor_luz = glGetUniformLocation(shaderProgram, "cor_luz");
+		glUniform3fv(cor_luz, 1, glm::value_ptr(corLuz));
+
+		// Desactivamos o flag para calcular a cor dos obxectos cargados
+		unsigned int obxecto_cargado = glGetUniformLocation(shaderProgram, "obxecto_cargado");
+		glUniform1i(obxecto_cargado, 0);
+
 		escena[i]->renderizarObxecto();
 	}
 }

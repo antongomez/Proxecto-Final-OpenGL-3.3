@@ -3,21 +3,23 @@
 
 #include <glad.h>
 
+#include <iostream>
+
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "encabezados/tiny_obj_loader.h"
 
-#include <iostream>
-
 // Construtor para as figuras xeometricas
-Figura::Figura(int tipo) {
+Figura::Figura(int tipo, unsigned int shaderProgram) {
 	this->tipo = tipo;
+	this->shaderProgram = shaderProgram;
 	// Debuxamos o tipo de figura xeometrica que corresponda
 	debuxar();
 }
 
 // Construtor para as figuras cargadas
-Figura::Figura(int tipo, std::string inputOBJfile) {
+Figura::Figura(int tipo, unsigned int shaderProgram, std::string inputOBJfile) {
 	this->tipo = tipo;
+	this->shaderProgram = shaderProgram;
 	cargarModelo(inputOBJfile);
 	debuxaFiguraCargada();
 }
@@ -143,12 +145,12 @@ void Figura::debuxaCadrado() {
 	glEnableVertexAttribArray(0);
 
 	// Determinamos a posicion das cores no array
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
 	// Determinamos a posicion dos vectores normais no array
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 
 	// Determinamos a posicion das texturas no array
 	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(9 * sizeof(float)));
@@ -226,12 +228,12 @@ void Figura::debuxaCubo() {
 	glEnableVertexAttribArray(0);
 
 	// cor
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
 	// normais
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -273,7 +275,7 @@ void Figura::cargarModelo(std::string inputOBJfile) {
 
 	auto& attrib = reader.GetAttrib();
 	auto& shapes = reader.GetShapes();
-	auto& materials = reader.GetMaterials();
+	materiais.assign(reader.GetMaterials().begin(), reader.GetMaterials().end());
 
 	// Loop over shapes
 	for (size_t s = 0; s < shapes.size(); s++) {
@@ -351,12 +353,18 @@ void Figura::debuxaFiguraCargada() {
 		glBufferData(GL_ARRAY_BUFFER, normaisMaterial.size() * 3 * sizeof(tinyobj::real_t), &normaisMaterial[0], GL_STATIC_DRAW);
 
 		// Determinamos a posicion das normais no array
-		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(tinyobj::real_t), (void*)0);
-		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(tinyobj::real_t), (void*)0);
+		glEnableVertexAttribArray(1);
 	}
 }
 
 void Figura::renderizarFiguraCargada() {
+
+	// Activamos o flag para calcular a cor dos obxectos cargados
+	unsigned int obxecto_cargado = glGetUniformLocation(shaderProgram, "obxecto_cargado");
+	glUniform1i(obxecto_cargado, 1);
+
+	glm::vec3 cor(1.0f, 0, 0);
 
 	// Percorremos os materiais do obxecto e renderizamos as caras
 	for (std::map<int, std::vector<glm::vec3>>::iterator iter = vertices.begin();
@@ -365,6 +373,12 @@ void Figura::renderizarFiguraCargada() {
 	{
 		int idMaterial = iter->first;
 		std::vector<glm::vec3> verticesMaterial = iter->second;
+
+		tinyobj::material_t material = materiais[idMaterial];
+
+		// Damoslle a cor do material ao obxecto
+		unsigned int cor_obxecto = glGetUniformLocation(shaderProgram, "cor_obxecto");
+		glUniform3fv(cor_obxecto, 1, material.ambient);
 
 		glBindVertexArray(VAO[idMaterial]);
 		glDrawArrays(GL_TRIANGLES, 0, verticesMaterial.size());

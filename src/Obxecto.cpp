@@ -12,6 +12,12 @@ Obxecto::Obxecto(glm::vec3 posicion, glm::vec3 escalado, unsigned int shaderProg
 	this->fg = new FigurasXeometricas(tipoFigura);
 }
 
+Obxecto::Obxecto(glm::vec3 posicion, glm::vec3 escalado, unsigned int shaderProgram) {
+	this->posicion = posicion;
+	this->escalado = escalado;
+	this->shaderProgram = shaderProgram;
+}
+
 void Obxecto::calcularMatrizModelo() {
 	matrizModelo = glm::mat4(); // Matriz identidade
 	matrizModelo = glm::translate(matrizModelo, posicion);

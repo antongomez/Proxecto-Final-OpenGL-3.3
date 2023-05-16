@@ -68,7 +68,7 @@ int main()
 
 	// Creamos as instancias dos obxectos
 	float escala = 0.5f;
-	personaxePrincipal = new PersonaxePrincipal(glm::vec3(0, ALTURA_Y + escala / 2.0f, 0), glm::vec3(escala, escala, escala), shaderProgram, FIGURA_CUBO, 0);
+	personaxePrincipal = new PersonaxePrincipal(glm::vec3(0, ALTURA_Y + escala / 2.0f, 0), glm::vec3(escala, escala, escala), shaderProgram, FIGURA_CARGADA, 0);
 	renderizador->introducirElementoEscena(personaxePrincipal);
 
 	// Xeramos os enemigos e os obxectos da escena

@@ -46,4 +46,4 @@
 #define FIGURA_EIXOS 0
 #define FIGURA_CADRADO 1
 #define FIGURA_CUBO 2
-#define FIGURA_INIMIGO 3
+#define FIGURA_CARGADA 3

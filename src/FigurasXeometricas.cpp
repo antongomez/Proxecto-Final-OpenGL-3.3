@@ -3,9 +3,10 @@
 
 #include <glad.h>
 
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
+#define TINYOBJLOADER_IMPLEMENTATION
+#include "encabezados/tiny_obj_loader.h"
+
+#include <iostream>
 
 FigurasXeometricas::FigurasXeometricas(int tipo) {
 	this->tipo = tipo;
@@ -13,11 +14,20 @@ FigurasXeometricas::FigurasXeometricas(int tipo) {
 	debuxar();
 }
 
+FigurasXeometricas::FigurasXeometricas(int tipo, std::string inputOBJfile) {
+	this->tipo = tipo;
+	cargarModelo(inputOBJfile);
+	debuxaFiguraCargada();
+}
+
 FigurasXeometricas::~FigurasXeometricas() {
-	glDeleteVertexArrays(1, &VAO);
+	glDeleteVertexArrays(1, VAO);
 }
 
 void FigurasXeometricas::debuxar() {
+	// Neste caso so utilizaremos un VAO
+	VAO = (unsigned int*)malloc(sizeof(unsigned int));
+
 	switch (tipo) {
 	case FIGURA_EIXOS:
 		debuxaEixos();
@@ -27,9 +37,6 @@ void FigurasXeometricas::debuxar() {
 		break;
 	case FIGURA_CUBO:
 		debuxaCubo();
-		break;
-	case FIGURA_INIMIGO:
-		debuxaFiguraCargada();
 		break;
 	default:	// Por defecto debuxamos un cubo
 		debuxaCubo();
@@ -48,7 +55,7 @@ void FigurasXeometricas::renderizar() {
 	case FIGURA_CUBO:
 		renderizarCubo();
 		break;
-	case FIGURA_INIMIGO:
+	case FIGURA_CARGADA:
 		renderizarFiguraCargada();
 		break;
 	}
@@ -74,11 +81,11 @@ void FigurasXeometricas::debuxaEixos() {
 		0, 4
 	};
 
-	glGenVertexArrays(1, &VAO);
+	glGenVertexArrays(1, VAO);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
 
-	glBindVertexArray(VAO);
+	glBindVertexArray(*VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
@@ -103,7 +110,7 @@ void FigurasXeometricas::debuxaEixos() {
 }
 
 void FigurasXeometricas::renderizarEixos() {
-	glBindVertexArray(VAO);
+	glBindVertexArray(*VAO);
 	glDrawElements(GL_LINES, 8, GL_UNSIGNED_INT, 0);
 }
 
@@ -122,9 +129,9 @@ void FigurasXeometricas::debuxaCadrado() {
 
 	};
 
-	glGenVertexArrays(1, &VAO);
+	glGenVertexArrays(1, VAO);
 	glGenBuffers(1, &VBO);
-	glBindVertexArray(VAO);
+	glBindVertexArray(*VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
@@ -152,7 +159,7 @@ void FigurasXeometricas::debuxaCadrado() {
 }
 
 void FigurasXeometricas::renderizarCadrado() {
-	glBindVertexArray(VAO);
+	glBindVertexArray(*VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
@@ -200,11 +207,11 @@ void FigurasXeometricas::debuxaCubo() {
 
 	};
 
-	glGenVertexArrays(1, &VAO);
+	glGenVertexArrays(1, VAO);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
 
-	glBindVertexArray(VAO);
+	glBindVertexArray(*VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
@@ -232,14 +239,118 @@ void FigurasXeometricas::debuxaCubo() {
 }
 
 void FigurasXeometricas::renderizarCubo() {
-	glBindVertexArray(VAO);
+	glBindVertexArray(*VAO);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 }
 
+void FigurasXeometricas::cargarModelo(std::string inputOBJfile) {
+	tinyobj::ObjReaderConfig reader_config;
+
+	// Atopa a ultima aparicion do caracter '/'
+	size_t posicionUltimaBarra = inputOBJfile.find_last_of('/');
+
+	// Extrae a subcadea dende o inicio ata a posicion da ultima barra
+	reader_config.mtl_search_path = inputOBJfile.substr(0, posicionUltimaBarra + 1);
+
+	tinyobj::ObjReader reader;
+
+	// No caso de que haxa erros
+	if (!reader.ParseFromFile(inputOBJfile, reader_config)) {
+		if (!reader.Error().empty()) {
+			std::cerr << "TinyObjReader: " << reader.Error();
+		}
+		exit(EXIT_FAILURE);
+	}
+
+	// No caso de que haxa warnings
+	if (!reader.Warning().empty()) {
+		std::cout << "TinyObjReader: " << reader.Warning();
+	}
+
+	auto& attrib = reader.GetAttrib();
+	auto& shapes = reader.GetShapes();
+	auto& materials = reader.GetMaterials();
+
+	// Loop over shapes
+	for (size_t s = 0; s < shapes.size(); s++) {
+		// Loop over faces(polygon)
+		size_t index_offset = 0;
+		for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
+			size_t fv = size_t(shapes[s].mesh.num_face_vertices[f]);
+
+			// Loop over vertices in the face.
+			for (size_t v = 0; v < fv; v++) {
+				// access to vertex
+				tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
+				tinyobj::real_t vx = attrib.vertices[3 * size_t(idx.vertex_index) + 0];
+				tinyobj::real_t vy = attrib.vertices[3 * size_t(idx.vertex_index) + 1];
+				tinyobj::real_t vz = attrib.vertices[3 * size_t(idx.vertex_index) + 2];
+				vertices.push_back(glm::vec3(vx, vy, vz));
+
+				// Check if `normal_index` is zero or positive. negative = no normal data
+				if (idx.normal_index >= 0) {
+					tinyobj::real_t nx = attrib.normals[3 * size_t(idx.normal_index) + 0];
+					tinyobj::real_t ny = attrib.normals[3 * size_t(idx.normal_index) + 1];
+					tinyobj::real_t nz = attrib.normals[3 * size_t(idx.normal_index) + 2];
+
+					normais.push_back(glm::vec3(nx, ny, nz));
+				}
+
+				// Check if `texcoord_index` is zero or positive. negative = no texcoord data
+				/*if (idx.texcoord_index >= 0) {
+					tinyobj::real_t tx = attrib.texcoords[2 * size_t(idx.texcoord_index) + 0];
+					tinyobj::real_t ty = attrib.texcoords[2 * size_t(idx.texcoord_index) + 1];
+				}*/
+
+			}
+			index_offset += fv;
+		}
+	}
+}
+
 void FigurasXeometricas::debuxaFiguraCargada() {
-	
+	// Reservamos memoria para debuxar as caras do obxecto unha a unha
+	int numVertices = vertices.size();
+
+	std::cout << numVertices << " ";
+
+	VAO = (unsigned int*)malloc(numVertices * sizeof(unsigned int));
+	unsigned int* VBO = (unsigned int*)malloc(numVertices * sizeof(unsigned int));
+	unsigned int* NBO = (unsigned int*)malloc(numVertices * sizeof(unsigned int)); // numNormais = numVertices
+
+	for (int i = 0; i < numVertices; i++) {
+		unsigned int* VAOi = VAO + i;
+
+		glGenVertexArrays(1, VAOi);
+		glBindVertexArray(*VAOi);
+
+		unsigned int* VBOi = VBO + i;
+
+		glGenBuffers(1, VBOi);
+		glBindBuffer(GL_ARRAY_BUFFER, *VBOi);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[i]), &(vertices[i].x), GL_STATIC_DRAW);
+		
+		// Determinamos a posicion dos vertices no array
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(tinyobj::real_t), (void*)0);
+		glEnableVertexAttribArray(0);
+
+		unsigned int* NBOi = NBO + i;
+
+		glGenBuffers(1, NBOi);
+		glBindBuffer(GL_ARRAY_BUFFER, *NBOi);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(normais[i]), &(normais[i].x), GL_STATIC_DRAW);
+
+		// Determinamos a posicion das normais no array
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(tinyobj::real_t), (void*)0);
+		glEnableVertexAttribArray(2);
+	}
 }
 
 void FigurasXeometricas::renderizarFiguraCargada() {
-	
+
+	for (int i = 0; i < vertices.size();i++)
+	{
+		glBindVertexArray(VAO[i]);
+		glDrawArrays(GL_TRIANGLES, 0, 1);
+	}
 }

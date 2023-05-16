@@ -9,7 +9,8 @@
 
 PersonaxePrincipal::PersonaxePrincipal(glm::vec3 posicion, glm::vec3 escalado, 
 	unsigned int shaderProgram, int tipoFigura, float angulo) : 
-	Obxecto(posicion, escalado, shaderProgram, tipoFigura){
+	Obxecto(posicion, escalado, shaderProgram){
+	this->fg = new FigurasXeometricas(FIGURA_CARGADA, "recursos/modelos/toro.obj");
 	this->angulo = angulo;
 	this->moverse = false;
 }

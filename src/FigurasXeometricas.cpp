@@ -349,9 +349,14 @@ void FigurasXeometricas::debuxaFiguraCargada() {
 
 void FigurasXeometricas::renderizarFiguraCargada() {
 
-	for (int i = 0; i < vertices.size();i++)
+	for (std::map<int, std::vector<glm::vec3>>::iterator iter = vertices.begin();
+		iter != vertices.end();
+		++iter)
 	{
-		glBindVertexArray(VAO[i]);
-		glDrawArrays(GL_TRIANGLES, 0, 1);
+		int idMaterial = iter->first;
+		std::vector<glm::vec3> verticesMaterial = iter->second;
+
+		glBindVertexArray(VAO[idMaterial]);
+		glDrawArrays(GL_TRIANGLES, 0, verticesMaterial.size());
 	}
 }

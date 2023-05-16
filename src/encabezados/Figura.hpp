@@ -10,19 +10,25 @@ class Figura
 {
 public:
 
-	//Atributos
+	// -------------- Atributos -----------------//
 	unsigned int* VAO;
+	// FIGURA_CADRADO, FIGURA_CUBO, FIGURA_CARGADA
 	int tipo;
+	// Almacenamos os vertices agrupados por material
 	std::map<int, std::vector<glm::vec3>> vertices;
+	// Almacenamos as normais agrupadas por material
 	std::map<int, std::vector<glm::vec3>> normais;
 
-	// Construtores
+	// -------------- Construtores -----------------//
+	
+	// Construtor para as figuras xeometricas
 	Figura(int tipo);
+	// Construtor para as figuras cargadas
 	Figura(int tipo, std::string inputOBJfile);
 	// Destrutor
 	~Figura();
 
-	// Metodos
+	// -------------- Meotodos -----------------//
 	void debuxar();
 	void renderizar();
 

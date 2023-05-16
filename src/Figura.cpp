@@ -23,7 +23,7 @@ Figura::Figura(int tipo, std::string inputOBJfile) {
 }
 
 Figura::~Figura() {
-	glDeleteVertexArrays(1, VAO);
+	
 }
 
 void Figura::debuxar() {
@@ -245,6 +245,8 @@ void Figura::renderizarCubo() {
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 }
 
+// Funcion que carga modelos .obj con TinyObjLoader. So necesita como parametro a ruta do .obj, asumese
+// que o .mtl estara na mesma carpeta
 void Figura::cargarModelo(std::string inputOBJfile) {
 	tinyobj::ObjReaderConfig reader_config;
 
@@ -279,7 +281,11 @@ void Figura::cargarModelo(std::string inputOBJfile) {
 		size_t index_offset = 0;
 		for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
 			size_t fv = size_t(shapes[s].mesh.num_face_vertices[f]);
-			int materialId = shapes[s].mesh.material_ids[f];
+			int idMaterial = shapes[s].mesh.material_ids[f];
+			// No caso de que o obxecto cargado non tenha materiais o id sera -1.
+			if (idMaterial == -1) {
+				idMaterial = 0;
+			}
 
 			// Loop over vertices in the face.
 			for (size_t v = 0; v < fv; v++) {
@@ -288,7 +294,7 @@ void Figura::cargarModelo(std::string inputOBJfile) {
 				tinyobj::real_t vx = attrib.vertices[3 * size_t(idx.vertex_index) + 0];
 				tinyobj::real_t vy = attrib.vertices[3 * size_t(idx.vertex_index) + 1];
 				tinyobj::real_t vz = attrib.vertices[3 * size_t(idx.vertex_index) + 2];
-				vertices[materialId].push_back(glm::vec3(vx, vy, vz));
+				vertices[idMaterial].push_back(glm::vec3(vx, vy, vz));
 
 				// Check if `normal_index` is zero or positive. negative = no normal data
 				if (idx.normal_index >= 0) {
@@ -296,14 +302,8 @@ void Figura::cargarModelo(std::string inputOBJfile) {
 					tinyobj::real_t ny = attrib.normals[3 * size_t(idx.normal_index) + 1];
 					tinyobj::real_t nz = attrib.normals[3 * size_t(idx.normal_index) + 2];
 
-					normais[materialId].push_back(glm::vec3(nx, ny, nz));
+					normais[idMaterial].push_back(glm::vec3(nx, ny, nz));
 				}
-
-				// Check if `texcoord_index` is zero or positive. negative = no texcoord data
-				/*if (idx.texcoord_index >= 0) {
-					tinyobj::real_t tx = attrib.texcoords[2 * size_t(idx.texcoord_index) + 0];
-					tinyobj::real_t ty = attrib.texcoords[2 * size_t(idx.texcoord_index) + 1];
-				}*/
 
 			}
 			index_offset += fv;
@@ -316,14 +316,21 @@ void Figura::debuxaFiguraCargada() {
 	int numMateriais = vertices.size();
 
 	VAO = (unsigned int*)malloc(numMateriais * sizeof(unsigned int));
-	unsigned int* VBO = (unsigned int*)malloc(numMateriais * sizeof(unsigned int));
-	unsigned int* NBO = (unsigned int*)malloc(numMateriais * sizeof(unsigned int)); // numNormais = numVertices
+	if (VAO == NULL) {
+		std::cout << "Erro reservando memoria para os obxectos cargados. \n";
+		exit(EXIT_FAILURE);
+	}
+
+	std::vector<unsigned int> VBO(numMateriais);
+	std::vector<unsigned int> NBO(numMateriais); // numNormais = numVertices
 
 	// Declarar un iterador 
 	std::map<int, std::vector<glm::vec3>>::iterator iterador;
 
+	// Percorremos os materiais do obxecto e debuxamos os vertices
 	for (iterador = vertices.begin(); iterador != vertices.end(); ++iterador) {
 		int idMaterial = iterador->first;
+
 		std::vector<glm::vec3> verticesMaterial = iterador->second;
 		std::vector<glm::vec3>normaisMaterial = normais[idMaterial];
 
@@ -351,6 +358,7 @@ void Figura::debuxaFiguraCargada() {
 
 void Figura::renderizarFiguraCargada() {
 
+	// Percorremos os materiais do obxecto e renderizamos as caras
 	for (std::map<int, std::vector<glm::vec3>>::iterator iter = vertices.begin();
 		iter != vertices.end();
 		++iter)

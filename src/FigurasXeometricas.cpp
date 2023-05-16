@@ -277,6 +277,7 @@ void FigurasXeometricas::cargarModelo(std::string inputOBJfile) {
 		size_t index_offset = 0;
 		for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
 			size_t fv = size_t(shapes[s].mesh.num_face_vertices[f]);
+			int materialId = shapes[s].mesh.material_ids[f];
 
 			// Loop over vertices in the face.
 			for (size_t v = 0; v < fv; v++) {
@@ -285,7 +286,7 @@ void FigurasXeometricas::cargarModelo(std::string inputOBJfile) {
 				tinyobj::real_t vx = attrib.vertices[3 * size_t(idx.vertex_index) + 0];
 				tinyobj::real_t vy = attrib.vertices[3 * size_t(idx.vertex_index) + 1];
 				tinyobj::real_t vz = attrib.vertices[3 * size_t(idx.vertex_index) + 2];
-				vertices.push_back(glm::vec3(vx, vy, vz));
+				vertices[materialId].push_back(glm::vec3(vx, vy, vz));
 
 				// Check if `normal_index` is zero or positive. negative = no normal data
 				if (idx.normal_index >= 0) {
@@ -293,7 +294,7 @@ void FigurasXeometricas::cargarModelo(std::string inputOBJfile) {
 					tinyobj::real_t ny = attrib.normals[3 * size_t(idx.normal_index) + 1];
 					tinyobj::real_t nz = attrib.normals[3 * size_t(idx.normal_index) + 2];
 
-					normais.push_back(glm::vec3(nx, ny, nz));
+					normais[materialId].push_back(glm::vec3(nx, ny, nz));
 				}
 
 				// Check if `texcoord_index` is zero or positive. negative = no texcoord data
@@ -310,35 +311,35 @@ void FigurasXeometricas::cargarModelo(std::string inputOBJfile) {
 
 void FigurasXeometricas::debuxaFiguraCargada() {
 	// Reservamos memoria para debuxar as caras do obxecto unha a unha
-	int numVertices = vertices.size();
+	int numMateriais = vertices.size();
 
-	std::cout << numVertices << " ";
+	VAO = (unsigned int*)malloc(numMateriais * sizeof(unsigned int));
+	unsigned int* VBO = (unsigned int*)malloc(numMateriais * sizeof(unsigned int));
+	unsigned int* NBO = (unsigned int*)malloc(numMateriais * sizeof(unsigned int)); // numNormais = numVertices
 
-	VAO = (unsigned int*)malloc(numVertices * sizeof(unsigned int));
-	unsigned int* VBO = (unsigned int*)malloc(numVertices * sizeof(unsigned int));
-	unsigned int* NBO = (unsigned int*)malloc(numVertices * sizeof(unsigned int)); // numNormais = numVertices
+	// Declarar un iterador 
+	std::map<int, std::vector<glm::vec3>>::iterator iterador;
 
-	for (int i = 0; i < numVertices; i++) {
-		unsigned int* VAOi = VAO + i;
+	for (iterador = vertices.begin(); iterador != vertices.end(); ++iterador) {
+		int idMaterial = iterador->first;
+		std::vector<glm::vec3> verticesMaterial = iterador->second;
+		std::vector<glm::vec3>normaisMaterial = normais[idMaterial];
 
-		glGenVertexArrays(1, VAOi);
-		glBindVertexArray(*VAOi);
+		glGenVertexArrays(1, &VAO[idMaterial]);
+		glBindVertexArray(VAO[idMaterial]);
 
-		unsigned int* VBOi = VBO + i;
+		glGenBuffers(1, &VBO[idMaterial]);
+		glBindBuffer(GL_ARRAY_BUFFER, VBO[idMaterial]);
 
-		glGenBuffers(1, VBOi);
-		glBindBuffer(GL_ARRAY_BUFFER, *VBOi);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[i]), &(vertices[i].x), GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, verticesMaterial.size() * 3 * sizeof(tinyobj::real_t), &verticesMaterial[0], GL_STATIC_DRAW);
 		
 		// Determinamos a posicion dos vertices no array
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(tinyobj::real_t), (void*)0);
 		glEnableVertexAttribArray(0);
 
-		unsigned int* NBOi = NBO + i;
-
-		glGenBuffers(1, NBOi);
-		glBindBuffer(GL_ARRAY_BUFFER, *NBOi);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(normais[i]), &(normais[i].x), GL_STATIC_DRAW);
+		glGenBuffers(1, &NBO[idMaterial]);
+		glBindBuffer(GL_ARRAY_BUFFER, NBO[idMaterial]);
+		glBufferData(GL_ARRAY_BUFFER, normaisMaterial.size() * 3 * sizeof(tinyobj::real_t), &normaisMaterial[0], GL_STATIC_DRAW);
 
 		// Determinamos a posicion das normais no array
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(tinyobj::real_t), (void*)0);

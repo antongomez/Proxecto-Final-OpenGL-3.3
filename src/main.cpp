@@ -59,6 +59,8 @@ int main()
 	GLuint viewLoc = glGetUniformLocation(shaderProgram, "view");
 	GLuint projectionLoc = glGetUniformLocation(shaderProgram, "projection");
 
+	glUseProgram(shaderProgram);
+
 	fgEixos = new FigurasXeometricas(FIGURA_EIXOS);
 
 	// Creamos a instancia do chan
@@ -98,8 +100,6 @@ int main()
 		personaxePrincipal->moverPersonaxe(tempoTranscurrido);
 
 		renderizador->establecerCamara(CAMARA_XERAL, personaxePrincipal->posicion);
-
-		glUseProgram(shaderProgram);
 
 		// Debuxamos os eixos
 		unsigned int transformLoc = glGetUniformLocation(shaderProgram, "transform");

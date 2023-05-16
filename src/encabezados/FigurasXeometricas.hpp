@@ -3,6 +3,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/glm.hpp>
 #include <vector>
+#include <map>
 #include <string>
 
 class FigurasXeometricas
@@ -12,8 +13,8 @@ public:
 	//Atributos
 	unsigned int* VAO;
 	int tipo;
-	std::vector<glm::vec3> vertices;
-	std::vector<glm::vec3> normais;
+	std::map<int, std::vector<glm::vec3>> vertices;
+	std::map<int, std::vector<glm::vec3>> normais;
 
 	// Construtores
 	FigurasXeometricas(int tipo);

@@ -1,4 +1,5 @@
 #include "encabezados/Obxecto.hpp"
+#include "encabezados/definicions.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -18,6 +19,14 @@ Obxecto::Obxecto(glm::vec3 posicion, glm::vec3 escalado, unsigned int shaderProg
 	this->posicion = posicion;
 	this->escalado = escalado;
 	this->shaderProgram = shaderProgram;
+}
+
+// Constructor para os elementos decorativos
+Obxecto::Obxecto(glm::vec3 posicion, glm::vec3 escalado, unsigned int shaderProgram, std::string inputOBJfile) {
+	this->posicion = posicion;
+	this->escalado = escalado;
+	this->shaderProgram = shaderProgram;
+	this->fg = new Figura(FIGURA_CARGADA, shaderProgram, inputOBJfile);
 }
 
 void Obxecto::calcularMatrizModelo() {

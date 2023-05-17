@@ -4,8 +4,9 @@
 
 // ----------------  Definicions OBXECTOS -------------------------- //
 
-// Definimos a altura a que se situan os obxectos por encima do chan
-#define ALTURA_Y 0
+// Definimos os id dos elementos decorativos
+#define ID_PEDRA 0
+#define ID_ARBORE 1
 
 // ----------------  Definicions CAMARA -------------------------- //
 

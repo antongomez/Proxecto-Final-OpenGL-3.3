@@ -20,6 +20,8 @@ public:
 	Obxecto(glm::vec3 posicion, glm::vec3 escalado, unsigned int shaderProgram, int tipoFigura);
 	// Non crea unha instacia para o atributo fg
 	Obxecto(glm::vec3 posicion, glm::vec3 escalado, unsigned int shaderProgram);
+	// Para os elementos decorativos
+	Obxecto(glm::vec3 posicion, glm::vec3 escalado, unsigned int shaderProgram, std::string inputOBJfile);
 
 	// Metodos
 	void renderizarObxecto();

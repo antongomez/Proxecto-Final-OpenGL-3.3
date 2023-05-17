@@ -20,13 +20,26 @@ void Partida::iniciarPartida() {
 	// Creamos os mundos
 	float limitesx[] = {-10.0f, 10.0f};
 	float limitesz[] = {-10.0f, 10.0f};
-	Mundo* mundo = new Mundo(personaxePrincipal, shaderProgram, 0, limitesx, limitesz, 30, 1);
+
+	std::map<int, int> elementosDecorativos;
+	elementosDecorativos[ID_PEDRA] =14 ;
+	elementosDecorativos[ID_ARBORE] = 2;
+	Mundo* mundo = new Mundo(personaxePrincipal, shaderProgram, 0, limitesx, limitesz, elementosDecorativos, 1);
 	mundos.push_back(mundo);
-	mundo = new Mundo(personaxePrincipal, shaderProgram, -50, limitesx, limitesz, 30, 2);
+
+	elementosDecorativos[ID_PEDRA] = 20;
+	elementosDecorativos[ID_ARBORE] = 0;
+	mundo = new Mundo(personaxePrincipal, shaderProgram, -50, limitesx, limitesz, elementosDecorativos, 2);
 	mundos.push_back(mundo);
-	mundo = new Mundo(personaxePrincipal, shaderProgram, -100, limitesx, limitesz, 30, 3);
+
+	elementosDecorativos[ID_PEDRA] = 10;
+	elementosDecorativos[ID_ARBORE] = 20;
+	mundo = new Mundo(personaxePrincipal, shaderProgram, -100, limitesx, limitesz, elementosDecorativos, 3);
 	mundos.push_back(mundo);
-	mundo = new Mundo(personaxePrincipal, shaderProgram, -150, limitesx, limitesz, 30, 4);
+
+	elementosDecorativos[ID_PEDRA] = 10;
+	elementosDecorativos[ID_ARBORE] = 15;
+	mundo = new Mundo(personaxePrincipal, shaderProgram, -150, limitesx, limitesz, elementosDecorativos, 4);
 	mundos.push_back(mundo);
 
 	idMundoActual = 0;

@@ -6,6 +6,7 @@
 #include "Camara.hpp"
 
 #include <vector>
+#include <map>
 #include <glm/glm.hpp>
 
 class Mundo
@@ -13,7 +14,7 @@ class Mundo
 public:
 	// Atributos
 	Suelo *suelo;
-	std::vector<Obxecto*> elementosDecorativos;
+	std::vector<Obxecto*> obxectosDecorativos;
 	std::vector<Enemigo*> inimigos;
 	PersonaxePrincipal* personaxePrincipal;
 	Camara *camara;
@@ -21,14 +22,14 @@ public:
 	GLuint shaderProgram;
 
 	// Construtores
-	Mundo(PersonaxePrincipal* personaxe, GLuint shaderProgram, float alturaMundo, float* limitesx, float* limitesz, int numElementosDecorativos, int nivelMundo);
+	Mundo(PersonaxePrincipal* personaxe, GLuint shaderProgram, float alturaMundo, float* limitesx, float* limitesz, std::map<int, int> elementosDecorativos, int nivelMundo);
 
 	// Destructor
 
 	// Metodos
 	void iniciarMundo();
 	void xerarSuelo(float alturaMundo, float* limitesx, float* limitesz);
-	void xerarElementosDecorativos(int numElementosDecorativos);
+	void xerarElementosDecorativos(std::map<int,int> elementosDecorativos);
 	void xerarInimigos(int nivelMundo);
 	void moverObxectos(float tempoTranscurrido);
 	void renderizarEscena();

@@ -8,14 +8,14 @@
 
 Mundo::Mundo(PersonaxePrincipal* personaxePrincipal, GLuint shaderProgram,
 	float alturaMundo, float* limitesx, float* limitesz, 
-	int numElementosDecorativos, int nivelMundo) 
+	std::map<int,int> elementosDecorativos, int nivelMundo) 
 {
 
 	this->personaxePrincipal = personaxePrincipal;
 	this->shaderProgram = shaderProgram;
 
 	xerarSuelo(alturaMundo, limitesx, limitesz);
-	xerarElementosDecorativos(numElementosDecorativos);
+	xerarElementosDecorativos(elementosDecorativos);
 	xerarInimigos(nivelMundo);
 }
 
@@ -30,9 +30,44 @@ void Mundo::xerarSuelo(float alturaMundo, float* limitesx, float* limitesz) {
 	this->suelo = new Suelo(glm::vec3(0, alturaMundo, 0), ESCALA_SUELO, limitesx, limitesz, shaderProgram, FIGURA_CADRADO);
 }
 
-void Mundo::xerarElementosDecorativos(int numElementosDecorativos) {
-	for (int i = 0; i < numElementosDecorativos; i++) {
-		// Crear unha pila de arbores e rochas
+void Mundo::xerarElementosDecorativos(std::map<int, int> elementosDecorativos) {
+
+	std::map<int,int>::iterator iterador;
+
+	// Recorrer el vector utilizando el iterador
+	for (iterador = elementosDecorativos.begin(); iterador != elementosDecorativos.end(); ++iterador) {
+		int idElemento = iterador->first;
+		
+		std::string rutaOBJ;
+		switch (idElemento) {
+		case ID_PEDRA:
+			rutaOBJ = "recursos/modelos/arbol.obj";
+			break;
+		case ID_ARBORE:
+			rutaOBJ = "recursos/modelos/arbol.obj";
+			break;
+		}
+
+		int numElementos = iterador->second;
+
+		std::random_device rd;
+		std::mt19937 generator(rd());
+
+		// Definir una distribución para generar números reales en un rango
+		std::uniform_real_distribution<double> distribucionRadio(2, suelo->limitesz[1]);
+		std::uniform_real_distribution<double> distribucionAngulo(0, 2 * PI);
+
+		for (int i = 0; i < numElementos; i++) {
+
+			float radio = (float)distribucionRadio(generator);
+			float angulo = (float)distribucionAngulo(generator);
+
+			glm::vec3 posicion(radio * glm::sin(angulo), suelo->posicion.y, radio * glm::cos(angulo));
+			glm::vec3 escala(0.4f);
+
+			Obxecto* obxecto = new Obxecto(posicion, escala, shaderProgram, rutaOBJ);
+			obxectosDecorativos.push_back(obxecto);
+		}
 	}
 }
 
@@ -46,13 +81,13 @@ void Mundo::xerarInimigos(int nivelInimigos) {
 	std::uniform_real_distribution<double> distribucionRadio(5, suelo->limitesz[1]);
 	std::uniform_real_distribution<double> distribucionAngulo(0, 2 * PI);
 
-	float escala = 0.4f;	
+	float esc = 0.4f;	
 
 	for (int i = 0; i < numEnemigos; i++) {
 		float radio = (float)distribucionRadio(generator);
 		float angulo = (float)distribucionAngulo(generator);
 
-		glm::vec3 posicion(radio * glm::sin(angulo), suelo->posicion.y + escala / 2.0f, radio * glm::cos(angulo));
+		glm::vec3 posicion(radio * glm::sin(angulo), suelo->posicion.y + esc / 2.0f, radio * glm::cos(angulo));
 		glm::vec3 escala(0.4f);
 
 		Enemigo* enemigo = new Enemigo(posicion, escala, shaderProgram, FIGURA_CUBO, 1, personaxePrincipal);
@@ -107,8 +142,6 @@ void Mundo::renderizarEscena() {
 
 	establecerCamara(CAMARA_XERAL, personaxePrincipal->posicion);
 
-	std::cout << suelo->posicion.x << " " << suelo->posicion.y << " " << suelo->posicion.z << "\n";
-
 	// Renderizamos os obxectos
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	suelo->renderizarSuelo();
@@ -117,8 +150,8 @@ void Mundo::renderizarEscena() {
 
 	personaxePrincipal->renderizarObxecto();
 
-	for (int i = 0; i < elementosDecorativos.size(); i++) {
-		elementosDecorativos[i]->renderizarObxecto();
+	for (int i = 0; i < obxectosDecorativos.size(); i++) {
+		obxectosDecorativos[i]->renderizarObxecto();
 	}
 
 	for (int i = 0; i < inimigos.size();i++) {

@@ -35,6 +35,12 @@
 // Definimos os incrementos ao xirar a camara
 #define INCREMENTO_XIRO_CAMARA_XERAL UNIDADE_GRAO_EN_RADIANS
 
+// Modos da camara
+#define MODO_CAMARA_INDEFINIDO 0
+#define MODO_CAMARA_PRIMEIRA_PERSOA 1
+#define MODO_CAMARA_VISTA_XERAL 2
+#define MODO_CAMARA_TERCEIRA_PERSOA 3
+
 // ----------------  Definicions MOVEMENTOS -------------------------- //
 #define VELOCIDADE_BASE_ENEMIGOS 0.2f
 #define VELOCIDADE_BASE_PERSONAXE 1.0f
@@ -47,3 +53,6 @@
 #define FIGURA_CADRADO 1
 #define FIGURA_CUBO 2
 #define FIGURA_CARGADA 3
+
+// ----------------  Definicions SUELO -------------------------- //
+#define ESCALA_SUELO 2.0f

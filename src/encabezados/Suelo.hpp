@@ -3,14 +3,14 @@
 #include "Figura.hpp"
 
 #include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 class Suelo
 {
 public:
 	// Atributos
-	float posicionx;	// Posicion en x na que se vai centrar o chan
-	float posicionz;	// Posicion en z na que se vai centrar o chan
-	float escala;		// tamanho dos cadrados
+	glm::vec3 posicion;	// Posicion na que se vai situar o chan
+	float escala;		// tamanho dos cadrados do chan
 	float limitesx[2];	// Limite inferior e superior do chan en x con respecto a posicionx
 	float limitesz[2];	// Limite inferior e superior do chan en z con respecto a posicionz
 	glm::mat4 matrizModelo; // Matriz que representa a transformacion linear que se aplica sobre cada cadrado do chan
@@ -21,7 +21,7 @@ public:
 	Figura* fg;
 
 	// Construtores
-	Suelo(float posicionx, float posicionz, float escala, float limitesx[], float limitesz[], unsigned int shaderProgram, int tipoFigura);
+	Suelo(glm::vec3 posicion, float escala, float limitesx[], float limitesz[], unsigned int shaderProgram, int tipoFigura);
 
 	// Metodos
 	void renderizarSuelo();

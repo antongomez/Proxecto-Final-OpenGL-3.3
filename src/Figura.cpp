@@ -243,6 +243,22 @@ void Figura::debuxaCubo() {
 }
 
 void Figura::renderizarCubo() {
+
+	glm::vec3 ambiente(1.0f, 0.5f, 0.31f);
+	glm::vec3 difusa(1.0f, 0.5f, 0.31f);
+	glm::vec3 especular(0.5f, 0.5f, 0.5f);
+	float brillo = 32.0f;
+
+	// Damoslle a cor do material ao obxecto
+	unsigned int ambient = glGetUniformLocation(shaderProgram, "material.ambient");
+	glUniform3fv(ambient, 1, glm::value_ptr(ambiente));
+	unsigned int diffuse = glGetUniformLocation(shaderProgram, "material.diffuse");
+	glUniform3fv(diffuse, 1, glm::value_ptr(difusa));
+	unsigned int specular = glGetUniformLocation(shaderProgram, "material.specular");
+	glUniform3fv(specular, 1, glm::value_ptr(especular));
+	unsigned int shininess = glGetUniformLocation(shaderProgram, "material.shininess");
+	glUniform1f(shininess, brillo);
+
 	glBindVertexArray(*VAO);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 }
@@ -360,10 +376,6 @@ void Figura::debuxaFiguraCargada() {
 
 void Figura::renderizarFiguraCargada() {
 
-	// Activamos o flag para calcular a cor dos obxectos cargados
-	unsigned int obxecto_cargado = glGetUniformLocation(shaderProgram, "obxecto_cargado");
-	glUniform1i(obxecto_cargado, 1);
-
 	glm::vec3 cor(1.0f, 0, 0);
 
 	// Percorremos os materiais do obxecto e renderizamos as caras
@@ -377,8 +389,14 @@ void Figura::renderizarFiguraCargada() {
 		tinyobj::material_t material = materiais[idMaterial];
 
 		// Damoslle a cor do material ao obxecto
-		unsigned int cor_obxecto = glGetUniformLocation(shaderProgram, "cor_obxecto");
-		glUniform3fv(cor_obxecto, 1, material.ambient);
+		unsigned int ambient = glGetUniformLocation(shaderProgram, "material.ambient");
+		glUniform3fv(ambient, 1, material.ambient);
+		unsigned int diffuse = glGetUniformLocation(shaderProgram, "material.diffuse");
+		glUniform3fv(diffuse, 1, material.diffuse);
+		unsigned int specular = glGetUniformLocation(shaderProgram, "material.specular");
+		glUniform3fv(specular, 1, material.specular);
+		unsigned int shininess = glGetUniformLocation(shaderProgram, "material.shininess");
+		glUniform1f(shininess, material.shininess);
 
 		glBindVertexArray(VAO[idMaterial]);
 		glDrawArrays(GL_TRIANGLES, 0, verticesMaterial.size());

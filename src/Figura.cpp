@@ -391,7 +391,7 @@ void Figura::renderizarFiguraCargada() {
 
 		// Damoslle a cor do material ao obxecto
 		unsigned int ambient = glGetUniformLocation(shaderProgram, "material.ambient");
-		glUniform3fv(ambient, 1, material.ambient);
+		glUniform3fv(ambient, 1, material.diffuse);
 		unsigned int diffuse = glGetUniformLocation(shaderProgram, "material.diffuse");
 		glUniform3fv(diffuse, 1, material.diffuse);
 		unsigned int specular = glGetUniformLocation(shaderProgram, "material.specular");

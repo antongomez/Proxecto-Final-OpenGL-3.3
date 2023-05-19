@@ -7,8 +7,8 @@
 #include <iostream>
 
 Mundo::Mundo(PersonaxePrincipal* personaxePrincipal, GLuint shaderProgram,
-	float alturaMundo, float* limitesx, float* limitesz, 
-	std::map<int,int> elementosDecorativos, int nivelMundo) 
+	float alturaMundo, float* limitesx, float* limitesz,
+	std::map<int, int> elementosDecorativos, int nivelMundo)
 {
 
 	this->personaxePrincipal = personaxePrincipal;
@@ -19,11 +19,11 @@ Mundo::Mundo(PersonaxePrincipal* personaxePrincipal, GLuint shaderProgram,
 	xerarInimigos(nivelMundo);
 }
 
-void Mundo::iniciarMundo(){
+void Mundo::iniciarMundo() {
 	this->camara = new Camara(20.0f, PI / 2.0f, (float)PI / 4.0f, shaderProgram);
 
 	// colocamos ao personaxe principal SOBRE o chan no centro do mesmo
-	personaxePrincipal->posicion = glm::vec3(suelo->posicion.x, suelo->posicion.y + personaxePrincipal->escalado.y / 2.0f, suelo->posicion.z);
+	personaxePrincipal->posicion = glm::vec3(suelo->posicion.x, suelo->posicion.y, suelo->posicion.z);
 }
 
 void Mundo::xerarSuelo(float alturaMundo, float* limitesx, float* limitesz) {
@@ -32,19 +32,28 @@ void Mundo::xerarSuelo(float alturaMundo, float* limitesx, float* limitesz) {
 
 void Mundo::xerarElementosDecorativos(std::map<int, int> elementosDecorativos) {
 
-	std::map<int,int>::iterator iterador;
+	std::map<int, int>::iterator iterador;
 
 	// Recorrer el vector utilizando el iterador
 	for (iterador = elementosDecorativos.begin(); iterador != elementosDecorativos.end(); ++iterador) {
 		int idElemento = iterador->first;
-		
+
 		std::string rutaOBJ;
 		switch (idElemento) {
-		case ID_PEDRA:
-			rutaOBJ = "recursos/modelos/arbol.obj";
+		case ID_PEDRA1:
+			rutaOBJ = "recursos/modelos/pedra1.obj";
 			break;
-		case ID_ARBORE:
-			rutaOBJ = "recursos/modelos/arbol.obj";
+		case ID_PEDRA2:
+			rutaOBJ = "recursos/modelos/pedra2.obj";
+			break;
+		case ID_PEDRA3:
+			rutaOBJ = "recursos/modelos/pedra3.obj";
+			break;
+		case ID_ARBORE1:
+			rutaOBJ = "recursos/modelos/arbore1.obj";
+			break;
+		case ID_HERBA:
+			rutaOBJ = "recursos/modelos/Herba.obj";
 			break;
 		}
 
@@ -63,7 +72,7 @@ void Mundo::xerarElementosDecorativos(std::map<int, int> elementosDecorativos) {
 			float angulo = (float)distribucionAngulo(generator);
 
 			glm::vec3 posicion(radio * glm::sin(angulo), suelo->posicion.y, radio * glm::cos(angulo));
-			glm::vec3 escala(0.4f);
+			glm::vec3 escala(1.0f);	
 
 			Obxecto* obxecto = new Obxecto(posicion, escala, shaderProgram, rutaOBJ);
 			obxectosDecorativos.push_back(obxecto);
@@ -81,14 +90,12 @@ void Mundo::xerarInimigos(int nivelInimigos) {
 	std::uniform_real_distribution<double> distribucionRadio(5, suelo->limitesz[1]);
 	std::uniform_real_distribution<double> distribucionAngulo(0, 2 * PI);
 
-	float esc = 0.4f;	
-
 	for (int i = 0; i < numEnemigos; i++) {
 		float radio = (float)distribucionRadio(generator);
 		float angulo = (float)distribucionAngulo(generator);
 
-		glm::vec3 posicion(radio * glm::sin(angulo), suelo->posicion.y + esc / 2.0f, radio * glm::cos(angulo));
-		glm::vec3 escala(0.4f);
+		glm::vec3 posicion(radio * glm::sin(angulo), suelo->posicion.y, radio * glm::cos(angulo));
+		glm::vec3 escala(1.0f);
 
 		Enemigo* enemigo = new Enemigo(posicion, escala, shaderProgram, FIGURA_CUBO, 1, personaxePrincipal);
 
@@ -96,16 +103,8 @@ void Mundo::xerarInimigos(int nivelInimigos) {
 	}
 }
 
-void Mundo::establecerCamara(int tipoCamara, glm::vec3 target) {
-	switch (tipoCamara) {
-	case CAMARA_XERAL:
-		// Colocamos a camara
-		camara->vistaXeral(target);
-		break;
-	case CAMARA_TERCEIRA_PERSOA:
-		break;
-	}
-
+void Mundo::establecerCamara() {
+	camara->establecerCamara(personaxePrincipal);
 	// Actualizamos a matriz de proxeccion
 	camara->actualizarMatrizProxeccion();
 }
@@ -120,12 +119,11 @@ void Mundo::moverObxectos(float tempoTranscurrido) {
 void Mundo::renderizarEscena() {
 	// Cor da luz que ilumina os obxectos
 	glm::vec3 corLuz(1.0f, 1.0f, 1.0f);
-	glm::vec3 posLuz(0.0f, 30.0f, 0.0f);
 
-	glm::vec3 dirLight_direccion(2, 0, -1);
-	glm::vec3 dirLight_ambiente(0.2f, 0.2f, 0.2f);
-	glm::vec3 dirLight_difusa(0.5f, 0.5f, 0.5f);
-	glm::vec3 dirLight_espec(1.0f, 1.0f, 1.0f);
+	glm::vec3 dirLight_direccion(0, -5, 1);
+	glm::vec3 dirLight_ambiente(1.0f);
+	glm::vec3 dirLight_difusa(0);
+	glm::vec3 dirLight_espec(0);
 
 	// Establecemos a posicion da camara 
 	unsigned int viewPos = glGetUniformLocation(shaderProgram, "viewPos");
@@ -140,7 +138,7 @@ void Mundo::renderizarEscena() {
 	unsigned int dirLight_especular = glGetUniformLocation(shaderProgram, "dirLight.especular");
 	glUniform3fv(dirLight_especular, 1, glm::value_ptr(dirLight_espec));
 
-	establecerCamara(CAMARA_XERAL, personaxePrincipal->posicion);
+	establecerCamara();
 
 	// Renderizamos os obxectos
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -157,7 +155,7 @@ void Mundo::renderizarEscena() {
 	for (int i = 0; i < inimigos.size();i++) {
 		inimigos[i]->renderizarObxecto();
 	}
-	
+
 }
 
 // Implementación de la función de callback para cambiar el tamaño de la ventana
@@ -169,8 +167,11 @@ void Mundo::reescalarVenta(GLFWwindow* window, int width, int height)
 	camara->actualizarMatrizProxeccion();
 }
 
-// Funcion que xestiona os eventos de teclado. Deste xeito cada mundo poderia cambiar, por exemplo, a velocidade de movemento do personaxe
+// Funcion que xestiona os controis. Deste xeito cada mundo poderia cambiar, por exemplo, a velocidade de movemento do personaxe
 void Mundo::eventoTeclado(int tecla, int accion) {
+
+	// --------------- personaxe principal MOVEMENTOS -------------------------- //
+	// 
 	// Tecla d: xiro do personaxe a dereita
 	if (tecla == 68 && accion != GLFW_RELEASE) {
 		personaxePrincipal->angulo -= INCREMENTO_XIRO_PERSONAXE;
@@ -205,34 +206,48 @@ void Mundo::eventoTeclado(int tecla, int accion) {
 		}
 	}
 
-	// Tecla dereita: xiro da camara en vistaXeral a dereita
-	if (tecla == 262) {
-		moverCamara(XIRO_CAMARA_DEREITA);
+	// --------------- Camara xeral MOVEMENTOS -------------------------- //
+	if (camara->modo == MODO_CAMARA_VISTA_XERAL) {
+		// Tecla dereita: xiro da camara en vistaXeral a dereita
+		if (tecla == 262) {
+			moverCamara(XIRO_CAMARA_DEREITA);
+		}
+
+		// Tecla esquerda: xiro da camara en vistaXeral a esquerda
+		if (tecla == 263) {
+			moverCamara(XIRO_CAMARA_ESQUERDA);
+		}
+
+		// Tecla arriba: xiro da camara en vistaXeral na vertical cara arriba
+		if (tecla == 265) {
+			moverCamara(XIRO_CAMARA_ARRIBA);
+		}
+
+		// Tecla abaixo: xiro da camara en vistaXeral na vertical cara abaixo
+		if (tecla == 264) {
+			moverCamara(XIRO_CAMARA_ABAIXO);
+		}
+
+		// Tecla +: achegase a camara en vistaXeral
+		if (tecla == 93 && accion != GLFW_RELEASE) {
+			moverCamara(ACERCAR_CAMARA);
+		}
+
+		// Tecla -: afastase a camara en vistaXeral
+		if (tecla == 47 && accion != GLFW_RELEASE) {
+			moverCamara(AFASTAR_CAMARA);
+		}
 	}
 
-	// Tecla esquerda: xiro da camara en vistaXeral a esquerda
-	if (tecla == 263) {
-		moverCamara(XIRO_CAMARA_ESQUERDA);
+	// --------------- CAMBIOS camara -------------------------- //
+	if (tecla == 49 && accion == GLFW_RELEASE) {
+		camara->modo = MODO_CAMARA_PRIMEIRA_PERSOA;
 	}
-
-	// Tecla arriba: xiro da camara en vistaXeral na vertical cara arriba
-	if (tecla == 265) {
-		moverCamara(XIRO_CAMARA_ARRIBA);
+	else if (tecla == 50 && accion == GLFW_RELEASE) {
+		camara->modo = MODO_CAMARA_VISTA_XERAL;
 	}
-
-	// Tecla abaixo: xiro da camara en vistaXeral na vertical cara abaixo
-	if (tecla == 264) {
-		moverCamara(XIRO_CAMARA_ABAIXO);
-	}
-
-	// Tecla +: achegase a camara en vistaXeral
-	if (tecla == 93 && accion != GLFW_RELEASE) {
-		moverCamara(ACERCAR_CAMARA);
-	}
-
-	// Tecla -: afastase a camara en vistaXeral
-	if (tecla == 47 && accion != GLFW_RELEASE) {
-		moverCamara(AFASTAR_CAMARA);
+	else if (tecla == 51 && accion == GLFW_RELEASE) {
+		camara->modo = MODO_CAMARA_TERCEIRA_PERSOA;
 	}
 }
 
@@ -243,7 +258,7 @@ void Mundo::moverCamara(int tipoMovemento) {
 		if (camara->alpha >= (float)(2.0 * PI)) {
 			camara->alpha -= (float)(2.0 * PI);
 		}
-			break;
+		break;
 	case XIRO_CAMARA_ESQUERDA:
 		camara->alpha -= INCREMENTO_XIRO_CAMARA_XERAL;
 		if (camara->alpha <= (float)(-2.0f * PI)) {

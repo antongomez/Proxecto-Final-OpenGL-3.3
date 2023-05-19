@@ -5,14 +5,15 @@
 // ----------------  Definicions OBXECTOS -------------------------- //
 
 // Definimos os id dos elementos decorativos
-#define ID_PEDRA 0
-#define ID_ARBORE 1
+#define ID_PEDRA1 1
+#define ID_PEDRA2 2
+#define ID_PEDRA3 3
+#define ID_ARBORE1 4
+#define ID_ARBORE2 5
+#define ID_ARBORE3 6
+#define ID_HERBA 7
 
 // ----------------  Definicions CAMARA -------------------------- //
-
-// Tipos de camara
-#define CAMARA_XERAL 2
-#define CAMARA_TERCEIRA_PERSOA 3
 
 // Tipos de movementos da camara
 #define XIRO_CAMARA_DEREITA 1
@@ -37,14 +38,13 @@
 #define INCREMENTO_XIRO_CAMARA_XERAL UNIDADE_GRAO_EN_RADIANS
 
 // Modos da camara
-#define MODO_CAMARA_INDEFINIDO 0
 #define MODO_CAMARA_PRIMEIRA_PERSOA 1
 #define MODO_CAMARA_VISTA_XERAL 2
 #define MODO_CAMARA_TERCEIRA_PERSOA 3
 
 // ----------------  Definicions MOVEMENTOS -------------------------- //
 #define VELOCIDADE_BASE_ENEMIGOS 0.2f
-#define VELOCIDADE_BASE_PERSONAXE 1.0f
+#define VELOCIDADE_BASE_PERSONAXE 2.5f
 
 # define INCREMENTO_XIRO_PERSONAXE 3.0f*UNIDADE_GRAO_EN_RADIANS
 

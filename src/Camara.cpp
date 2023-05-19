@@ -21,31 +21,49 @@ Camara::Camara(float radio, float alpha, float beta, GLuint shaderProgram) {
 	this->beta = beta;
 	this->width = SCR_WIDTH;
 	this->height = SCR_HEIGHT;
-	this->modo = MODO_CAMARA_INDEFINIDO;
+	this->modo = MODO_CAMARA_VISTA_XERAL;
 	this->posicionCamara = glm::vec3(0, 0, 0);
 }
 
-void Camara::vistaPrimeiraPersoa(float x, float y, float z, float angulo)
-{
-	float d2 = 1.0f, alturaOllos = 0.2, posicionSilla = 0.2;
+void Camara::establecerCamara(PersonaxePrincipal *p) {
+	switch (modo) {
+	case MODO_CAMARA_VISTA_XERAL:
+		vistaXeral(p);
+		break;
+	case MODO_CAMARA_TERCEIRA_PERSOA:
+		vistaTerceiraPersoa(p);
+		break;
+	case MODO_CAMARA_PRIMEIRA_PERSOA:
+		vistaPrimeiraPersoa(p);
+		break;
+	}
+}
 
-	posicionCamara = glm::vec3(x + posicionSilla * sin(angulo), y + 0.15, z + posicionSilla * cos(angulo));
+void Camara::vistaPrimeiraPersoa(PersonaxePrincipal* p)
+{
+	// d1: distancia cara atras que se bota a camara
+	// d2: distancia a que apunta a camara con respecto da posicion do obxecto ao que segue
+	float d2 = 5.0f, d1 = 2.0f;
+	// Alura a que situamos a camara
+	float alturaCamara = 1.1f;
+	// A camara debe rotar co obxecto que segue
+	float angulo = p->angulo;
+
+	posicionCamara = p->posicion + glm::vec3(d1 * sin(angulo), alturaCamara, d1 * cos(angulo));
 
 	// Matriz de vista
 	glm::mat4 view;
 	view = glm::mat4();
 	view = glm::lookAt(
 		posicionCamara,
-		glm::vec3(x + d2 * sin(angulo), y + 0.15, z + d2 * cos(angulo)),
+		p->posicion + glm::vec3(d2 * sin(angulo), alturaCamara, d2 * cos(angulo)),
 		glm::vec3(0.0f, 1.0f, 0.0f)
 	);
 	unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-
-	modo = MODO_CAMARA_PRIMEIRA_PERSOA;
 }
 
-void Camara::vistaXeral(glm::vec3 target)
+void Camara::vistaXeral(PersonaxePrincipal* p)
 {
 	posicionCamara = glm::vec3(radio * sin(alpha) * cos(beta), radio * sin(beta), radio * cos(alpha) * cos(beta));
 
@@ -54,33 +72,36 @@ void Camara::vistaXeral(glm::vec3 target)
 	view = glm::mat4();
 	view = glm::lookAt(
 		posicionCamara,
-		target,
+		p->posicion,
 		glm::vec3(0.0f, 1.0f, 0.0f)
 	);
 	unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-
-	modo = MODO_CAMARA_VISTA_XERAL;
 }
 
-void Camara::vistaTerceiraPersoa(float x, float y, float z, float angulo)
+void Camara::vistaTerceiraPersoa(PersonaxePrincipal* p)
 {
-	float d1 = 0.6f, d2 = 3.0f;
+	// d1: distancia cara atras que se bota a camara
+	// d2: distancia a que apunta a camara con respecto da posicion do obxecto ao que segue
+	float d1 = 4.0f, d2 = 5.0f;
+	// Definimos a altura da camara con respecto da posicion do obxecto ao que segue
+	float alturaCamara = 2.0f;
+	// A camara debe rotar co obxecto que segue
+	float angulo = p->angulo;
 
-	posicionCamara = glm::vec3(x - d1 * sin(angulo), y + 0.4, z - d1 * cos(angulo));
+	posicionCamara = p->posicion + glm::vec3(-d1 * sin(angulo), alturaCamara, -d1 * cos(angulo));
+	glm::vec3 lookAt = p->posicion + glm::vec3(d2 * sin(angulo), 0, d2 * cos(angulo));
 
 	// Matriz de vista
 	glm::mat4 view;
 	view = glm::mat4();
 	view = glm::lookAt(
 		posicionCamara,
-		glm::vec3(x + d2 * sin(angulo), y, z + d2 * cos(angulo)),
+		lookAt,
 		glm::vec3(0.0f, 1.0f, 0.0f)
 	);
 	unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-
-	modo = MODO_CAMARA_TERCEIRA_PERSOA;
 }
 
 void Camara::actualizarMatrizProxeccion() {

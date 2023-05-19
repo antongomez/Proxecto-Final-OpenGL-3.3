@@ -35,6 +35,6 @@ public:
 	void renderizarEscena();
 	void eventoTeclado(int tecla, int accion);
 	void reescalarVenta(GLFWwindow* window, int width, int height);
-	void establecerCamara(int tipoCamara, glm::vec3 target);
+	void establecerCamara();
 	void moverCamara(int tipoMovemento);
 };

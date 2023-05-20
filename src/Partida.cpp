@@ -26,28 +26,31 @@ void Partida::iniciarPartida() {
 	elementosDecorativos[ID_PEDRA2] = 2;
 	elementosDecorativos[ID_PEDRA3] = 12;
 	elementosDecorativos[ID_ARBORE1] = 3;
-	elementosDecorativos[ID_HERBA] = 25;
+	elementosDecorativos[ID_HERBA] = 35;
 	Mundo* mundo = new Mundo(personaxePrincipal, shaderProgram, 0, limitesx, limitesz, elementosDecorativos, 1);
 	mundos.push_back(mundo);
 
-	elementosDecorativos[ID_PEDRA1] = 10;
-	elementosDecorativos[ID_PEDRA2] = 2;
-	elementosDecorativos[ID_PEDRA3] = 12;
-	elementosDecorativos[ID_ARBORE1] = 3;
+	elementosDecorativos[ID_PEDRA1] = 30;
+	elementosDecorativos[ID_PEDRA2] = 15;
+	elementosDecorativos[ID_PEDRA3] = 20;
+	elementosDecorativos[ID_ARBORE1] = 0;
+	elementosDecorativos[ID_HERBA] = 0;
 	mundo = new Mundo(personaxePrincipal, shaderProgram, -50, limitesx, limitesz, elementosDecorativos, 2);
 	mundos.push_back(mundo);
 
-	elementosDecorativos[ID_PEDRA1] = 10;
+	elementosDecorativos[ID_PEDRA1] = 5;
 	elementosDecorativos[ID_PEDRA2] = 2;
-	elementosDecorativos[ID_PEDRA3] = 12;
-	elementosDecorativos[ID_ARBORE1] = 3;
+	elementosDecorativos[ID_PEDRA3] = 10;
+	elementosDecorativos[ID_ARBORE1] = 20;
+	elementosDecorativos[ID_HERBA] = 20;
 	mundo = new Mundo(personaxePrincipal, shaderProgram, -100, limitesx, limitesz, elementosDecorativos, 3);
 	mundos.push_back(mundo);
 
-	elementosDecorativos[ID_PEDRA1] = 10;
-	elementosDecorativos[ID_PEDRA2] = 2;
-	elementosDecorativos[ID_PEDRA3] = 12;
-	elementosDecorativos[ID_ARBORE1] = 3;
+	elementosDecorativos[ID_PEDRA1] = 11;
+	elementosDecorativos[ID_PEDRA2] = 5;
+	elementosDecorativos[ID_PEDRA3] = 15;
+	elementosDecorativos[ID_ARBORE1] = 15;
+	elementosDecorativos[ID_HERBA] = 40;
 	mundo = new Mundo(personaxePrincipal, shaderProgram, -150, limitesx, limitesz, elementosDecorativos, 4);
 	mundos.push_back(mundo);
 
@@ -78,16 +81,16 @@ void Partida::seguinteMundo() {
 	finalizarMundo();
 	if (idMundoActual != 3) {
 		idMundoActual++;
-		mundos[idMundoActual]->iniciarMundo();
 	}
 	else {
-		std::cout << "FIN DE PARTIDA\n";
+		idMundoActual = 0;
+		std::cout << "VOLVEMOS MUNDO1\n";
 	}
-
+	mundos[idMundoActual]->iniciarMundo();
 }
 
 void Partida::finalizarMundo() {
-
+	
 }
 
 

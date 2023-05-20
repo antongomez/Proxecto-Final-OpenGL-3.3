@@ -2,6 +2,7 @@
 #include "encabezados/definicions.h"
 
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include <random>
 #include <iostream>
@@ -13,6 +14,7 @@ Mundo::Mundo(PersonaxePrincipal* personaxePrincipal, GLuint shaderProgram,
 
 	this->personaxePrincipal = personaxePrincipal;
 	this->shaderProgram = shaderProgram;
+	this->nivelMundo = nivelMundo;
 
 	xerarSuelo(alturaMundo, limitesx, limitesz);
 	xerarElementosDecorativos(elementosDecorativos);
@@ -72,7 +74,7 @@ void Mundo::xerarElementosDecorativos(std::map<int, int> elementosDecorativos) {
 			float angulo = (float)distribucionAngulo(generator);
 
 			glm::vec3 posicion(radio * glm::sin(angulo), suelo->posicion.y, radio * glm::cos(angulo));
-			glm::vec3 escala(1.0f);	
+			glm::vec3 escala(1.0f);
 
 			Obxecto* obxecto = new Obxecto(posicion, escala, shaderProgram, rutaOBJ);
 			obxectosDecorativos.push_back(obxecto);
@@ -120,10 +122,46 @@ void Mundo::renderizarEscena() {
 	// Cor da luz que ilumina os obxectos
 	glm::vec3 corLuz(1.0f, 1.0f, 1.0f);
 
-	glm::vec3 dirLight_direccion(0, -5, 1);
-	glm::vec3 dirLight_ambiente(1.0f);
-	glm::vec3 dirLight_difusa(0);
-	glm::vec3 dirLight_espec(0);
+	glm::vec3 dirLight_direccion;
+	glm::vec3 dirLight_ambiente;
+	glm::vec3 dirLight_difusa;
+	glm::vec3 dirLight_espec;
+
+	glm::vec3 spotLight_posicion;
+	glm::vec3 spotLight_direccion;
+	glm::vec3 spotLight_difusa;
+	glm::vec3 spotLight_espec;
+
+	float spotLight_corte;
+
+	if (nivelMundo == 4) {
+		dirLight_direccion = glm::vec3(0, -3, 5);
+		dirLight_ambiente = glm::vec3(0.0f);
+		dirLight_difusa = glm::vec3(0.3f);
+		dirLight_espec = glm::vec3(0.0f);
+
+		spotLight_posicion = personaxePrincipal->posicion + glm::vec3(0, 2.0f, 0);
+
+		// Provisional, isto debeo facer o personaxe principal e devolver a direccion
+		glm::mat4 rotacion = rotate(glm::mat4(), personaxePrincipal->angulo, glm::vec3(0, 1, 0));
+		spotLight_direccion =  rotacion * glm::vec4(0, 0, 1.0f, 0);
+
+		spotLight_difusa = glm::vec3(0.0f, 0.8f, 0.8f);
+		spotLight_espec = glm::vec3(0.0f);
+		spotLight_corte = 0.85f;
+	}
+	else {
+		dirLight_direccion = glm::vec3(0, -5, 3);
+		dirLight_ambiente = glm::vec3(0.3f);
+		dirLight_difusa = glm::vec3(0.8f);
+		dirLight_espec = glm::vec3(0);
+
+		spotLight_posicion = glm::vec3(0);
+		spotLight_direccion = glm::vec3(0);
+		spotLight_difusa = glm::vec3(0);
+		spotLight_espec = glm::vec3(0);
+		spotLight_corte = 2;
+	}
 
 	// Establecemos a posicion da camara 
 	unsigned int viewPos = glGetUniformLocation(shaderProgram, "viewPos");
@@ -138,10 +176,65 @@ void Mundo::renderizarEscena() {
 	unsigned int dirLight_especular = glGetUniformLocation(shaderProgram, "dirLight.especular");
 	glUniform3fv(dirLight_especular, 1, glm::value_ptr(dirLight_espec));
 
+
+	unsigned int spotLight_position = glGetUniformLocation(shaderProgram, "spotLight.position");
+	glUniform3fv(spotLight_position, 1, glm::value_ptr(spotLight_posicion));
+	unsigned int spotLight_direction = glGetUniformLocation(shaderProgram, "spotLight.direction");
+	glUniform3fv(spotLight_direction, 1, glm::value_ptr(spotLight_direccion));
+	unsigned int spotLight_cutOff = glGetUniformLocation(shaderProgram, "spotLight.cutOff");
+	glUniform1f(spotLight_cutOff, spotLight_corte);
+	unsigned int spotLight_diffuse = glGetUniformLocation(shaderProgram, "spotLight.diffuse");
+	glUniform3fv(spotLight_diffuse, 1, glm::value_ptr(spotLight_difusa));
+	unsigned int spotLight_specular = glGetUniformLocation(shaderProgram, "spotLight.specular");
+	glUniform3fv(spotLight_specular, 1, glm::value_ptr(spotLight_espec));
+
 	establecerCamara();
 
 	// Renderizamos os obxectos
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+	// Provisional mentres non texturas
+	glm::vec3 ambiente;
+	glm::vec3 difusa;
+	glm::vec3 especular;
+	float brillo = 10.0f;
+
+	if (nivelMundo == 1) {
+		ambiente = glm::vec3(0.0f, 0.2f, 0.0f);
+		difusa = glm::vec3(0.0f, 0.2f, 0.0f);
+		especular = glm::vec3(1.0f);
+		brillo = 10.0f;
+	}
+	else if (nivelMundo == 2) {
+		ambiente = glm::vec3(0.4f, 0.1f, 0.2f);
+		difusa = glm::vec3(0.4f, 0.3f, 0.2f);
+		especular = glm::vec3(1.0f);
+		brillo = 15.0f;
+	}
+	else if (nivelMundo == 3) {
+		ambiente = glm::vec3(0.0f, 0.1f, 0.0f);
+		difusa = glm::vec3(0.0f, 0.1f, 0.0f);
+		especular = glm::vec3(1.0f);
+		brillo = 4.0f;
+	}
+	else if (nivelMundo == 4) {
+		ambiente = glm::vec3(0.0f, 0.1f, 0.0f);
+		difusa = glm::vec3(0.0f, 0.2f, 0.0f);
+		especular = glm::vec3(1.0f);
+		brillo = 1.0f;
+	}
+
+	// Damoslle a cor do material ao obxecto
+	unsigned int ambient = glGetUniformLocation(shaderProgram, "material.ambient");
+	glUniform3fv(ambient, 1, glm::value_ptr(ambiente));
+	unsigned int diffuse = glGetUniformLocation(shaderProgram, "material.diffuse");
+	glUniform3fv(diffuse, 1, glm::value_ptr(difusa));
+	unsigned int specular = glGetUniformLocation(shaderProgram, "material.specular");
+	glUniform3fv(specular, 1, glm::value_ptr(especular));
+	unsigned int shininess = glGetUniformLocation(shaderProgram, "material.shininess");
+	glUniform1f(shininess, brillo);
+
+
 	suelo->renderizarSuelo();
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -266,11 +359,11 @@ void Mundo::moverCamara(int tipoMovemento) {
 		}
 		break;
 	case XIRO_CAMARA_ARRIBA:
+		// Limite superior de 90 grados
 		camara->beta = fmin(camara->beta + INCREMENTO_XIRO_CAMARA_XERAL, PI / 2.0f - UNIDADE_GRAO_EN_RADIANS);
 		break;
 	case XIRO_CAMARA_ABAIXO:
-		// Limite superior de 90 grados
-		camara->beta = fmax(camara->beta - INCREMENTO_XIRO_CAMARA_XERAL, 0.0f + UNIDADE_GRAO_EN_RADIANS);
+		camara->beta = fmax(camara->beta - INCREMENTO_XIRO_CAMARA_XERAL, -PI / 2.0f + UNIDADE_GRAO_EN_RADIANS);
 		break;
 	case ACERCAR_CAMARA:
 		camara->radio = fmax(camara->radio - INCREMENTO_RADIO_CAMARA_XERAL, MIN_DIST_CAMARA_XERAL);

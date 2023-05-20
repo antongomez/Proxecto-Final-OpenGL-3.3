@@ -18,6 +18,7 @@ public:
 	std::vector<Enemigo*> inimigos;
 	PersonaxePrincipal* personaxePrincipal;
 	Camara *camara;
+	int nivelMundo;
 
 	GLuint shaderProgram;
 

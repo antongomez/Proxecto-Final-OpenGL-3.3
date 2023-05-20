@@ -49,22 +49,22 @@ void Figura::debuxar() {
 }
 
 void Figura::renderizar() {
-	if (tipo != FIGURA_CARGADA) {
-		glm::vec3 ambiente(1.0f, 0.5f, 0.31f);
-		glm::vec3 difusa(1.0f, 0.5f, 0.31f);
-		glm::vec3 especular(0.5f, 0.5f, 0.5f);
-		float brillo = 32.0f;
+	//if (tipo != FIGURA_CARGADA) {
+	//	glm::vec3 ambiente(0.0f, 0.2f, 0.0f);
+	//	glm::vec3 difusa(0.0f, 0.2f, 0.0f);
+	//	glm::vec3 especular(1.0f);
+	//	float brillo = 10.0f;
 
-		// Damoslle a cor do material ao obxecto
-		unsigned int ambient = glGetUniformLocation(shaderProgram, "material.ambient");
-		glUniform3fv(ambient, 1, glm::value_ptr(ambiente));
-		unsigned int diffuse = glGetUniformLocation(shaderProgram, "material.diffuse");
-		glUniform3fv(diffuse, 1, glm::value_ptr(difusa));
-		unsigned int specular = glGetUniformLocation(shaderProgram, "material.specular");
-		glUniform3fv(specular, 1, glm::value_ptr(especular));
-		unsigned int shininess = glGetUniformLocation(shaderProgram, "material.shininess");
-		glUniform1f(shininess, brillo);
-	}
+	//	// Damoslle a cor do material ao obxecto
+	//	unsigned int ambient = glGetUniformLocation(shaderProgram, "material.ambient");
+	//	glUniform3fv(ambient, 1, glm::value_ptr(ambiente));
+	//	unsigned int diffuse = glGetUniformLocation(shaderProgram, "material.diffuse");
+	//	glUniform3fv(diffuse, 1, glm::value_ptr(difusa));
+	//	unsigned int specular = glGetUniformLocation(shaderProgram, "material.specular");
+	//	glUniform3fv(specular, 1, glm::value_ptr(especular));
+	//	unsigned int shininess = glGetUniformLocation(shaderProgram, "material.shininess");
+	//	glUniform1f(shininess, brillo);
+	//}
 
 	switch (tipo) {
 	case FIGURA_EIXOS:

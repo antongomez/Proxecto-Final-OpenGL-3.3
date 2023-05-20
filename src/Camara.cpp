@@ -65,7 +65,7 @@ void Camara::vistaPrimeiraPersoa(PersonaxePrincipal* p)
 
 void Camara::vistaXeral(PersonaxePrincipal* p)
 {
-	posicionCamara = glm::vec3(radio * sin(alpha) * cos(beta), radio * sin(beta), radio * cos(alpha) * cos(beta));
+	posicionCamara = p->posicion + glm::vec3(radio * sin(alpha) * cos(beta), radio * sin(beta), radio * cos(alpha) * cos(beta));
 
 	// Matriz de vista
 	glm::mat4 view;

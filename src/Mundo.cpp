@@ -26,6 +26,7 @@ void Mundo::iniciarMundo() {
 
 	// colocamos ao personaxe principal SOBRE o chan no centro do mesmo
 	personaxePrincipal->posicion = glm::vec3(suelo->posicion.x, suelo->posicion.y, suelo->posicion.z);
+	personaxePrincipal->angulo = 0;
 }
 
 void Mundo::xerarSuelo(float alturaMundo, float* limitesx, float* limitesz) {
@@ -138,7 +139,7 @@ void Mundo::renderizarEscena() {
 		dirLight_direccion = glm::vec3(0, -3, 5);
 		dirLight_ambiente = glm::vec3(0.0f);
 		dirLight_difusa = glm::vec3(0.3f);
-		dirLight_espec = glm::vec3(0.0f);
+		dirLight_espec = glm::vec3(0.1f);
 
 		spotLight_posicion = personaxePrincipal->posicion + glm::vec3(0, 2.0f, 0);
 
@@ -146,15 +147,15 @@ void Mundo::renderizarEscena() {
 		glm::mat4 rotacion = rotate(glm::mat4(), personaxePrincipal->angulo, glm::vec3(0, 1, 0));
 		spotLight_direccion =  rotacion * glm::vec4(0, 0, 1.0f, 0);
 
-		spotLight_difusa = glm::vec3(0.0f, 0.8f, 0.8f);
-		spotLight_espec = glm::vec3(0.0f);
+		spotLight_difusa = glm::vec3(0.8f, 0.8f, 0.4f);
+		spotLight_espec = glm::vec3(1.0f, 1.0f, 0.5f);
 		spotLight_corte = 0.85f;
 	}
 	else {
 		dirLight_direccion = glm::vec3(0, -5, 3);
-		dirLight_ambiente = glm::vec3(0.3f);
-		dirLight_difusa = glm::vec3(0.8f);
-		dirLight_espec = glm::vec3(0);
+		dirLight_ambiente = glm::vec3(0.4f);
+		dirLight_difusa = glm::vec3(0.9f);
+		dirLight_espec = glm::vec3(1.0f);
 
 		spotLight_posicion = glm::vec3(0);
 		spotLight_direccion = glm::vec3(0);
@@ -173,7 +174,7 @@ void Mundo::renderizarEscena() {
 	glUniform3fv(dirLight_ambient, 1, glm::value_ptr(dirLight_ambiente));
 	unsigned int dirLight_diffuse = glGetUniformLocation(shaderProgram, "dirLight.diffuse");
 	glUniform3fv(dirLight_diffuse, 1, glm::value_ptr(dirLight_difusa));
-	unsigned int dirLight_especular = glGetUniformLocation(shaderProgram, "dirLight.especular");
+	unsigned int dirLight_especular = glGetUniformLocation(shaderProgram, "dirLight.specular");
 	glUniform3fv(dirLight_especular, 1, glm::value_ptr(dirLight_espec));
 
 
@@ -197,30 +198,30 @@ void Mundo::renderizarEscena() {
 	glm::vec3 ambiente;
 	glm::vec3 difusa;
 	glm::vec3 especular;
-	float brillo = 10.0f;
+	float brillo = 1.0f;
 
 	if (nivelMundo == 1) {
 		ambiente = glm::vec3(0.0f, 0.2f, 0.0f);
-		difusa = glm::vec3(0.0f, 0.2f, 0.0f);
-		especular = glm::vec3(1.0f);
-		brillo = 10.0f;
+		difusa = glm::vec3(0.0f, 0.3f, 0.0f);
+		especular = glm::vec3(0);
+		brillo = 1.0f;
 	}
 	else if (nivelMundo == 2) {
-		ambiente = glm::vec3(0.4f, 0.1f, 0.2f);
+		ambiente = glm::vec3(0.4f, 0.3f, 0.2f);
 		difusa = glm::vec3(0.4f, 0.3f, 0.2f);
-		especular = glm::vec3(1.0f);
-		brillo = 15.0f;
+		especular = glm::vec3(0);
+		brillo = 1.0f;
 	}
 	else if (nivelMundo == 3) {
 		ambiente = glm::vec3(0.0f, 0.1f, 0.0f);
-		difusa = glm::vec3(0.0f, 0.1f, 0.0f);
-		especular = glm::vec3(1.0f);
-		brillo = 4.0f;
+		difusa = glm::vec3(0.0f, 0.3f, 0.0f);
+		especular = glm::vec3(0);
+		brillo = 1.0f;
 	}
 	else if (nivelMundo == 4) {
 		ambiente = glm::vec3(0.0f, 0.1f, 0.0f);
-		difusa = glm::vec3(0.0f, 0.2f, 0.0f);
-		especular = glm::vec3(1.0f);
+		difusa = glm::vec3(0.0f, 0.3f, 0.0f);
+		especular = glm::vec3(0);
 		brillo = 1.0f;
 	}
 

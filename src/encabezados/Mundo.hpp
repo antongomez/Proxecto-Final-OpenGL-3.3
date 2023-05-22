@@ -4,6 +4,7 @@
 #include "Enemigo.hpp"
 #include "PersonaxePrincipal.hpp"
 #include "Camara.hpp"
+#include "Luz.hpp"
 
 #include <vector>
 #include <map>
@@ -17,13 +18,16 @@ public:
 	std::vector<Obxecto*> obxectosDecorativos;
 	std::vector<Enemigo*> inimigos;
 	PersonaxePrincipal* personaxePrincipal;
+	std::map<int, std::vector<Luz*>> luces;
 	Camara *camara;
 	int nivelMundo;
 
 	GLuint shaderProgram;
 
 	// Construtores
-	Mundo(PersonaxePrincipal* personaxe, GLuint shaderProgram, float alturaMundo, float* limitesx, float* limitesz, std::map<int, int> elementosDecorativos, int nivelMundo);
+	Mundo(PersonaxePrincipal* personaxe, GLuint shaderProgram, float alturaMundo, 
+		float* limitesx, float* limitesz, std::map<int, int> elementosDecorativos, 
+		int nivelMundo, std::map<int, std::vector<Luz*>> luces);
 
 	// Destructor
 
@@ -38,4 +42,7 @@ public:
 	void reescalarVenta(GLFWwindow* window, int width, int height);
 	void establecerCamara();
 	void moverCamara(int tipoMovemento);
+
+private:
+	void establecerLucesShader();
 };

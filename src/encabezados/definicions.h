@@ -57,3 +57,9 @@
 
 // ----------------  Definicions SUELO -------------------------- //
 #define ESCALA_SUELO 2.0f
+
+
+// ----------------  Definicions LUCES -------------------------- //
+#define LUZ_DIRECCIONAL 0
+#define LUZ_POSICIONAL 1
+#define LUZ_FOCAL 2

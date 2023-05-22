@@ -22,12 +22,19 @@ void Partida::iniciarPartida() {
 	float limitesz[] = { -10.0f, 10.0f };
 
 	std::map<int, int> elementosDecorativos;
+	std::map<int, std::vector<Luz*>> luces;
+
 	elementosDecorativos[ID_PEDRA1] = 10;
 	elementosDecorativos[ID_PEDRA2] = 2;
 	elementosDecorativos[ID_PEDRA3] = 12;
 	elementosDecorativos[ID_ARBORE1] = 3;
 	elementosDecorativos[ID_HERBA] = 35;
-	Mundo* mundo = new Mundo(personaxePrincipal, shaderProgram, 0, limitesx, limitesz, elementosDecorativos, 1);
+
+	std::vector<Luz*> luzDireccional1;
+	luzDireccional1.push_back(new Luz(glm::vec3(0, -5, 3), glm::vec3(0.4f), glm::vec3(0.9f), glm::vec3(1.0f)));
+	luces[LUZ_DIRECCIONAL] = luzDireccional1;
+
+	Mundo* mundo = new Mundo(personaxePrincipal, shaderProgram, 0, limitesx, limitesz, elementosDecorativos, 1, luces);
 	mundos.push_back(mundo);
 
 	elementosDecorativos[ID_PEDRA1] = 30;
@@ -35,7 +42,12 @@ void Partida::iniciarPartida() {
 	elementosDecorativos[ID_PEDRA3] = 20;
 	elementosDecorativos[ID_ARBORE1] = 0;
 	elementosDecorativos[ID_HERBA] = 0;
-	mundo = new Mundo(personaxePrincipal, shaderProgram, -50, limitesx, limitesz, elementosDecorativos, 2);
+
+	std::vector<Luz*> luzDireccional2;
+	luzDireccional2.push_back(new Luz(glm::vec3(0, -5, 3), glm::vec3(0.4f), glm::vec3(0.9f), glm::vec3(1.0f)));
+	luces[LUZ_DIRECCIONAL] = luzDireccional2;
+
+	mundo = new Mundo(personaxePrincipal, shaderProgram, -50, limitesx, limitesz, elementosDecorativos, 2, luces);
 	mundos.push_back(mundo);
 
 	elementosDecorativos[ID_PEDRA1] = 5;
@@ -43,7 +55,12 @@ void Partida::iniciarPartida() {
 	elementosDecorativos[ID_PEDRA3] = 10;
 	elementosDecorativos[ID_ARBORE1] = 20;
 	elementosDecorativos[ID_HERBA] = 20;
-	mundo = new Mundo(personaxePrincipal, shaderProgram, -100, limitesx, limitesz, elementosDecorativos, 3);
+
+	std::vector<Luz*> luzDireccional3;
+	luzDireccional3.push_back(new Luz(glm::vec3(0, -5, 3), glm::vec3(0.4f), glm::vec3(0.9f), glm::vec3(1.0f)));
+	luces[LUZ_DIRECCIONAL] = luzDireccional3;
+
+	mundo = new Mundo(personaxePrincipal, shaderProgram, -100, limitesx, limitesz, elementosDecorativos, 3, luces);
 	mundos.push_back(mundo);
 
 	elementosDecorativos[ID_PEDRA1] = 11;
@@ -51,7 +68,15 @@ void Partida::iniciarPartida() {
 	elementosDecorativos[ID_PEDRA3] = 15;
 	elementosDecorativos[ID_ARBORE1] = 15;
 	elementosDecorativos[ID_HERBA] = 40;
-	mundo = new Mundo(personaxePrincipal, shaderProgram, -150, limitesx, limitesz, elementosDecorativos, 4);
+
+	std::vector<Luz*> luzDireccional4;
+	luzDireccional4.push_back(new Luz(glm::vec3(0, -3, 5), glm::vec3(0.0f), glm::vec3(0.3f), glm::vec3(0.1f)));
+	luces[LUZ_DIRECCIONAL] = luzDireccional4;
+	std::vector<Luz*> luzFocal;
+	luzFocal.push_back(new Luz(glm::vec3(0, 2.0f, 0), glm::vec3(0, 0, 1.0f), glm::vec3(0.8f, 0.8f, 0.4f), glm::vec3(1.0f, 1.0f, 0.5f), 0.85f));
+	luces[LUZ_FOCAL] = luzFocal;
+
+	mundo = new Mundo(personaxePrincipal, shaderProgram, -150, limitesx, limitesz, elementosDecorativos, 4, luces);
 	mundos.push_back(mundo);
 
 	idMundoActual = 0;
@@ -90,7 +115,7 @@ void Partida::seguinteMundo() {
 }
 
 void Partida::finalizarMundo() {
-	
+
 }
 
 

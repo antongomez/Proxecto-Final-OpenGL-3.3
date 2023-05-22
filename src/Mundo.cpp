@@ -9,12 +9,13 @@
 
 Mundo::Mundo(PersonaxePrincipal* personaxePrincipal, GLuint shaderProgram,
 	float alturaMundo, float* limitesx, float* limitesz,
-	std::map<int, int> elementosDecorativos, int nivelMundo)
+	std::map<int, int> elementosDecorativos, int nivelMundo, std::map<int, std::vector<Luz*>> luces)
 {
 
 	this->personaxePrincipal = personaxePrincipal;
 	this->shaderProgram = shaderProgram;
 	this->nivelMundo = nivelMundo;
+	this->luces = luces;
 
 	xerarSuelo(alturaMundo, limitesx, limitesz);
 	xerarElementosDecorativos(elementosDecorativos);
@@ -119,80 +120,68 @@ void Mundo::moverObxectos(float tempoTranscurrido) {
 	}
 }
 
-void Mundo::renderizarEscena() {
-	// Cor da luz que ilumina os obxectos
-	glm::vec3 corLuz(1.0f, 1.0f, 1.0f);
+void Mundo::establecerLucesShader() {
+	// Iluminacion
+	auto iter = luces.find(LUZ_DIRECCIONAL);
+	if (iter != luces.end()) {
+		// El elemento se encontró en el mapa
+		std::vector<Luz*>& vecDir = iter->second;
 
-	glm::vec3 dirLight_direccion;
-	glm::vec3 dirLight_ambiente;
-	glm::vec3 dirLight_difusa;
-	glm::vec3 dirLight_espec;
+		// Establecemos a luz direccional
+		unsigned int dirLight_direction = glGetUniformLocation(shaderProgram, "dirLight.direction");
+		glUniform3fv(dirLight_direction, 1, glm::value_ptr(vecDir[0]->direccion));
+		unsigned int dirLight_ambient = glGetUniformLocation(shaderProgram, "dirLight.ambient");
+		glUniform3fv(dirLight_ambient, 1, glm::value_ptr(vecDir[0]->ambiente));
+		unsigned int dirLight_diffuse = glGetUniformLocation(shaderProgram, "dirLight.diffuse");
+		glUniform3fv(dirLight_diffuse, 1, glm::value_ptr(vecDir[0]->difusa));
+		unsigned int dirLight_especular = glGetUniformLocation(shaderProgram, "dirLight.specular");
+		glUniform3fv(dirLight_especular, 1, glm::value_ptr(vecDir[0]->especular));
+	}
 
-	glm::vec3 spotLight_posicion;
-	glm::vec3 spotLight_direccion;
-	glm::vec3 spotLight_difusa;
-	glm::vec3 spotLight_espec;
+	iter = luces.find(LUZ_FOCAL);
 
-	float spotLight_corte;
+	if (iter != luces.end()) {
+		// El elemento se encontró en el mapa
+		std::vector<Luz*>& vecLuzFocal = iter->second;
 
-	if (nivelMundo == 4) {
-		dirLight_direccion = glm::vec3(0, -3, 5);
-		dirLight_ambiente = glm::vec3(0.0f);
-		dirLight_difusa = glm::vec3(0.3f);
-		dirLight_espec = glm::vec3(0.1f);
+		// Marcamos no shader que utilizamos luz focal
+		unsigned int spot = glGetUniformLocation(shaderProgram, "spot");
+		glUniform1i(spot, 1);
 
-		spotLight_posicion = personaxePrincipal->posicion + glm::vec3(0, 2.0f, 0);
+		glm::vec3 spotLight_posicion = personaxePrincipal->posicion + glm::vec3(0, 2.0f, 0);
 
 		// Provisional, isto debeo facer o personaxe principal e devolver a direccion
 		glm::mat4 rotacion = rotate(glm::mat4(), personaxePrincipal->angulo, glm::vec3(0, 1, 0));
-		spotLight_direccion =  rotacion * glm::vec4(0, 0, 1.0f, 0);
+		glm::vec3 spotLight_direccion = rotacion * glm::vec4(0, 0, 1.0f, 0);
 
-		spotLight_difusa = glm::vec3(0.8f, 0.8f, 0.4f);
-		spotLight_espec = glm::vec3(1.0f, 1.0f, 0.5f);
-		spotLight_corte = 0.85f;
+		unsigned int spotLight_position = glGetUniformLocation(shaderProgram, "spotLight.position");
+		glUniform3fv(spotLight_position, 1, glm::value_ptr(spotLight_posicion));
+		unsigned int spotLight_direction = glGetUniformLocation(shaderProgram, "spotLight.direction");
+		glUniform3fv(spotLight_direction, 1, glm::value_ptr(spotLight_direccion));
+		unsigned int spotLight_cutOff = glGetUniformLocation(shaderProgram, "spotLight.cutOff");
+		glUniform1f(spotLight_cutOff, 0.9);
+		unsigned int spotLight_diffuse = glGetUniformLocation(shaderProgram, "spotLight.diffuse");
+		glUniform3fv(spotLight_diffuse, 1, glm::value_ptr(glm::vec3(0, 1, 1)));
+		unsigned int spotLight_specular = glGetUniformLocation(shaderProgram, "spotLight.specular");
+		glUniform3fv(spotLight_specular, 1, glm::value_ptr(glm::vec3(0, 0.5, 0.5)));
+
 	}
 	else {
-		dirLight_direccion = glm::vec3(0, -5, 3);
-		dirLight_ambiente = glm::vec3(0.4f);
-		dirLight_difusa = glm::vec3(0.9f);
-		dirLight_espec = glm::vec3(1.0f);
-
-		spotLight_posicion = glm::vec3(0);
-		spotLight_direccion = glm::vec3(0);
-		spotLight_difusa = glm::vec3(0);
-		spotLight_espec = glm::vec3(0);
-		spotLight_corte = 2;
+		// Marcamos no shader que non utilizamos luz focal
+		unsigned int spot = glGetUniformLocation(shaderProgram, "spot");
+		glUniform1i(spot, 0);
 	}
+}
 
-	// Establecemos a posicion da camara 
-	unsigned int viewPos = glGetUniformLocation(shaderProgram, "viewPos");
-	glUniform3fv(viewPos, 1, glm::value_ptr(camara->posicionCamara));
-	// Establecemos a luz direccional
-	unsigned int dirLight_direction = glGetUniformLocation(shaderProgram, "dirLight.direction");
-	glUniform3fv(dirLight_direction, 1, glm::value_ptr(dirLight_direccion));
-	unsigned int dirLight_ambient = glGetUniformLocation(shaderProgram, "dirLight.ambient");
-	glUniform3fv(dirLight_ambient, 1, glm::value_ptr(dirLight_ambiente));
-	unsigned int dirLight_diffuse = glGetUniformLocation(shaderProgram, "dirLight.diffuse");
-	glUniform3fv(dirLight_diffuse, 1, glm::value_ptr(dirLight_difusa));
-	unsigned int dirLight_especular = glGetUniformLocation(shaderProgram, "dirLight.specular");
-	glUniform3fv(dirLight_especular, 1, glm::value_ptr(dirLight_espec));
-
-
-	unsigned int spotLight_position = glGetUniformLocation(shaderProgram, "spotLight.position");
-	glUniform3fv(spotLight_position, 1, glm::value_ptr(spotLight_posicion));
-	unsigned int spotLight_direction = glGetUniformLocation(shaderProgram, "spotLight.direction");
-	glUniform3fv(spotLight_direction, 1, glm::value_ptr(spotLight_direccion));
-	unsigned int spotLight_cutOff = glGetUniformLocation(shaderProgram, "spotLight.cutOff");
-	glUniform1f(spotLight_cutOff, spotLight_corte);
-	unsigned int spotLight_diffuse = glGetUniformLocation(shaderProgram, "spotLight.diffuse");
-	glUniform3fv(spotLight_diffuse, 1, glm::value_ptr(spotLight_difusa));
-	unsigned int spotLight_specular = glGetUniformLocation(shaderProgram, "spotLight.specular");
-	glUniform3fv(spotLight_specular, 1, glm::value_ptr(spotLight_espec));
+void Mundo::renderizarEscena() {
 
 	establecerCamara();
 
-	// Renderizamos os obxectos
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	// Establecemos a posicion da camara no shader
+	unsigned int viewPos = glGetUniformLocation(shaderProgram, "viewPos");
+	glUniform3fv(viewPos, 1, glm::value_ptr(camara->posicionCamara));
+
+	establecerLucesShader();
 
 	// Provisional mentres non texturas
 	glm::vec3 ambiente;
@@ -235,10 +224,10 @@ void Mundo::renderizarEscena() {
 	unsigned int shininess = glGetUniformLocation(shaderProgram, "material.shininess");
 	glUniform1f(shininess, brillo);
 
+	// Renderizamos os obxectos
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	suelo->renderizarSuelo();
-
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	personaxePrincipal->renderizarObxecto();
 

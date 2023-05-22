@@ -63,6 +63,9 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 // Funcion que calcula o efecto dos focos de luz
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 
+// Variables para usar ou non distintos tipos de luz
+uniform int spot;
+
 void main() 
 {
 
@@ -80,10 +83,9 @@ void main()
         //saida += CalcPointLight(pointLights[i], Normal, FragPos, viewDir);
         //}
 
-    saida += CalcSpotLight(spotLight, Normal, FragPos, viewDir);
-
-    // and add others lights as well (like spotlights)
-    //saida += someFunctionToCalculateSpotLight();
+    if(spot == 1) {
+        saida += CalcSpotLight(spotLight, Normal, FragPos, viewDir);
+    }
     
     FragColor = vec4(saida, 1.0);
 }
@@ -122,7 +124,7 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
     ambient  *= attenuation;
     diffuse  *= attenuation;
     specular *= attenuation;
-    return (ambient + diffuse);
+    return (ambient + diffuse + specular);
 } 
 
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)

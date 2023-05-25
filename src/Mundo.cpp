@@ -7,13 +7,14 @@
 #include <random>
 #include <iostream>
 
-Mundo::Mundo(PersonaxePrincipal* personaxePrincipal, GLuint shaderProgram,
+Mundo::Mundo(PersonaxePrincipal* personaxePrincipal, GLuint shaderProgram, GLuint shaderProgramTex,
 	float alturaMundo, float* limitesx, float* limitesz,
 	std::map<int, int> elementosDecorativos, int nivelMundo, std::map<int, std::vector<Luz*>> luces)
 {
 
 	this->personaxePrincipal = personaxePrincipal;
 	this->shaderProgram = shaderProgram;
+	this->shaderProgramTex = shaderProgramTex;
 	this->nivelMundo = nivelMundo;
 	this->luces = luces;
 
@@ -22,8 +23,8 @@ Mundo::Mundo(PersonaxePrincipal* personaxePrincipal, GLuint shaderProgram,
 	xerarInimigos(nivelMundo);
 }
 
-void Mundo::iniciarMundo() {
-	this->camara = new Camara(20.0f, PI / 2.0f, (float)PI / 4.0f, shaderProgram);
+void Mundo::iniciarMundo(float width, float height) {
+	this->camara = new Camara(20.0f, PI / 2.0f, (float)PI / 4.0f, width, height);
 
 	// colocamos ao personaxe principal SOBRE o chan no centro do mesmo
 	personaxePrincipal->posicion = glm::vec3(suelo->posicion.x, suelo->posicion.y, suelo->posicion.z);
@@ -31,7 +32,7 @@ void Mundo::iniciarMundo() {
 }
 
 void Mundo::xerarSuelo(float alturaMundo, float* limitesx, float* limitesz) {
-	this->suelo = new Suelo(glm::vec3(0, alturaMundo, 0), ESCALA_SUELO, limitesx, limitesz, shaderProgram, FIGURA_CADRADO);
+	this->suelo = new Suelo(glm::vec3(0, alturaMundo, 0), ESCALA_SUELO, limitesx, limitesz, shaderProgramTex, FIGURA_CADRADO);
 }
 
 void Mundo::xerarElementosDecorativos(std::map<int, int> elementosDecorativos) {
@@ -67,15 +68,27 @@ void Mundo::xerarElementosDecorativos(std::map<int, int> elementosDecorativos) {
 		std::mt19937 generator(rd());
 
 		// Definir una distribución para generar números reales en un rango
-		std::uniform_real_distribution<double> distribucionRadio(2, suelo->limitesz[1]);
-		std::uniform_real_distribution<double> distribucionAngulo(0, 2 * PI);
+		std::uniform_real_distribution<float> distribucionX(0, suelo->limitesx[1]);
+		std::uniform_real_distribution<float> distribucionZ(0, suelo->limitesx[1]);
+
+		std::uniform_real_distribution<float> distribucionZ_2(6, suelo->limitesx[1]);
+
+		std::uniform_int_distribution<int> distribucionAux(0, 1);
 
 		for (int i = 0; i < numElementos; i++) {
+			int aux1 = (distribucionAux(generator) == 0) ? -1 : 1;
+			float posX = (float)aux1 * distribucionX(generator);
+			int aux2 = (distribucionAux(generator) == 0) ? -1 : 1;
 
-			float radio = (float)distribucionRadio(generator);
-			float angulo = (float)distribucionAngulo(generator);
+			float posZ;
+			if (posX < 6 && posX > -6) {
+				posZ = (float)aux2 * distribucionZ_2(generator);
+			}
+			else {
+				posZ = (float)aux2 * distribucionZ(generator);
+			}
 
-			glm::vec3 posicion(radio * glm::sin(angulo), suelo->posicion.y, radio * glm::cos(angulo));
+			glm::vec3 posicion(posX, suelo->posicion.y, posZ);
 			glm::vec3 escala(1.0f);
 
 			Obxecto* obxecto = new Obxecto(posicion, escala, shaderProgram, rutaOBJ);
@@ -91,14 +104,14 @@ void Mundo::xerarInimigos(int nivelInimigos) {
 	std::mt19937 generator(rd());
 
 	// Definir una distribución para generar números reales en un rango
-	std::uniform_real_distribution<double> distribucionRadio(5, suelo->limitesz[1]);
-	std::uniform_real_distribution<double> distribucionAngulo(0, 2 * PI);
+	std::uniform_real_distribution<float> distribucionRadio(8, suelo->limitesx[1]);
+	std::uniform_real_distribution<float> distribucionAngulo(0, 2 * PI);
 
 	for (int i = 0; i < numEnemigos; i++) {
-		float radio = (float)distribucionRadio(generator);
-		float angulo = (float)distribucionAngulo(generator);
+		float radio = distribucionRadio(generator);
+		float angulo = distribucionAngulo(generator);
 
-		glm::vec3 posicion(radio * glm::sin(angulo), suelo->posicion.y, radio * glm::cos(angulo));
+		glm::vec3 posicion(radio * sin(angulo), suelo->posicion.y, radio * cos(angulo));
 		glm::vec3 escala(1.0f);
 
 		Enemigo* enemigo = new Enemigo(posicion, escala, shaderProgram, FIGURA_CUBO, 1, personaxePrincipal);
@@ -120,7 +133,7 @@ void Mundo::moverObxectos(float tempoTranscurrido) {
 	}
 }
 
-void Mundo::establecerLucesShader() {
+void Mundo::establecerLucesShader(GLuint shader) {
 	// Iluminacion
 	auto iter = luces.find(LUZ_DIRECCIONAL);
 	if (iter != luces.end()) {
@@ -128,13 +141,13 @@ void Mundo::establecerLucesShader() {
 		std::vector<Luz*>& vecDir = iter->second;
 
 		// Establecemos a luz direccional
-		unsigned int dirLight_direction = glGetUniformLocation(shaderProgram, "dirLight.direction");
+		unsigned int dirLight_direction = glGetUniformLocation(shader, "dirLight.direction");
 		glUniform3fv(dirLight_direction, 1, glm::value_ptr(vecDir[0]->direccion));
-		unsigned int dirLight_ambient = glGetUniformLocation(shaderProgram, "dirLight.ambient");
+		unsigned int dirLight_ambient = glGetUniformLocation(shader, "dirLight.ambient");
 		glUniform3fv(dirLight_ambient, 1, glm::value_ptr(vecDir[0]->ambiente));
-		unsigned int dirLight_diffuse = glGetUniformLocation(shaderProgram, "dirLight.diffuse");
+		unsigned int dirLight_diffuse = glGetUniformLocation(shader, "dirLight.diffuse");
 		glUniform3fv(dirLight_diffuse, 1, glm::value_ptr(vecDir[0]->difusa));
-		unsigned int dirLight_especular = glGetUniformLocation(shaderProgram, "dirLight.specular");
+		unsigned int dirLight_especular = glGetUniformLocation(shader, "dirLight.specular");
 		glUniform3fv(dirLight_especular, 1, glm::value_ptr(vecDir[0]->especular));
 	}
 
@@ -145,45 +158,46 @@ void Mundo::establecerLucesShader() {
 		std::vector<Luz*>& vecLuzFocal = iter->second;
 
 		// Marcamos no shader que utilizamos luz focal
-		unsigned int spot = glGetUniformLocation(shaderProgram, "spot");
+		unsigned int spot = glGetUniformLocation(shader, "spot");
 		glUniform1i(spot, 1);
 
 		glm::vec3 spotLight_posicion = personaxePrincipal->posicion + glm::vec3(0, 2.0f, 0);
 
-		// Provisional, isto debeo facer o personaxe principal e devolver a direccion
-		glm::mat4 rotacion = rotate(glm::mat4(), personaxePrincipal->angulo, glm::vec3(0, 1, 0));
-		glm::vec3 spotLight_direccion = rotacion * glm::vec4(0, 0, 1.0f, 0);
+		vecLuzFocal[0]->actualizarLuz(personaxePrincipal->posicion, personaxePrincipal->angulo);
 
-		unsigned int spotLight_position = glGetUniformLocation(shaderProgram, "spotLight.position");
+		unsigned int spotLight_position = glGetUniformLocation(shader, "spotLight.position");
 		glUniform3fv(spotLight_position, 1, glm::value_ptr(spotLight_posicion));
-		unsigned int spotLight_direction = glGetUniformLocation(shaderProgram, "spotLight.direction");
-		glUniform3fv(spotLight_direction, 1, glm::value_ptr(spotLight_direccion));
-		unsigned int spotLight_innerCutOff = glGetUniformLocation(shaderProgram, "spotLight.innerCutOff");
+		unsigned int spotLight_direction = glGetUniformLocation(shader, "spotLight.direction");
+		glUniform3fv(spotLight_direction, 1, glm::value_ptr(vecLuzFocal[0]->direccion));
+		unsigned int spotLight_innerCutOff = glGetUniformLocation(shader, "spotLight.innerCutOff");
 		glUniform1f(spotLight_innerCutOff, vecLuzFocal[0]->innerCutOff);
-		unsigned int spotLight_outerCutOff = glGetUniformLocation(shaderProgram, "spotLight.outerCutOff");
+		unsigned int spotLight_outerCutOff = glGetUniformLocation(shader, "spotLight.outerCutOff");
 		glUniform1f(spotLight_outerCutOff, vecLuzFocal[0]->outerCutOff);
-		unsigned int spotLight_diffuse = glGetUniformLocation(shaderProgram, "spotLight.diffuse");
+		unsigned int spotLight_diffuse = glGetUniformLocation(shader, "spotLight.diffuse");
 		glUniform3fv(spotLight_diffuse, 1, glm::value_ptr(vecLuzFocal[0]->difusa));
-		unsigned int spotLight_specular = glGetUniformLocation(shaderProgram, "spotLight.specular");
+		unsigned int spotLight_specular = glGetUniformLocation(shader, "spotLight.specular");
 		glUniform3fv(spotLight_specular, 1, glm::value_ptr(vecLuzFocal[0]->especular));
 
 	}
 	else {
 		// Marcamos no shader que non utilizamos luz focal
-		unsigned int spot = glGetUniformLocation(shaderProgram, "spot");
+		unsigned int spot = glGetUniformLocation(shader, "spot");
 		glUniform1i(spot, 0);
 	}
 }
 
 void Mundo::renderizarEscena() {
+	// Utilizamos o shader para os obxectos que non tenhen texturas
+	glUseProgram(shaderProgram);
 
 	establecerCamara();
-
+	// Establecemos as matrices de view e projection no shader
+	camara->actualizarMatricesShader(shaderProgram);
 	// Establecemos a posicion da camara no shader
 	unsigned int viewPos = glGetUniformLocation(shaderProgram, "viewPos");
 	glUniform3fv(viewPos, 1, glm::value_ptr(camara->posicionCamara));
-
-	establecerLucesShader();
+	// Luces no shader
+	establecerLucesShader(shaderProgram);
 
 	// Provisional mentres non texturas
 	glm::vec3 ambiente;
@@ -191,45 +205,7 @@ void Mundo::renderizarEscena() {
 	glm::vec3 especular;
 	float brillo = 1.0f;
 
-	if (nivelMundo == 1) {
-		ambiente = glm::vec3(0.0f, 0.2f, 0.0f);
-		difusa = glm::vec3(0.0f, 0.3f, 0.0f);
-		especular = glm::vec3(0);
-		brillo = 1.0f;
-	}
-	else if (nivelMundo == 2) {
-		ambiente = glm::vec3(0.4f, 0.3f, 0.2f);
-		difusa = glm::vec3(0.4f, 0.3f, 0.2f);
-		especular = glm::vec3(0);
-		brillo = 1.0f;
-	}
-	else if (nivelMundo == 3) {
-		ambiente = glm::vec3(0.0f, 0.1f, 0.0f);
-		difusa = glm::vec3(0.0f, 0.3f, 0.0f);
-		especular = glm::vec3(0);
-		brillo = 1.0f;
-	}
-	else if (nivelMundo == 4) {
-		ambiente = glm::vec3(0.0f, 0.1f, 0.0f);
-		difusa = glm::vec3(0.0f, 0.3f, 0.0f);
-		especular = glm::vec3(0);
-		brillo = 1.0f;
-	}
-
-	// Damoslle a cor do material ao obxecto
-	unsigned int ambient = glGetUniformLocation(shaderProgram, "material.ambient");
-	glUniform3fv(ambient, 1, glm::value_ptr(ambiente));
-	unsigned int diffuse = glGetUniformLocation(shaderProgram, "material.diffuse");
-	glUniform3fv(diffuse, 1, glm::value_ptr(difusa));
-	unsigned int specular = glGetUniformLocation(shaderProgram, "material.specular");
-	glUniform3fv(specular, 1, glm::value_ptr(especular));
-	unsigned int shininess = glGetUniformLocation(shaderProgram, "material.shininess");
-	glUniform1f(shininess, brillo);
-
-	// Renderizamos os obxectos
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-	suelo->renderizarSuelo();
 
 	personaxePrincipal->renderizarObxecto();
 
@@ -240,6 +216,14 @@ void Mundo::renderizarEscena() {
 	for (int i = 0; i < inimigos.size();i++) {
 		inimigos[i]->renderizarObxecto();
 	}
+
+	glUseProgram(shaderProgramTex);
+	// Establecemos as matrices de view e projection no shader
+	camara->actualizarMatricesShader(shaderProgram);
+	// Establecemos as luces no shader
+	establecerLucesShader(shaderProgramTex);
+
+	suelo->renderizarSuelo();
 
 }
 

@@ -13,7 +13,6 @@ public:
 	const static unsigned int SCR_WIDTH;
 	const static unsigned int SCR_HEIGHT;
 
-	GLuint shaderProgram;
 	float radio;
 	float alpha;
 	float beta;
@@ -21,12 +20,15 @@ public:
 	float height;
 	int modo;
 	glm::vec3 posicionCamara;
+	glm::mat4 view;
+	glm::mat4 projection;
 
-	Camara(float radio, float alpha, float beta, GLuint shaderprogram);
+	Camara(float radio, float alpha, float beta, float width, float height);
 	void establecerCamara(PersonaxePrincipal* p);
 	void vistaPrimeiraPersoa(PersonaxePrincipal* p);
 	void vistaXeral(PersonaxePrincipal* p);
 	void vistaTerceiraPersoa(PersonaxePrincipal* p);
 	void actualizarMatrizProxeccion();
+	void actualizarMatricesShader(GLuint shader);
 };
 

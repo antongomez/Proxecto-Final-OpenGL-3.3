@@ -24,6 +24,8 @@ public:
 	std::map<int, std::vector<glm::vec3>> normais;
 	// ShaderProgram que usa
 	unsigned int shaderProgram;
+	// Textura da figura
+	unsigned int textura;
 
 	// -------------- Construtores -----------------//
 	
@@ -37,6 +39,8 @@ public:
 	// -------------- Meotodos -----------------//
 	void debuxar();
 	void renderizar();
+
+	void cargarTextura(const char* nombreTextura, int formato);
 
 private:
 

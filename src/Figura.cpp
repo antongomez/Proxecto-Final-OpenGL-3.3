@@ -8,6 +8,9 @@
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "encabezados/tiny_obj_loader.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
 // Construtor para as figuras xeometricas
 Figura::Figura(int tipo, unsigned int shaderProgram) {
 	this->tipo = tipo;
@@ -49,23 +52,6 @@ void Figura::debuxar() {
 }
 
 void Figura::renderizar() {
-	//if (tipo != FIGURA_CARGADA) {
-	//	glm::vec3 ambiente(0.0f, 0.2f, 0.0f);
-	//	glm::vec3 difusa(0.0f, 0.2f, 0.0f);
-	//	glm::vec3 especular(1.0f);
-	//	float brillo = 10.0f;
-
-	//	// Damoslle a cor do material ao obxecto
-	//	unsigned int ambient = glGetUniformLocation(shaderProgram, "material.ambient");
-	//	glUniform3fv(ambient, 1, glm::value_ptr(ambiente));
-	//	unsigned int diffuse = glGetUniformLocation(shaderProgram, "material.diffuse");
-	//	glUniform3fv(diffuse, 1, glm::value_ptr(difusa));
-	//	unsigned int specular = glGetUniformLocation(shaderProgram, "material.specular");
-	//	glUniform3fv(specular, 1, glm::value_ptr(especular));
-	//	unsigned int shininess = glGetUniformLocation(shaderProgram, "material.shininess");
-	//	glUniform1f(shininess, brillo);
-	//}
-
 	switch (tipo) {
 	case FIGURA_EIXOS:
 		renderizarEixos();
@@ -82,18 +68,17 @@ void Figura::renderizar() {
 	}
 }
 
-
 void Figura::debuxaEixos() {
 	unsigned int VBO, EBO;
 	// set up vertex data (and buffer(s)) and configure vertex attributes
 	// ------------------------------------------------------------------
 	float vertices[] = {
-		//Vertices          //Colores
-		0.0f, 0.0f, 0.0f,	 1.0f, 1.0f, 1.0f,  // 0
-		2.0f, 0.0f, 0.0f,	 0.0f, 1.0f, 1.0f, //x
-		0.0f, 2.0f, 0.0f,	 1.0f, 0.0f, 1.0f,// y
-		0.0f, 0.0f, 2.0f,	 1.0f, 1.0f, 0.0f, // z  
-		2.0f ,2.0f, 2.0f,	 1.0f, 1.0f, 1.0f
+		//Vertices     
+		0.0f, 0.0f, 0.0f,
+		2.0f, 0.0f, 0.0f,
+		0.0f, 2.0f, 0.0f,
+		0.0f, 0.0f, 2.0f, 
+		2.0f ,2.0f, 2.0f
 	};
 	unsigned int indices[] = {  // empieza desde cero
 		0, 1,
@@ -115,13 +100,8 @@ void Figura::debuxaEixos() {
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	// position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-
-	// position Color
-
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -140,13 +120,13 @@ void Figura::debuxaCadrado() {
 
 
 	float vertices[] = {
-		-0.5f, -0.5f,  0.0f,  0.0f, 1.0f, 0.0f,  0.0f, 0.0f, 1.0f,  0.0f, 0.0f,
-		 0.5f, -0.5f,  0.0f,  0.0f, 1.0f, 0.0f,  0.0f, 0.0f, 1.0f,  1.0f, 0.0f,
-		 0.5f,  0.5f,  0.0f, 0.0f, 1.0f, 0.0f,  0.0f, 0.0f, 1.0f,  1.0f, 1.0f,
+		-0.5f, -0.5f,  0.0f,  0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+		 0.5f, -0.5f,  0.0f,  0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+		 0.5f,  0.5f,  0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
 
-		 -0.5f, -0.5f,  0.0f,  0.0f, 1.0f, 0.0f,  0.0f, 0.0f, 1.0f,  0.0f, 0.0f,
-		 0.5f,  0.5f,  0.0f,  0.0f, 1.0f, 0.0f,  0.0f, 0.0f, 1.0f,  1.0f, 1.0f,
-		-0.5f,  0.5f,  0.0f,  0.0f, 1.0f, 0.0f,  0.0f, .0f, 1.0f,  0.0f, 1.0f
+		 -0.5f, -0.5f,  0.0f,  0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+		 0.5f,  0.5f,  0.0f,  0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+		-0.5f,  0.5f,  0.0f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f
 
 	};
 
@@ -158,20 +138,16 @@ void Figura::debuxaCadrado() {
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 	// Determinamos a posicion dos vertices no array
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
-	// Determinamos a posicion das cores no array
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(2);
-
 	// Determinamos a posicion dos vectores normais no array
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(6 * sizeof(float)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
 	// Determinamos a posicion das texturas no array
-	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 11 * sizeof(float), (void*)(9 * sizeof(float)));
-	glEnableVertexAttribArray(3);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
@@ -190,15 +166,15 @@ void Figura::debuxaCubo() {
 	float n = 0.577350f;	// Este valor es 1/sqrt(3)
 
 	float vertices[] = {
-		-0.5f, -0.5f,  0.5f,  1.0f, 0.0f,0.0f,  -n, -n, n,
-		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,0.0f,  n, -n, n,
-		 0.5f,  0.5f,  0.5f,  0.0f, 0.0f,1.0f,  n, n, n,
-		-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,1.0f,  -n, n, n,
+		-0.5f, -0.5f,  0.5f, -n, -n, n,
+		 0.5f, -0.5f,  0.5f, n, -n, n,
+		 0.5f,  0.5f,  0.5f, n, n, n,
+		-0.5f,  0.5f,  0.5f, -n, n, n,
 
-		-0.5f, -0.5f,  -0.5f, 1.0f, 0.0f,0.0f,  -n, -n, -n,
-		 0.5f, -0.5f,  -0.5f, 1.0f, 0.0f,0.0f,  n, -n, -n,
-		 0.5f,  0.5f,  -0.5f, 0.0f, 0.0f,1.0f,  n, n, -n,
-		-0.5f,  0.5f,  -0.5f, 0.0f, 1.0f,1.0f,  -n, n, -n
+		-0.5f, -0.5f,  -0.5f, -n, -n, -n,
+		 0.5f, -0.5f,  -0.5f, n, -n, -n,
+		 0.5f,  0.5f,  -0.5f, n, n, -n,
+		-0.5f,  0.5f,  -0.5f, -n, n, -n
 	};
 
 	unsigned int indices[] = {
@@ -241,15 +217,11 @@ void Figura::debuxaCubo() {
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	// posicion vertices
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
-	// cor
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(2);
-
 	// normais
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)(6 * sizeof(float)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -262,6 +234,31 @@ void Figura::debuxaCubo() {
 void Figura::renderizarCubo() {
 	glBindVertexArray(*VAO);
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+}
+
+void Figura::cargarTextura(const char* nombreTextura, int formato) {
+
+	// Cargamos y creamos la textura
+	glGenTextures(1, &textura);
+	// Ahora todas las operaciones GL_TEXTURE_2D tienen efecto sobre este objeto texture
+	glBindTexture(GL_TEXTURE_2D, textura);
+	// Establecemos los parámetros de wrapping
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	// Establecemos los parametros de filtering
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// Cargamos la imagen, creamos la textura y generamos mipmaps
+	int width, height, nrChannels;
+	unsigned char* data = stbi_load(nombreTextura, &width, &height, &nrChannels, 0);
+	if (data) {
+		glTexImage2D(GL_TEXTURE_2D, 0, formato, width, height, 0, formato, GL_UNSIGNED_BYTE, data);
+	}
+	else {
+		std::cout << "Error ao cargar a textura" << std::endl;
+	}
+	stbi_image_free(data);
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 // Funcion que carga modelos .obj con TinyObjLoader. So necesita como parametro a ruta do .obj, asumese

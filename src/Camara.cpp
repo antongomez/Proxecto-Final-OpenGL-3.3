@@ -14,13 +14,12 @@
 #define M_PI 3.14159265358979323846
 #endif
 
-Camara::Camara(float radio, float alpha, float beta, GLuint shaderProgram) {
-	this->shaderProgram = shaderProgram;
+Camara::Camara(float radio, float alpha, float beta, float width, float height) {
 	this->radio = radio;
 	this->alpha = alpha;
 	this->beta = beta;
-	this->width = SCR_WIDTH;
-	this->height = SCR_HEIGHT;
+	this->width = width;
+	this->height = height;
 	this->modo = MODO_CAMARA_VISTA_XERAL;
 	this->posicionCamara = glm::vec3(0, 0, 0);
 }
@@ -52,15 +51,12 @@ void Camara::vistaPrimeiraPersoa(PersonaxePrincipal* p)
 	posicionCamara = p->posicion + glm::vec3(d1 * sin(angulo), alturaCamara, d1 * cos(angulo));
 
 	// Matriz de vista
-	glm::mat4 view;
 	view = glm::mat4();
 	view = glm::lookAt(
 		posicionCamara,
 		p->posicion + glm::vec3(d2 * sin(angulo), alturaCamara, d2 * cos(angulo)),
 		glm::vec3(0.0f, 1.0f, 0.0f)
 	);
-	unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 }
 
 void Camara::vistaXeral(PersonaxePrincipal* p)
@@ -68,15 +64,12 @@ void Camara::vistaXeral(PersonaxePrincipal* p)
 	posicionCamara = p->posicion + glm::vec3(radio * sin(alpha) * cos(beta), radio * sin(beta), radio * cos(alpha) * cos(beta));
 
 	// Matriz de vista
-	glm::mat4 view;
 	view = glm::mat4();
 	view = glm::lookAt(
 		posicionCamara,
 		p->posicion,
 		glm::vec3(0.0f, 1.0f, 0.0f)
 	);
-	unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 }
 
 void Camara::vistaTerceiraPersoa(PersonaxePrincipal* p)
@@ -93,26 +86,28 @@ void Camara::vistaTerceiraPersoa(PersonaxePrincipal* p)
 	glm::vec3 lookAt = p->posicion + glm::vec3(d2 * sin(angulo), 0, d2 * cos(angulo));
 
 	// Matriz de vista
-	glm::mat4 view;
 	view = glm::mat4();
 	view = glm::lookAt(
 		posicionCamara,
 		lookAt,
 		glm::vec3(0.0f, 1.0f, 0.0f)
 	);
-	unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 }
 
 void Camara::actualizarMatrizProxeccion() {
 
-	glm::mat4 projection;
 	projection = glm::mat4();
 	projection = glm::perspective(
 		glm::radians(60.0f),
 		width / height,
 		NEAR, FAR
 	);
-	unsigned int projectionLoc = glGetUniformLocation(shaderProgram, "projection");
+}
+
+void Camara::actualizarMatricesShader(GLuint shader) {
+	unsigned int viewLoc = glGetUniformLocation(shader, "view");
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+
+	unsigned int projectionLoc = glGetUniformLocation(shader, "projection");
 	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 }

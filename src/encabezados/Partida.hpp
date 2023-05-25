@@ -17,9 +17,10 @@ public:
 	// Luces
 
 	GLuint shaderProgram;
+	GLuint shaderProgramTex;
 
 	// Construtores
-	Partida(GLuint shaderProgram);
+	Partida(GLuint shaderProgram, GLuint shaderProgramTex);
 
 	// Metodos
 	void iniciarPartida();

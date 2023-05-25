@@ -25,14 +25,14 @@
 
 // Definimos os planos NEAR e FAR da camara
 #define NEAR 0.1f
-#define FAR 60.0f
+#define FAR 100.0f
 
 // Definimos a maxima e minima distancia a que se pode alonxar a camara
 #define MIN_DIST_CAMARA_XERAL 1.0f
 #define MAX_DIST_CAMARA_XERAL 100.0f
 
 // Definimos os incrementos ao acercar e alonxar a camara
-#define INCREMENTO_RADIO_CAMARA_XERAL 0.1f
+#define INCREMENTO_RADIO_CAMARA_XERAL 0.5f
 
 // Definimos os incrementos ao xirar a camara
 #define INCREMENTO_XIRO_CAMARA_XERAL UNIDADE_GRAO_EN_RADIANS
@@ -56,7 +56,7 @@
 #define FIGURA_CARGADA 3
 
 // ----------------  Definicions SUELO -------------------------- //
-#define ESCALA_SUELO 2.0f
+#define ESCALA_SUELO 0.25f
 
 
 // ----------------  Definicions LUCES -------------------------- //

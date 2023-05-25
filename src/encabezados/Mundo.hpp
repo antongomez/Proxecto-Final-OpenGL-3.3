@@ -23,16 +23,18 @@ public:
 	int nivelMundo;
 
 	GLuint shaderProgram;
+	GLuint shaderProgramTex;
 
 	// Construtores
-	Mundo(PersonaxePrincipal* personaxe, GLuint shaderProgram, float alturaMundo, 
-		float* limitesx, float* limitesz, std::map<int, int> elementosDecorativos, 
+	Mundo(PersonaxePrincipal* personaxe, GLuint shaderProgram, GLuint shaderProgramTex, 
+		float alturaMundo, float* limitesx, float* limitesz, 
+		std::map<int, int> elementosDecorativos, 
 		int nivelMundo, std::map<int, std::vector<Luz*>> luces);
 
 	// Destructor
 
 	// Metodos
-	void iniciarMundo();
+	void iniciarMundo(float width, float height);
 	void xerarSuelo(float alturaMundo, float* limitesx, float* limitesz);
 	void xerarElementosDecorativos(std::map<int,int> elementosDecorativos);
 	void xerarInimigos(int nivelMundo);
@@ -44,5 +46,5 @@ public:
 	void moverCamara(int tipoMovemento);
 
 private:
-	void establecerLucesShader();
+	void establecerLucesShader(GLuint shader);
 };

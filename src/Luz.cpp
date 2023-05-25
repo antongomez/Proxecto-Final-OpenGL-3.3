@@ -6,6 +6,7 @@
 
 #include <glad.h>
 
+// Construtor para as luces direcionais
 Luz::Luz(glm::vec3 direccion, glm::vec3 ambiente, glm::vec3 difusa, glm::vec3 especular) {
 	this->direccion = direccion;
 	this->ambiente = ambiente;
@@ -13,6 +14,7 @@ Luz::Luz(glm::vec3 direccion, glm::vec3 ambiente, glm::vec3 difusa, glm::vec3 es
 	this->especular = especular;
 }
 
+// Construtor para as luces focais
 Luz::Luz(glm::vec3 posicion, glm::vec3 direccion, glm::vec3 difusa, glm::vec3 especular, float innerCutOff, float outerCutOff) {
 	this->posicion = posicion;
 	this->direccion = direccion;
@@ -22,7 +24,8 @@ Luz::Luz(glm::vec3 posicion, glm::vec3 direccion, glm::vec3 difusa, glm::vec3 es
 	this->outerCutOff = outerCutOff;
 }
 
-void Luz::xirarDireccionLuz(float angulo) {
+void Luz::actualizarLuz(glm::vec3 pos, float angulo) {
+	posicion = pos + glm::vec3(0, 2, 0);
 	glm::mat4 rotacion = rotate(glm::mat4(), angulo, glm::vec3(0, 1, 0));
-	direccion = rotacion * glm::vec4(direccion, 0);
+	direccion = rotacion * glm::vec4(0, 0, 1, 0);
 }

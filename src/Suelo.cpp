@@ -16,11 +16,14 @@ Suelo::Suelo(glm::vec3 posicion, float escala, float limitesx[], float limitesz[
 	this->shaderProgram = shaderProgram;
 
 	this->fg = new Figura(tipoFigura, shaderProgram);
+	this->fg->cargarTextura("recursos/texturas/hierba.bmp", GL_RGB);
 }
 
 void Suelo::renderizarSuelo() {
 	float i, j;
 	float escalado = (float)1.0 / escala;
+
+	glBindTexture(GL_TEXTURE_2D, fg->textura);
 
 	for (i = limitesx[0]; i <= limitesx[1]; i += (float)(1.0 / escala)) {
 		for (j = limitesz[0]; j <= limitesz[1]; j += (float)(1.0 / escala)) {

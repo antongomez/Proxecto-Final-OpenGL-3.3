@@ -23,8 +23,6 @@ const unsigned int Camara::SCR_HEIGHT = 800;
 // Obxecto que leva a cabo a loxica do xogo e intercambia os mundos
 Partida* partida = NULL;
 
-GLuint shaderProgram;
-
 GLFWwindow* crearVenta();
 void processInput(GLFWwindow* window);
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -34,13 +32,11 @@ int main()
 {
 	GLFWwindow* window = crearVenta();
 
-	// Xeramos o Shaders
-	shaderProgram = setShaders("recursos/shaders/shader.vert", "recursos/shaders/shader.frag");
+	// Xeramos os Shaders
+	GLuint shaderProgram = setShaders("recursos/shaders/shader.vert", "recursos/shaders/shader.frag");
+	GLuint shaderProgramTex = setShaders("recursos/shaders/shaderTex.vert", "recursos/shaders/shaderTex.frag");
 
-	// Utilizaremos este shader unicamente. Ponhemolo aqui
-	glUseProgram(shaderProgram);
-
-	partida = new Partida(shaderProgram);
+	partida = new Partida(shaderProgram, shaderProgramTex);
 
 	// Obten a ubicación das matrices de vista e proxeccion no programa de shader
 	GLuint viewLoc = glGetUniformLocation(shaderProgram, "view");

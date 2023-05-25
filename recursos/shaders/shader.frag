@@ -39,7 +39,8 @@ uniform PointLight pointLights[NR_POINT_LIGHTS];
 struct SpotLight {
     vec3  position;
     vec3  direction;
-    float cutOff;
+    float innerCutOff;
+    float outerCutOff;
 
     vec3 diffuse;
     vec3 specular;
@@ -136,7 +137,7 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
     vec3 lightDir = normalize(fragPos - light.position);
     float theta = dot(lightDir, normalize(light.direction));
     
-    if(theta > light.cutOff) 
+    if(theta > light.outerCutOff) 
     {       
         // diffuse shading
         float diff = max(dot(normal, -lightDir), 0.0);
@@ -146,6 +147,14 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 
         diffuse  += light.diffuse  * diff * material.diffuse;
         specular += light.specular * spec * material.specular;
+
+        // Comprobamos se o fragmento se atopa entre o innerCutOff e o outrerCutOff
+        if(theta < light.innerCutOff)
+        {
+            float intensity = clamp((theta - light.outerCutOff)/(light.innerCutOff - light.outerCutOff), 0.0, 1.0);
+            diffuse *= intensity;
+            specular *= intensity;
+        }
     }
 
     return (diffuse + specular);

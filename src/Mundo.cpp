@@ -158,12 +158,14 @@ void Mundo::establecerLucesShader() {
 		glUniform3fv(spotLight_position, 1, glm::value_ptr(spotLight_posicion));
 		unsigned int spotLight_direction = glGetUniformLocation(shaderProgram, "spotLight.direction");
 		glUniform3fv(spotLight_direction, 1, glm::value_ptr(spotLight_direccion));
-		unsigned int spotLight_cutOff = glGetUniformLocation(shaderProgram, "spotLight.cutOff");
-		glUniform1f(spotLight_cutOff, 0.9);
+		unsigned int spotLight_innerCutOff = glGetUniformLocation(shaderProgram, "spotLight.innerCutOff");
+		glUniform1f(spotLight_innerCutOff, vecLuzFocal[0]->innerCutOff);
+		unsigned int spotLight_outerCutOff = glGetUniformLocation(shaderProgram, "spotLight.outerCutOff");
+		glUniform1f(spotLight_outerCutOff, vecLuzFocal[0]->outerCutOff);
 		unsigned int spotLight_diffuse = glGetUniformLocation(shaderProgram, "spotLight.diffuse");
-		glUniform3fv(spotLight_diffuse, 1, glm::value_ptr(glm::vec3(0, 1, 1)));
+		glUniform3fv(spotLight_diffuse, 1, glm::value_ptr(vecLuzFocal[0]->difusa));
 		unsigned int spotLight_specular = glGetUniformLocation(shaderProgram, "spotLight.specular");
-		glUniform3fv(spotLight_specular, 1, glm::value_ptr(glm::vec3(0, 0.5, 0.5)));
+		glUniform3fv(spotLight_specular, 1, glm::value_ptr(vecLuzFocal[0]->especular));
 
 	}
 	else {

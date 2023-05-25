@@ -73,7 +73,7 @@ void Partida::iniciarPartida() {
 	luzDireccional4.push_back(new Luz(glm::vec3(0, -3, 5), glm::vec3(0.0f), glm::vec3(0.3f), glm::vec3(0.1f)));
 	luces[LUZ_DIRECCIONAL] = luzDireccional4;
 	std::vector<Luz*> luzFocal;
-	luzFocal.push_back(new Luz(glm::vec3(0, 2.0f, 0), glm::vec3(0, 0, 1.0f), glm::vec3(0.8f, 0.8f, 0.4f), glm::vec3(1.0f, 1.0f, 0.5f), 0.85f));
+	luzFocal.push_back(new Luz(glm::vec3(0, 2.0f, 0), glm::vec3(0, 0, 1.0f), glm::vec3(0.8f, 0.8f, 0.4f), glm::vec3(1.0f, 1.0f, 0.5f), 0.91f, 0.82f));
 	luces[LUZ_FOCAL] = luzFocal;
 
 	mundo = new Mundo(personaxePrincipal, shaderProgram, -150, limitesx, limitesz, elementosDecorativos, 4, luces);

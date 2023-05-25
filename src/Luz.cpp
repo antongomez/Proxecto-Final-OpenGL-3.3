@@ -13,12 +13,13 @@ Luz::Luz(glm::vec3 direccion, glm::vec3 ambiente, glm::vec3 difusa, glm::vec3 es
 	this->especular = especular;
 }
 
-Luz::Luz(glm::vec3 posicion, glm::vec3 direccion, glm::vec3 difusa, glm::vec3 especular, float cutOff) {
+Luz::Luz(glm::vec3 posicion, glm::vec3 direccion, glm::vec3 difusa, glm::vec3 especular, float innerCutOff, float outerCutOff) {
 	this->posicion = posicion;
 	this->direccion = direccion;
 	this->difusa = difusa;
 	this->especular = especular;
-	this->cutOff = cutOff;
+	this->innerCutOff = innerCutOff;
+	this->outerCutOff = outerCutOff;
 }
 
 void Luz::xirarDireccionLuz(float angulo) {

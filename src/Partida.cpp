@@ -32,7 +32,7 @@ void Partida::iniciarPartida() {
 	elementosDecorativos[ID_HERBA] = 150;
 
 	std::vector<Luz*> luzDireccional1;
-	luzDireccional1.push_back(new Luz(glm::vec3(0, -5, 3), glm::vec3(0.5f), glm::vec3(1.0f), glm::vec3(1.0f)));
+	luzDireccional1.push_back(new Luz(glm::vec3(0, -5, 3), glm::vec3(0.7f), glm::vec3(1.0f), glm::vec3(1.0f)));
 	luces[LUZ_DIRECCIONAL] = luzDireccional1;
 
 	Mundo* mundo = new Mundo(personaxePrincipal, shaderProgram, shaderProgramTex, 0, limitesx, limitesz, elementosDecorativos, 1, luces);
@@ -45,7 +45,7 @@ void Partida::iniciarPartida() {
 	elementosDecorativos[ID_HERBA] = 0;
 
 	std::vector<Luz*> luzDireccional2;
-	luzDireccional2.push_back(new Luz(glm::vec3(0, -5, 3), glm::vec3(0.6f), glm::vec3(1.0f), glm::vec3(1.0f)));
+	luzDireccional2.push_back(new Luz(glm::vec3(0, -5, 3), glm::vec3(0.8f), glm::vec3(1.0f), glm::vec3(1.0f)));
 	luces[LUZ_DIRECCIONAL] = luzDireccional2;
 
 	mundo = new Mundo(personaxePrincipal, shaderProgram, shaderProgramTex, -50, limitesx, limitesz, elementosDecorativos, 2, luces);
@@ -58,7 +58,7 @@ void Partida::iniciarPartida() {
 	elementosDecorativos[ID_HERBA] = 20;
 
 	std::vector<Luz*> luzDireccional3;
-	luzDireccional3.push_back(new Luz(glm::vec3(0, -5, 3), glm::vec3(0.4f), glm::vec3(1.0f), glm::vec3(1.0f)));
+	luzDireccional3.push_back(new Luz(glm::vec3(0, -5, 3), glm::vec3(0.6f), glm::vec3(1.0f), glm::vec3(1.0f)));
 	luces[LUZ_DIRECCIONAL] = luzDireccional3;
 
 	mundo = new Mundo(personaxePrincipal, shaderProgram, shaderProgramTex, -100, limitesx, limitesz, elementosDecorativos, 3, luces);
@@ -71,10 +71,10 @@ void Partida::iniciarPartida() {
 	elementosDecorativos[ID_HERBA] = 40;
 
 	std::vector<Luz*> luzDireccional4;
-	luzDireccional4.push_back(new Luz(glm::vec3(0, -3, 5), glm::vec3(0), glm::vec3(0.5f, 0.3f, 0.5f), glm::vec3(0.1f)));
+	luzDireccional4.push_back(new Luz(glm::vec3(0, -3, 5), glm::vec3(0), glm::vec3(0.5f, 0.3f, 0), glm::vec3(0.1f)));
 	luces[LUZ_DIRECCIONAL] = luzDireccional4;
 	std::vector<Luz*> luzFocal;
-	luzFocal.push_back(new Luz(glm::vec3(0, 2.0f, 0), glm::vec3(0, 0, 1.0f), glm::vec3(1.0f, 1.0f, 0.5f), glm::vec3(1.0f, 1.0f, 0.7f), 0.91f, 0.86f));
+	luzFocal.push_back(new Luz(glm::vec3(0, 2.0f, 0), glm::vec3(0, 0, 1.0f), glm::vec3(1.0f, 1.0f, 0.1f), glm::vec3(1.0f, 1.0f, 0.1f), 0.91f, 0.86f));
 	luces[LUZ_FOCAL] = luzFocal;
 
 	mundo = new Mundo(personaxePrincipal, shaderProgram, shaderProgramTex, -150, limitesx, limitesz, elementosDecorativos, 4, luces);

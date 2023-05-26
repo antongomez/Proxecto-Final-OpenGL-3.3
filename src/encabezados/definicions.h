@@ -50,13 +50,12 @@
 
 
 // ----------------  Definicions TIPOS FIGURAS -------------------------- //
-#define FIGURA_EIXOS 0
 #define FIGURA_CADRADO 1
 #define FIGURA_CUBO 2
 #define FIGURA_CARGADA 3
 
 // ----------------  Definicions SUELO -------------------------- //
-#define ESCALA_SUELO 0.25f
+#define ESCALA_SUELO 0.20f
 
 
 // ----------------  Definicions LUCES -------------------------- //

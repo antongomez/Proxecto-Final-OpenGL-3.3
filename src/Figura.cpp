@@ -28,7 +28,7 @@ Figura::Figura(int tipo, unsigned int shaderProgram, std::string inputOBJfile) {
 }
 
 Figura::~Figura() {
-	
+
 }
 
 void Figura::debuxar() {
@@ -36,9 +36,6 @@ void Figura::debuxar() {
 	VAO = (unsigned int*)malloc(sizeof(unsigned int));
 
 	switch (tipo) {
-	case FIGURA_EIXOS:
-		debuxaEixos();
-		break;
 	case FIGURA_CADRADO:
 		debuxaCadrado();
 		break;
@@ -53,9 +50,6 @@ void Figura::debuxar() {
 
 void Figura::renderizar() {
 	switch (tipo) {
-	case FIGURA_EIXOS:
-		renderizarEixos();
-		break;
 	case FIGURA_CADRADO:
 		renderizarCadrado();
 		break;
@@ -68,65 +62,18 @@ void Figura::renderizar() {
 	}
 }
 
-void Figura::debuxaEixos() {
-	unsigned int VBO, EBO;
-	// set up vertex data (and buffer(s)) and configure vertex attributes
-	// ------------------------------------------------------------------
-	float vertices[] = {
-		//Vertices     
-		0.0f, 0.0f, 0.0f,
-		2.0f, 0.0f, 0.0f,
-		0.0f, 2.0f, 0.0f,
-		0.0f, 0.0f, 2.0f, 
-		2.0f ,2.0f, 2.0f
-	};
-	unsigned int indices[] = {  // empieza desde cero
-		0, 1,
-		0, 2,
-		0, 3,
-		0, 4
-	};
-
-	glGenVertexArrays(1, VAO);
-	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
-
-	glBindVertexArray(*VAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-	// position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	glBindVertexArray(0);
-	glDeleteBuffers(1, &VBO);
-	glDeleteBuffers(1, &EBO);
-}
-
-void Figura::renderizarEixos() {
-	glBindVertexArray(*VAO);
-	glDrawElements(GL_LINES, 8, GL_UNSIGNED_INT, 0);
-}
-
 void Figura::debuxaCadrado() {
 	unsigned int VBO;
 
 
 	float vertices[] = {
-		-0.5f, -0.5f,  0.0f,  0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
-		 0.5f, -0.5f,  0.0f,  0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-		 0.5f,  0.5f,  0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+		-0.5f, -0.5f,  0.0f,  0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+		 0.5f, -0.5f,  0.0f,  0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
+		 0.5f,  0.5f,  0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
 
-		 -0.5f, -0.5f,  0.0f,  0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
-		 0.5f,  0.5f,  0.0f,  0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-		-0.5f,  0.5f,  0.0f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f
+		 -0.5f, -0.5f,  0.0f,  0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+		 0.5f,  0.5f,  0.0f,  0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+		-0.5f,  0.5f,  0.0f,  0.0f, 0.0f, 1.0f, 0.0f, 1.0f
 
 	};
 
@@ -357,7 +304,7 @@ void Figura::debuxaFiguraCargada() {
 		glBindBuffer(GL_ARRAY_BUFFER, VBO[idMaterial]);
 
 		glBufferData(GL_ARRAY_BUFFER, verticesMaterial.size() * 3 * sizeof(tinyobj::real_t), &verticesMaterial[0], GL_STATIC_DRAW);
-		
+
 		// Determinamos a posicion dos vertices no array
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(tinyobj::real_t), (void*)0);
 		glEnableVertexAttribArray(0);

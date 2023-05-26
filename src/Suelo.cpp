@@ -28,8 +28,8 @@ void Suelo::renderizarSuelo() {
 	for (i = limitesx[0]; i <= limitesx[1]; i += (float)(1.0 / escala)) {
 		for (j = limitesz[0]; j <= limitesz[1]; j += (float)(1.0 / escala)) {
 			matrizModelo = glm::mat4();
+			matrizModelo = glm::translate(matrizModelo, glm::vec3(i + posicion.x, posicion.y, j + posicion.z));
 			matrizModelo = glm::rotate(matrizModelo, (float)(-PI / 2.0), glm::vec3(1.0, 0.0, 0.0));
-			matrizModelo = glm::translate(matrizModelo, glm::vec3(i + posicion.x, j + posicion.z, posicion.y));
 			matrizModelo = glm::scale(matrizModelo, glm::vec3(escalado));
 
 			unsigned int transformLoc = glGetUniformLocation(shaderProgram, "transform");

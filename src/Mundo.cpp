@@ -161,12 +161,10 @@ void Mundo::establecerLucesShader(GLuint shader) {
 		unsigned int spot = glGetUniformLocation(shader, "spot");
 		glUniform1i(spot, 1);
 
-		glm::vec3 spotLight_posicion = personaxePrincipal->posicion + glm::vec3(0, 2.0f, 0);
-
 		vecLuzFocal[0]->actualizarLuz(personaxePrincipal->posicion, personaxePrincipal->angulo);
 
 		unsigned int spotLight_position = glGetUniformLocation(shader, "spotLight.position");
-		glUniform3fv(spotLight_position, 1, glm::value_ptr(spotLight_posicion));
+		glUniform3fv(spotLight_position, 1, glm::value_ptr(vecLuzFocal[0]->posicion));
 		unsigned int spotLight_direction = glGetUniformLocation(shader, "spotLight.direction");
 		glUniform3fv(spotLight_direction, 1, glm::value_ptr(vecLuzFocal[0]->direccion));
 		unsigned int spotLight_innerCutOff = glGetUniformLocation(shader, "spotLight.innerCutOff");

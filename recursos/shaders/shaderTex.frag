@@ -6,9 +6,6 @@ in vec2 TexCoord;
 
 out vec4 FragColor;
 
-// Punto de vista do espectador
-uniform vec3 viewPos;
-
 // Luz direccional: sol
 struct DirLight {
     vec3 direction;
@@ -53,30 +50,27 @@ uniform int spot;
 uniform sampler2D texture0;
 
 // Funcion que calcula o efecto da luz direccional
-vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);
+vec3 CalcDirLight(DirLight light, vec3 normal);
 // Funcion que calcula o efecto dos focos de luz
-vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
+vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos);
 
 void main() 
 {
-
-    // Calculamos a direccion dende a que ve o espectador a escena
-    vec3 viewDir = normalize(viewPos - FragPos);
 
     // definimos unha cor de saida
     vec3 saida = vec3(0.0);
 
     // add the directional light's contribution to the output
-    saida += CalcDirLight(dirLight, Normal, viewDir);
+    saida += CalcDirLight(dirLight, Normal);
 
     if(spot == 1) {
-        saida += CalcSpotLight(spotLight, Normal, FragPos, viewDir);
+        saida += CalcSpotLight(spotLight, Normal, FragPos);
     }
     
     FragColor = vec4(saida, 1.0);
 }
 
-vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
+vec3 CalcDirLight(DirLight light, vec3 normal)
 {
     vec3 lightDir = normalize(-light.direction);
     // diffuse shading
@@ -87,14 +81,15 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
     return (ambient + diffuse);
 }  
 
-vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
+vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos)
 {
 
     vec3 diffuse  = vec3(0.0);
-    vec3 specular = vec3(0.0);
 
     vec3 lightDir = normalize(fragPos - light.position);
     float theta = dot(lightDir, normalize(light.direction));
+
+    //normal = vec3(0, 1, 0);
     
     if(theta > light.outerCutOff) 
     {       

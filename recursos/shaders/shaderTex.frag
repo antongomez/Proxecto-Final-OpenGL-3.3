@@ -41,10 +41,13 @@ struct SpotLight {
     vec3 diffuse;
     vec3 specular;
 };    
-uniform SpotLight spotLight;
+#define NR_SPOT_LIGHTS 2
+uniform SpotLight spotLights[NR_SPOT_LIGHTS];
 
 // Variables para usar ou non distintos tipos de luz
 uniform int spot;
+// Variable para determinar se estamos iluminando o skyBox
+uniform int skyBox;
 
 // Variable para a tetxura
 uniform sampler2D texture0;
@@ -56,15 +59,21 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos);
 
 void main() 
 {
-
     // definimos unha cor de saida
     vec3 saida = vec3(0.0);
 
-    // add the directional light's contribution to the output
-    saida += CalcDirLight(dirLight, Normal);
+    // Iluminacion skyBox
+    if(skyBox == 1){
+        saida = vec3(texture(texture0, TexCoord));
+    } else { 
+        // add the directional light's contribution to the output
+        saida += CalcDirLight(dirLight, Normal);
 
-    if(spot == 1) {
-        saida += CalcSpotLight(spotLight, Normal, FragPos);
+        if(spot == 1) {
+            for(int i = 0; i < NR_SPOT_LIGHTS; i++) {
+                saida += CalcSpotLight(spotLights[i], Normal, FragPos);
+            }
+        }
     }
     
     FragColor = vec4(saida, 1.0);
@@ -96,7 +105,8 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos)
         // diffuse shading
         float diff = max(dot(normal, -lightDir), 0.0);
 
-        diffuse  += light.diffuse  * diff * vec3(texture(texture0, TexCoord));
+        // Axustamos a cor da textura para que destaque mais en comparacion coa iluminacion dos obxectos non texturizados
+        diffuse  += light.diffuse  * diff * 10.0f * vec3(texture(texture0, TexCoord));
 
         // Comprobamos se o fragmento se atopa entre o innerCutOff e o outrerCutOff
         if(theta < light.innerCutOff)

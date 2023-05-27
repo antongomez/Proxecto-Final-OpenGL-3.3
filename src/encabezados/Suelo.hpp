@@ -11,8 +11,7 @@ public:
 	// Atributos
 	glm::vec3 posicion;	// Posicion na que se vai situar o chan
 	float escala;		// tamanho dos cadrados do chan
-	float limitesx[2];	// Limite inferior e superior do chan en x con respecto a posicionx
-	float limitesz[2];	// Limite inferior e superior do chan en z con respecto a posicionz
+	float limites[2];	// Limite inferior e superior do chan
 	glm::mat4 matrizModelo; // Matriz que representa a transformacion linear que se aplica sobre cada cadrado do chan
 	
 
@@ -21,7 +20,7 @@ public:
 	Figura* fg;
 
 	// Construtores
-	Suelo(glm::vec3 posicion, float escala, float limitesx[], float limitesz[], unsigned int shaderProgram, int tipoFigura);
+	Suelo(glm::vec3 posicion, float escala, float* limites, unsigned int shaderProgram, int tipoFigura, std::string rutaTextura);
 
 	// Metodos
 	void renderizarSuelo();

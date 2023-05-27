@@ -15,9 +15,9 @@ Luz::Luz(glm::vec3 direccion, glm::vec3 ambiente, glm::vec3 difusa, glm::vec3 es
 }
 
 // Construtor para as luces focais
-Luz::Luz(glm::vec3 posicion, glm::vec3 direccion, glm::vec3 difusa, glm::vec3 especular, float innerCutOff, float outerCutOff) {
-	this->posicion = posicion;
-	this->direccion = direccion;
+Luz::Luz(glm::vec3 posicionInicial, glm::vec3 direccionInicial, glm::vec3 difusa, glm::vec3 especular, float innerCutOff, float outerCutOff) {
+	this->posicionInicial = posicionInicial;
+	this->direccionInicial = direccionInicial;
 	this->difusa = difusa;
 	this->especular = especular;
 	this->innerCutOff = innerCutOff;
@@ -25,7 +25,8 @@ Luz::Luz(glm::vec3 posicion, glm::vec3 direccion, glm::vec3 difusa, glm::vec3 es
 }
 
 void Luz::actualizarLuz(glm::vec3 pos, float angulo) {
-	posicion = pos + glm::vec3(0, 2, 0);
-	glm::mat4 rotacion = rotate(glm::mat4(), angulo, glm::vec3(0, 1, 0));
-	direccion = rotacion * glm::vec4(0, 0, 1.0f, 0);
+	
+	glm::mat3 rotacion = rotate(glm::mat4(), angulo, glm::vec3(0, 1, 0));
+	posicion = pos + rotacion * posicionInicial;
+	direccion = rotacion * direccionInicial;
 }

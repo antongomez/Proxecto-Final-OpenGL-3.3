@@ -42,6 +42,9 @@ void Figura::debuxar() {
 	case FIGURA_CUBO:
 		debuxaCubo();
 		break;
+	case FIGURA_CUBO_SKYBOX:
+		debuxaCuboSkyBox();
+		break;
 	default:	// Por defecto debuxamos un cubo
 		debuxaCubo();
 		break;
@@ -55,6 +58,9 @@ void Figura::renderizar() {
 		break;
 	case FIGURA_CUBO:
 		renderizarCubo();
+		break;
+	case FIGURA_CUBO_SKYBOX:
+		renderizarCuboSkyBox();
 		break;
 	case FIGURA_CARGADA:
 		renderizarFiguraCargada();
@@ -183,6 +189,82 @@ void Figura::renderizarCubo() {
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 }
 
+void Figura::debuxaCuboSkyBox() {
+	unsigned int VBO, EBO;
+
+	float n = 0.577350f;	// Este valor es 1/sqrt(3)
+
+	float vertices[] = {
+		-0.5f, -0.5f,  0.5f, n, n, -n,
+		 0.5f, -0.5f,  0.5f, -n, n, -n,
+		 0.5f,  0.5f,  0.5f, -n, -n, -n,
+		-0.5f,  0.5f,  0.5f, n, -n, -n,
+
+		-0.5f, -0.5f,  -0.5f, n, n, n,
+		 0.5f, -0.5f,  -0.5f, -n, n, n,
+		 0.5f,  0.5f,  -0.5f, -n, -n, n,
+		-0.5f,  0.5f,  -0.5f, n, -n, n
+	};
+
+	unsigned int indices[] = {
+		// Cara frontal
+		0, 2, 1,
+		0, 3, 2,
+
+		// Cara de atrás
+		4, 6, 7,
+		4, 5, 6,
+
+		// Cara superior
+		2, 3, 6,
+		3, 7, 6,
+
+		// Cara inferior
+		0, 1, 4,
+		1, 5, 4,
+
+		// Cara dereita
+		1, 2, 5,
+		5, 2, 6,
+
+		// Cara esquerda
+		0, 4, 3,
+		4, 7, 3
+
+	};
+
+	glGenVertexArrays(1, VAO);
+	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
+
+	glBindVertexArray(*VAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	// posicion vertices
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	// normais
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glBindVertexArray(0);
+	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
+}
+
+void Figura::renderizarCuboSkyBox() {
+	glBindVertexArray(*VAO);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+}
+
 void Figura::cargarTextura(const char* nombreTextura, int formato) {
 
 	// Cargamos y creamos la textura
@@ -197,6 +279,10 @@ void Figura::cargarTextura(const char* nombreTextura, int formato) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	// Cargamos la imagen, creamos la textura y generamos mipmaps
 	int width, height, nrChannels;
+
+	// Antes de cargar a imaxe invertimola para que quede ao dereito
+	stbi_set_flip_vertically_on_load(1);
+
 	unsigned char* data = stbi_load(nombreTextura, &width, &height, &nrChannels, 0);
 	if (data) {
 		glTexImage2D(GL_TEXTURE_2D, 0, formato, width, height, 0, formato, GL_UNSIGNED_BYTE, data);

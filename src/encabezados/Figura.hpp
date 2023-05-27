@@ -44,14 +44,14 @@ public:
 
 private:
 
-	void debuxaEixos();
-	void renderizarEixos();
-
 	void debuxaCadrado();
 	void renderizarCadrado();
 
 	void debuxaCubo();
 	void renderizarCubo();
+
+	void debuxaCuboSkyBox();
+	void renderizarCuboSkyBox();
 
 	void cargarModelo(std::string inputOBJfile);
 	void debuxaFiguraCargada();

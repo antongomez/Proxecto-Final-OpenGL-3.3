@@ -25,17 +25,17 @@
 
 // Definimos os planos NEAR e FAR da camara
 #define NEAR 0.1f
-#define FAR 100.0f
+#define FAR 400.0f
 
 // Definimos a maxima e minima distancia a que se pode alonxar a camara
 #define MIN_DIST_CAMARA_XERAL 1.0f
-#define MAX_DIST_CAMARA_XERAL 100.0f
+#define MAX_DIST_CAMARA_XERAL 400.0f
 
 // Definimos os incrementos ao acercar e alonxar a camara
 #define INCREMENTO_RADIO_CAMARA_XERAL 0.5f
 
 // Definimos os incrementos ao xirar a camara
-#define INCREMENTO_XIRO_CAMARA_XERAL UNIDADE_GRAO_EN_RADIANS
+#define INCREMENTO_XIRO_CAMARA_XERAL 3.0f*UNIDADE_GRAO_EN_RADIANS
 
 // Modos da camara
 #define MODO_CAMARA_PRIMEIRA_PERSOA 1
@@ -44,7 +44,7 @@
 
 // ----------------  Definicions MOVEMENTOS -------------------------- //
 #define VELOCIDADE_BASE_ENEMIGOS 0.2f
-#define VELOCIDADE_BASE_PERSONAXE 2.5f
+#define VELOCIDADE_BASE_PERSONAXE 4.0f
 
 # define INCREMENTO_XIRO_PERSONAXE 3.0f*UNIDADE_GRAO_EN_RADIANS
 
@@ -52,10 +52,11 @@
 // ----------------  Definicions TIPOS FIGURAS -------------------------- //
 #define FIGURA_CADRADO 1
 #define FIGURA_CUBO 2
-#define FIGURA_CARGADA 3
+#define FIGURA_CUBO_SKYBOX 3
+#define FIGURA_CARGADA 4
 
 // ----------------  Definicions SUELO -------------------------- //
-#define ESCALA_SUELO 0.20f
+#define ESCALA_SUELO 0.08f
 
 
 // ----------------  Definicions LUCES -------------------------- //

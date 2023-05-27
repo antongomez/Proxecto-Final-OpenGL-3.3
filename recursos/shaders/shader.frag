@@ -44,7 +44,8 @@ struct SpotLight {
     vec3 diffuse;
     vec3 specular;
 };    
-uniform SpotLight spotLight;
+#define NR_SPOT_LIGHTS 2
+uniform SpotLight spotLights[NR_SPOT_LIGHTS];
 
 // Propiedades do obxecto
 struct Material {
@@ -86,7 +87,9 @@ void main()
         //}
 
     if(spot == 1) {
-        saida += CalcSpotLight(spotLight, Normal, FragPos, viewDir);
+        for(int i = 0; i < NR_SPOT_LIGHTS; i++) {
+            saida += CalcSpotLight(spotLights[i], Normal, FragPos, viewDir);
+        }
     }
     
     FragColor = vec4(saida, 1.0);

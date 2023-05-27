@@ -8,8 +8,10 @@
 #include <iostream>
 
 Mundo::Mundo(PersonaxePrincipal* personaxePrincipal, GLuint shaderProgram, GLuint shaderProgramTex,
-	float alturaMundo, float* limitesx, float* limitesz,
-	std::map<int, int> elementosDecorativos, int nivelMundo, std::map<int, std::vector<Luz*>> luces)
+	float alturaMundo, float* limites,
+	std::map<int, int> elementosDecorativos, int nivelMundo, std::map<int, std::vector<Luz*>> luces, 
+	std::string rutaTexturasSkyBox[],
+	std::string rutaTexturaSuelo)
 {
 
 	this->personaxePrincipal = personaxePrincipal;
@@ -18,7 +20,8 @@ Mundo::Mundo(PersonaxePrincipal* personaxePrincipal, GLuint shaderProgram, GLuin
 	this->nivelMundo = nivelMundo;
 	this->luces = luces;
 
-	xerarSuelo(alturaMundo, limitesx, limitesz);
+	xerarSuelo(alturaMundo, limites, rutaTexturaSuelo);
+	xerarSkyBox(alturaMundo, limites, rutaTexturasSkyBox);
 	xerarElementosDecorativos(elementosDecorativos);
 	xerarInimigos(nivelMundo);
 }
@@ -31,8 +34,12 @@ void Mundo::iniciarMundo(float width, float height) {
 	personaxePrincipal->angulo = 0;
 }
 
-void Mundo::xerarSuelo(float alturaMundo, float* limitesx, float* limitesz) {
-	this->suelo = new Suelo(glm::vec3(0, alturaMundo, 0), ESCALA_SUELO, limitesx, limitesz, shaderProgramTex, FIGURA_CADRADO);
+void Mundo::xerarSkyBox(float alturaMundo, float* limites, std::string rutaTexturas[]) {
+	this->skyBox = new SkyBox(limites[1], alturaMundo, shaderProgramTex, FIGURA_CADRADO,rutaTexturas);
+}
+
+void Mundo::xerarSuelo(float alturaMundo, float* limites, std::string rutaTextura) {
+	this->suelo = new Suelo(glm::vec3(0, alturaMundo, 0), ESCALA_SUELO, limites, shaderProgramTex, FIGURA_CADRADO, rutaTextura);
 }
 
 void Mundo::xerarElementosDecorativos(std::map<int, int> elementosDecorativos) {
@@ -68,10 +75,10 @@ void Mundo::xerarElementosDecorativos(std::map<int, int> elementosDecorativos) {
 		std::mt19937 generator(rd());
 
 		// Definir una distribución para generar números reales en un rango
-		std::uniform_real_distribution<float> distribucionX(0, suelo->limitesx[1]);
-		std::uniform_real_distribution<float> distribucionZ(0, suelo->limitesx[1]);
+		std::uniform_real_distribution<float> distribucionX(0, suelo->limites[1]);
+		std::uniform_real_distribution<float> distribucionZ(0, suelo->limites[1]);
 
-		std::uniform_real_distribution<float> distribucionZ_2(6, suelo->limitesx[1]);
+		std::uniform_real_distribution<float> distribucionZ_2(6, suelo->limites[1]);
 
 		std::uniform_int_distribution<int> distribucionAux(0, 1);
 
@@ -104,7 +111,7 @@ void Mundo::xerarInimigos(int nivelInimigos) {
 	std::mt19937 generator(rd());
 
 	// Definir una distribución para generar números reales en un rango
-	std::uniform_real_distribution<float> distribucionRadio(8, suelo->limitesx[1]);
+	std::uniform_real_distribution<float> distribucionRadio(8, suelo->limites[1]);
 	std::uniform_real_distribution<float> distribucionAngulo(0, 2 * PI);
 
 	for (int i = 0; i < numEnemigos; i++) {
@@ -161,20 +168,36 @@ void Mundo::establecerLucesShader(GLuint shader) {
 		unsigned int spot = glGetUniformLocation(shader, "spot");
 		glUniform1i(spot, 1);
 
-		vecLuzFocal[0]->actualizarLuz(personaxePrincipal->posicion, personaxePrincipal->angulo);
+		for (int i = 0; i < vecLuzFocal.size(); i++) {
 
-		unsigned int spotLight_position = glGetUniformLocation(shader, "spotLight.position");
-		glUniform3fv(spotLight_position, 1, glm::value_ptr(vecLuzFocal[0]->posicion));
-		unsigned int spotLight_direction = glGetUniformLocation(shader, "spotLight.direction");
-		glUniform3fv(spotLight_direction, 1, glm::value_ptr(vecLuzFocal[0]->direccion));
-		unsigned int spotLight_innerCutOff = glGetUniformLocation(shader, "spotLight.innerCutOff");
-		glUniform1f(spotLight_innerCutOff, vecLuzFocal[0]->innerCutOff);
-		unsigned int spotLight_outerCutOff = glGetUniformLocation(shader, "spotLight.outerCutOff");
-		glUniform1f(spotLight_outerCutOff, vecLuzFocal[0]->outerCutOff);
-		unsigned int spotLight_diffuse = glGetUniformLocation(shader, "spotLight.diffuse");
-		glUniform3fv(spotLight_diffuse, 1, glm::value_ptr(vecLuzFocal[0]->difusa));
-		unsigned int spotLight_specular = glGetUniformLocation(shader, "spotLight.specular");
-		glUniform3fv(spotLight_specular, 1, glm::value_ptr(vecLuzFocal[0]->especular));
+			vecLuzFocal[i]->actualizarLuz(personaxePrincipal->posicion, personaxePrincipal->angulo);
+
+			std::string base = "spotLights[" + std::to_string(i) + "].";
+
+			std::string aux = base + "position";
+			unsigned int spotLight_position = glGetUniformLocation(shader, aux.c_str());
+			glUniform3fv(spotLight_position, 1, glm::value_ptr(vecLuzFocal[i]->posicion));
+
+			aux = base + "direction";
+			unsigned int spotLight_direction = glGetUniformLocation(shader, aux.c_str());
+			glUniform3fv(spotLight_direction, 1, glm::value_ptr(vecLuzFocal[i]->direccion));
+
+			aux = base + "innerCutOff";
+			unsigned int spotLight_innerCutOff = glGetUniformLocation(shader, aux.c_str());
+			glUniform1f(spotLight_innerCutOff, vecLuzFocal[i]->innerCutOff);
+
+			aux = base + "outerCutOff";
+			unsigned int spotLight_outerCutOff = glGetUniformLocation(shader, aux.c_str());
+			glUniform1f(spotLight_outerCutOff, vecLuzFocal[i]->outerCutOff);
+
+			aux = base + "diffuse";
+			unsigned int spotLight_diffuse = glGetUniformLocation(shader, aux.c_str());
+			glUniform3fv(spotLight_diffuse, 1, glm::value_ptr(vecLuzFocal[i]->difusa));
+
+			aux = base + "specular";
+			unsigned int spotLight_specular = glGetUniformLocation(shader, aux.c_str());
+			glUniform3fv(spotLight_specular, 1, glm::value_ptr(vecLuzFocal[i]->especular));
+		}
 
 	}
 	else {
@@ -221,7 +244,16 @@ void Mundo::renderizarEscena() {
 	// Establecemos as luces no shader
 	establecerLucesShader(shaderProgramTex);
 
+	// Variable do shader para determinar se estamos iluminando o skyBox ou non
+	unsigned int loc_skyBox = glGetUniformLocation(shaderProgramTex, "skyBox");
+	glUniform1i(loc_skyBox, 0);
+
 	suelo->renderizarSuelo();
+
+	// Actuvamos a variable do shader para iluminar o skyBox
+	glUniform1i(loc_skyBox, 1);
+
+	skyBox->renderizarSkyBox();
 
 }
 

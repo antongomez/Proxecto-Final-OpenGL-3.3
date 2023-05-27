@@ -76,14 +76,14 @@ void Camara::vistaTerceiraPersoa(PersonaxePrincipal* p)
 {
 	// d1: distancia cara atras que se bota a camara
 	// d2: distancia a que apunta a camara con respecto da posicion do obxecto ao que segue
-	float d1 = 4.0f, d2 = 5.0f;
+	float d1 = 5.0f, d2 = 6.0f;
 	// Definimos a altura da camara con respecto da posicion do obxecto ao que segue
-	float alturaCamara = 2.0f;
+	float alturaCamara = 2.5f;
 	// A camara debe rotar co obxecto que segue
 	float angulo = p->angulo;
 
 	posicionCamara = p->posicion + glm::vec3(-d1 * sin(angulo), alturaCamara, -d1 * cos(angulo));
-	glm::vec3 lookAt = p->posicion + glm::vec3(d2 * sin(angulo), 0, d2 * cos(angulo));
+	glm::vec3 lookAt = p->posicion + glm::vec3(d2 * sin(angulo), alturaCamara/3.0f, d2 * cos(angulo));
 
 	// Matriz de vista
 	view = glm::mat4();

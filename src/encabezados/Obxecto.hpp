@@ -12,6 +12,7 @@ public:
 	glm::vec3 escalado; // Determina o escalado para redimensionar o obxecto
 	glm::mat4 matrizModelo; // Matriz que representa a transformacion linear que se aplica sobre o obxecto
 	Figura* fg; // Obxecto que se encarga de debuxar
+	Figura* fgMiniMapa; // Obxecto que se encarga de debuxar
 
 	unsigned int shaderProgram;
 
@@ -25,5 +26,7 @@ public:
 
 	// Metodos
 	void renderizarObxecto();
+	void renderizarObxectoMiniMapa();
 	virtual void calcularMatrizModelo();
+	virtual void calcularMatrizModeloMiniMapa();
 };

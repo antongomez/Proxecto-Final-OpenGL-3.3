@@ -24,7 +24,7 @@ Camara::Camara(float radio, float alpha, float beta, float width, float height) 
 	this->posicionCamara = glm::vec3(0, 0, 0);
 }
 
-void Camara::establecerCamara(PersonaxePrincipal *p) {
+void Camara::establecerCamara(PersonaxePrincipal* p) {
 	switch (modo) {
 	case MODO_CAMARA_VISTA_XERAL:
 		vistaXeral(p);
@@ -83,7 +83,7 @@ void Camara::vistaTerceiraPersoa(PersonaxePrincipal* p)
 	float angulo = p->angulo;
 
 	posicionCamara = p->posicion + glm::vec3(-d1 * sin(angulo), alturaCamara, -d1 * cos(angulo));
-	glm::vec3 lookAt = p->posicion + glm::vec3(d2 * sin(angulo), alturaCamara/3.0f, d2 * cos(angulo));
+	glm::vec3 lookAt = p->posicion + glm::vec3(d2 * sin(angulo), alturaCamara / 3.0f, d2 * cos(angulo));
 
 	// Matriz de vista
 	view = glm::mat4();
@@ -102,6 +102,11 @@ void Camara::actualizarMatrizProxeccion() {
 		width / height,
 		NEAR, FAR
 	);
+}
+
+void Camara::actualizarMatrizProxeccionOrtho() {
+	projection = glm::mat4();
+	projection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.0f, 20.0f);
 }
 
 void Camara::actualizarMatricesShader(GLuint shader) {

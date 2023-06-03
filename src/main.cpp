@@ -61,6 +61,7 @@ int main()
 
 		partida->moverObxectos(tempoTranscurrido);
 
+
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}

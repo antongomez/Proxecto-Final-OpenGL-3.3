@@ -21,11 +21,15 @@ public:
 	PersonaxePrincipal* personaxePrincipal;
 	std::map<int, std::vector<Luz*>> luces;
 	Camara* camara;
+	Camara* camaraMiniMapa;
 	int nivelMundo;
 	SkyBox* skyBox;
 
 	GLuint shaderProgram;
 	GLuint shaderProgramTex;
+
+	// Para o minimapa
+	Suelo* sueloMinimapa;
 
 	// Construtores
 	Mundo(PersonaxePrincipal* personaxe, GLuint shaderProgram, GLuint shaderProgramTex,
@@ -55,5 +59,5 @@ private:
 
 	void establecerLucesShader(GLuint shader);
 
-	void renderizarSkyBox();
+	void renderizarMiniMapa();
 };

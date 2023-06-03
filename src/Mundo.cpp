@@ -9,7 +9,7 @@
 
 Mundo::Mundo(PersonaxePrincipal* personaxePrincipal, GLuint shaderProgram, GLuint shaderProgramTex,
 	float alturaMundo, float* limites,
-	std::map<int, int> elementosDecorativos, int nivelMundo, std::map<int, std::vector<Luz*>> luces, 
+	std::map<int, int> elementosDecorativos, int nivelMundo, std::map<int, std::vector<Luz*>> luces,
 	std::string rutaTexturasSkyBox[],
 	std::string rutaTexturaSuelo)
 {
@@ -27,19 +27,24 @@ Mundo::Mundo(PersonaxePrincipal* personaxePrincipal, GLuint shaderProgram, GLuin
 }
 
 void Mundo::iniciarMundo(float width, float height) {
-	this->camara = new Camara(20.0f, PI / 2.0f, (float)PI / 4.0f, width, height);
+	this->camara = new Camara(20.0f, PI / 2.0f, PI / 4.0f, width, height);
 
-	// colocamos ao personaxe principal SOBRE o chan no centro do mesmo
+	// colocamos ao personaxe principal sobre o chan no centro do mesmo
 	personaxePrincipal->posicion = glm::vec3(suelo->posicion.x, suelo->posicion.y, suelo->posicion.z);
 	personaxePrincipal->angulo = 0;
+
+	this->camaraMiniMapa = new Camara(10.0f, PI, PI / 2.0f - UNIDADE_GRAO_EN_RADIANS, width, height);
 }
 
 void Mundo::xerarSkyBox(float alturaMundo, float* limites, std::string rutaTexturas[]) {
-	this->skyBox = new SkyBox(limites[1], alturaMundo, shaderProgramTex, FIGURA_CADRADO,rutaTexturas);
+	this->skyBox = new SkyBox(limites[1], alturaMundo, shaderProgramTex, FIGURA_CADRADO, rutaTexturas);
 }
 
 void Mundo::xerarSuelo(float alturaMundo, float* limites, std::string rutaTextura) {
 	this->suelo = new Suelo(glm::vec3(0, alturaMundo, 0), ESCALA_SUELO, limites, shaderProgramTex, FIGURA_CADRADO, rutaTextura);
+
+	// Xeramos o chan do minimapa, cun offset a esquerda
+	//this->sueloMinimapa = new Suelo(glm::vec3(0, alturaMundo, 0), ESCALA_SUELO, limites, shaderProgramTex, FIGURA_CADRADO, rutaTextura);
 }
 
 void Mundo::xerarElementosDecorativos(std::map<int, int> elementosDecorativos) {
@@ -207,7 +212,43 @@ void Mundo::establecerLucesShader(GLuint shader) {
 	}
 }
 
+void Mundo::renderizarMiniMapa() {
+	float tam = 200;
+	glViewport(camara->width - tam - 20 , camara->height - tam - 20, tam, tam);
+
+	// Utilizamos o shader para os obxectos que non tenhen texturas
+	glUseProgram(shaderProgram);
+
+	camaraMiniMapa->establecerCamara(personaxePrincipal);
+	camaraMiniMapa->actualizarMatrizProxeccionOrtho();
+	camaraMiniMapa->actualizarMatricesShader(shaderProgram);
+
+	// Establecemos a posicion da camara no shader
+	unsigned int viewPos = glGetUniformLocation(shaderProgram, "viewPos");
+	glUniform3fv(viewPos, 1, glm::value_ptr(camaraMiniMapa->posicionCamara));
+	// Luces no shader
+	establecerLucesShader(shaderProgram);
+
+	personaxePrincipal->renderizarObxecto();
+
+	glUseProgram(shaderProgramTex);
+	// Establecemos as matrices de view e projection no shader
+	camaraMiniMapa->actualizarMatricesShader(shaderProgram);
+	// Establecemos as luces no shader
+	establecerLucesShader(shaderProgramTex);
+
+	// Variable do shader para determinar se estamos iluminando o skyBox ou non
+	unsigned int loc_skyBox = glGetUniformLocation(shaderProgramTex, "skyBox");
+	glUniform1i(loc_skyBox, 0);
+
+	suelo->renderizarSuelo();
+
+}
+
 void Mundo::renderizarEscena() {
+
+	glViewport(0, 0, camara->width, camara->height);
+
 	// Utilizamos o shader para os obxectos que non tenhen texturas
 	glUseProgram(shaderProgram);
 
@@ -219,12 +260,6 @@ void Mundo::renderizarEscena() {
 	glUniform3fv(viewPos, 1, glm::value_ptr(camara->posicionCamara));
 	// Luces no shader
 	establecerLucesShader(shaderProgram);
-
-	// Provisional mentres non texturas
-	glm::vec3 ambiente;
-	glm::vec3 difusa;
-	glm::vec3 especular;
-	float brillo = 1.0f;
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
@@ -255,14 +290,15 @@ void Mundo::renderizarEscena() {
 
 	skyBox->renderizarSkyBox();
 
+	renderizarMiniMapa();
 }
 
 // Implementación de la función de callback para cambiar el tamaño de la ventana
 void Mundo::reescalarVenta(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
-	camara->width = width;
-	camara->height = height;
+	camara->width = (float)width;
+	camara->height = (float)height;
 	camara->actualizarMatrizProxeccion();
 }
 
@@ -366,10 +402,10 @@ void Mundo::moverCamara(int tipoMovemento) {
 		break;
 	case XIRO_CAMARA_ARRIBA:
 		// Limite superior de 90 grados
-		camara->beta = fmin(camara->beta + INCREMENTO_XIRO_CAMARA_XERAL, PI / 2.0f - UNIDADE_GRAO_EN_RADIANS);
+		camara->beta = fmin(camara->beta + INCREMENTO_XIRO_CAMARA_XERAL, (float)PI / 2.0f - UNIDADE_GRAO_EN_RADIANS);
 		break;
 	case XIRO_CAMARA_ABAIXO:
-		camara->beta = fmax(camara->beta - INCREMENTO_XIRO_CAMARA_XERAL, -PI / 2.0f + UNIDADE_GRAO_EN_RADIANS);
+		camara->beta = fmax(camara->beta - INCREMENTO_XIRO_CAMARA_XERAL, (float) - PI / 2.0f + UNIDADE_GRAO_EN_RADIANS);
 		break;
 	case ACERCAR_CAMARA:
 		camara->radio = fmax(camara->radio - INCREMENTO_RADIO_CAMARA_XERAL, MIN_DIST_CAMARA_XERAL);

@@ -12,6 +12,8 @@ Obxecto::Obxecto(glm::vec3 posicion, glm::vec3 escalado, unsigned int shaderProg
 	this->escalado = escalado;
 	this->shaderProgram = shaderProgram;
 	this->fg = new Figura(tipoFigura, shaderProgram);
+	// Por defecto a forma do obxecto no minimapa e no mundo real e a mesma
+	this->fgMiniMapa = fg;
 }
 
 // Constructor para os obxectos cargados
@@ -27,6 +29,8 @@ Obxecto::Obxecto(glm::vec3 posicion, glm::vec3 escalado, unsigned int shaderProg
 	this->escalado = escalado;
 	this->shaderProgram = shaderProgram;
 	this->fg = new Figura(FIGURA_CARGADA, shaderProgram, inputOBJfile);
+	// Por defecto a forma do obxecto no minimapa e no mundo real e a mesma
+	this->fgMiniMapa = fg;
 }
 
 void Obxecto::calcularMatrizModelo() {
@@ -44,4 +48,19 @@ void Obxecto::renderizarObxecto() {
 
 	fg->renderizar();
 	
+}
+
+void Obxecto::calcularMatrizModeloMiniMapa() {
+	calcularMatrizModelo();
+}
+
+void Obxecto::renderizarObxectoMiniMapa() {
+	// Recalculamos a matriz do modelo para aplicar as transformacions
+	calcularMatrizModeloMiniMapa();
+
+	unsigned int transformLoc = glGetUniformLocation(shaderProgram, "transform");
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(matrizModelo));
+
+	fgMiniMapa->renderizar();
+
 }

@@ -23,12 +23,16 @@ public:
 	glm::mat4 view;
 	glm::mat4 projection;
 
+	// Construtores
 	Camara(float radio, float alpha, float beta, float width, float height);
+
+	// Metodos
 	void establecerCamara(PersonaxePrincipal* p);
 	void vistaPrimeiraPersoa(PersonaxePrincipal* p);
 	void vistaXeral(PersonaxePrincipal* p);
 	void vistaTerceiraPersoa(PersonaxePrincipal* p);
 	void actualizarMatrizProxeccion();
+	void actualizarMatrizProxeccionOrtho();
 	void actualizarMatricesShader(GLuint shader);
 };
 

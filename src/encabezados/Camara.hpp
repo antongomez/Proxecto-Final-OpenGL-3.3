@@ -32,7 +32,7 @@ public:
 	void vistaXeral(PersonaxePrincipal* p);
 	void vistaTerceiraPersoa(PersonaxePrincipal* p);
 	void actualizarMatrizProxeccion();
-	void actualizarMatrizProxeccionOrtho();
+	void actualizarMatrizProxeccionOrtho(float ancho);
 	void actualizarMatricesShader(GLuint shader);
 };
 

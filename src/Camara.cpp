@@ -104,9 +104,9 @@ void Camara::actualizarMatrizProxeccion() {
 	);
 }
 
-void Camara::actualizarMatrizProxeccionOrtho() {
+void Camara::actualizarMatrizProxeccionOrtho(float ancho) {
 	projection = glm::mat4();
-	projection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.0f, 20.0f);
+	projection = glm::ortho(-ancho / 2.0f, ancho / 2.0f, -ancho * PROPORCION_MINIMAPA / 2.0f, ancho * PROPORCION_MINIMAPA / 2.0f, 0.0f, radio + 1.0f);
 }
 
 void Camara::actualizarMatricesShader(GLuint shader) {

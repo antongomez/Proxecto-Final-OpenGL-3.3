@@ -15,5 +15,4 @@ public:
 	// Metodos
 	void moverPersonaxe(double tempoTranscurrido);
 	void calcularMatrizModelo() override;
-	void calcularMatrizModeloMiniMapa() override;
 };

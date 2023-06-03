@@ -27,12 +27,13 @@ public:
 
 	GLuint shaderProgram;
 	GLuint shaderProgramTex;
+	GLuint shaderProgramMiniMapa;
 
 	// Para o minimapa
 	Suelo* sueloMinimapa;
 
 	// Construtores
-	Mundo(PersonaxePrincipal* personaxe, GLuint shaderProgram, GLuint shaderProgramTex,
+	Mundo(PersonaxePrincipal* personaxe, GLuint shaderProgram, GLuint shaderProgramTex, GLuint shaderProgramMiniMapa,
 		float alturaMundo, float* limites,
 		std::map<int, int> elementosDecorativos,
 		int nivelMundo, std::map<int, std::vector<Luz*>> luces,

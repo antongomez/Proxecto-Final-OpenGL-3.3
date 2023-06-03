@@ -7,7 +7,7 @@
 #include <random>
 #include <iostream>
 
-Mundo::Mundo(PersonaxePrincipal* personaxePrincipal, GLuint shaderProgram, GLuint shaderProgramTex,
+Mundo::Mundo(PersonaxePrincipal* personaxePrincipal, GLuint shaderProgram, GLuint shaderProgramTex, GLuint shaderProgramMiniMapa,
 	float alturaMundo, float* limites,
 	std::map<int, int> elementosDecorativos, int nivelMundo, std::map<int, std::vector<Luz*>> luces,
 	std::string rutaTexturasSkyBox[],
@@ -17,6 +17,7 @@ Mundo::Mundo(PersonaxePrincipal* personaxePrincipal, GLuint shaderProgram, GLuin
 	this->personaxePrincipal = personaxePrincipal;
 	this->shaderProgram = shaderProgram;
 	this->shaderProgramTex = shaderProgramTex;
+	this->shaderProgramMiniMapa = shaderProgramMiniMapa;
 	this->nivelMundo = nivelMundo;
 	this->luces = luces;
 
@@ -213,34 +214,30 @@ void Mundo::establecerLucesShader(GLuint shader) {
 }
 
 void Mundo::renderizarMiniMapa() {
-	float tam = 200;
-	glViewport(camara->width - tam - 20 , camara->height - tam - 20, tam, tam);
+	float ancho = 400;
+	float alto = ancho * PROPORCION_MINIMAPA;
+	glViewport(camara->width - ancho - 20, camara->height - alto - 20, ancho, alto);
 
 	// Utilizamos o shader para os obxectos que non tenhen texturas
-	glUseProgram(shaderProgram);
+	glUseProgram(shaderProgramMiniMapa);
 
 	camaraMiniMapa->establecerCamara(personaxePrincipal);
-	camaraMiniMapa->actualizarMatrizProxeccionOrtho();
+	camaraMiniMapa->actualizarMatrizProxeccionOrtho(25.0f);
 	camaraMiniMapa->actualizarMatricesShader(shaderProgram);
 
-	// Establecemos a posicion da camara no shader
-	unsigned int viewPos = glGetUniformLocation(shaderProgram, "viewPos");
-	glUniform3fv(viewPos, 1, glm::value_ptr(camaraMiniMapa->posicionCamara));
-	// Luces no shader
-	establecerLucesShader(shaderProgram);
+	// O obxecto pintamolo doutra cor
+	unsigned int loc_cor = glGetUniformLocation(shaderProgramMiniMapa, "cor");
+	glUniform1i(loc_cor, 1);
+
+	unsigned int loc_color = glGetUniformLocation(shaderProgramMiniMapa, "color");
 
 	personaxePrincipal->renderizarObxecto();
 
-	glUseProgram(shaderProgramTex);
-	// Establecemos as matrices de view e projection no shader
-	camaraMiniMapa->actualizarMatricesShader(shaderProgram);
-	// Establecemos as luces no shader
-	establecerLucesShader(shaderProgramTex);
+	for (int i = 0; i < inimigos.size();i++) {
+		inimigos[i]->renderizarObxecto();
+	}
 
-	// Variable do shader para determinar se estamos iluminando o skyBox ou non
-	unsigned int loc_skyBox = glGetUniformLocation(shaderProgramTex, "skyBox");
-	glUniform1i(loc_skyBox, 0);
-
+	glUniform3fv(loc_color, 1, value_ptr(glm::vec3(0, 0.3f, 0)));
 	suelo->renderizarSuelo();
 
 }
@@ -405,7 +402,7 @@ void Mundo::moverCamara(int tipoMovemento) {
 		camara->beta = fmin(camara->beta + INCREMENTO_XIRO_CAMARA_XERAL, (float)PI / 2.0f - UNIDADE_GRAO_EN_RADIANS);
 		break;
 	case XIRO_CAMARA_ABAIXO:
-		camara->beta = fmax(camara->beta - INCREMENTO_XIRO_CAMARA_XERAL, (float) - PI / 2.0f + UNIDADE_GRAO_EN_RADIANS);
+		camara->beta = fmax(camara->beta - INCREMENTO_XIRO_CAMARA_XERAL, (float)-PI / 2.0f + UNIDADE_GRAO_EN_RADIANS);
 		break;
 	case ACERCAR_CAMARA:
 		camara->radio = fmax(camara->radio - INCREMENTO_RADIO_CAMARA_XERAL, MIN_DIST_CAMARA_XERAL);

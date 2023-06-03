@@ -11,7 +11,6 @@ PersonaxePrincipal::PersonaxePrincipal(glm::vec3 posicion, glm::vec3 escalado,
 	unsigned int shaderProgram, int tipoFigura, float angulo) : 
 	Obxecto(posicion, escalado, shaderProgram){
 	this->fg = new Figura(FIGURA_CARGADA, shaderProgram, "recursos/modelos/Chieftain_tanque.obj");
-	this->fgMiniMapa = this->fg;
 	this->angulo = angulo;
 	this->moverse = false;
 }
@@ -33,10 +32,4 @@ void PersonaxePrincipal::calcularMatrizModelo() {
 	matrizModelo = glm::translate(matrizModelo, posicion);
 	matrizModelo = glm::rotate(matrizModelo, angulo, glm::vec3(0, 1, 0));
 	matrizModelo = glm::scale(matrizModelo, escalado);
-}
-
-void PersonaxePrincipal::calcularMatrizModeloMiniMapa() {
-	calcularMatrizModelo();
-	// Rotamos o cadrado
-	//matrizModelo = glm::rotate(matrizModelo, (float)PI/2.0f, glm::vec3(1, 0, 0));
 }

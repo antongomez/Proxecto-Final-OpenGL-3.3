@@ -41,7 +41,6 @@
 #define MODO_CAMARA_PRIMEIRA_PERSOA 1
 #define MODO_CAMARA_VISTA_XERAL 2
 #define MODO_CAMARA_TERCEIRA_PERSOA 3
-#define MODO_CAMARA_MINIMAPA 4
 
 // ----------------  Definicions MOVEMENTOS -------------------------- //
 #define VELOCIDADE_BASE_ENEMIGOS 0.2f
@@ -64,3 +63,6 @@
 #define LUZ_DIRECCIONAL 0
 #define LUZ_POSICIONAL 1
 #define LUZ_FOCAL 2
+
+// ---------------- Definicions MINIMAPA -------------------------- //
+#define PROPORCION_MINIMAPA 0.75f

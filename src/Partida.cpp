@@ -8,9 +8,10 @@
 
 #include <iostream>
 
-Partida::Partida(GLuint shaderProgram, GLuint shaderProgramTex) {
+Partida::Partida(GLuint shaderProgram, GLuint shaderProgramTex, GLuint shaderProgramMiniMapa) {
 	this->shaderProgram = shaderProgram;
 	this->shaderProgramTex = shaderProgramTex;
+	this->shaderProgramMiniMapa = shaderProgramMiniMapa;
 	iniciarPartida();
 }
 
@@ -41,7 +42,8 @@ void Partida::iniciarPartida() {
 	rutaTexturasSkyBox[2] = "recursos/texturas/front.jpg";
 	rutaTexturasSkyBox[3] = "recursos/texturas/back.jpg";
 
-	Mundo* mundo = new Mundo(personaxePrincipal, shaderProgram, shaderProgramTex, 0, limites, elementosDecorativos, 1, luces, rutaTexturasSkyBox, rutaTexturaSuelo);
+	Mundo* mundo = new Mundo(personaxePrincipal, shaderProgram, shaderProgramTex, shaderProgramMiniMapa,
+		0, limites, elementosDecorativos, 1, luces, rutaTexturasSkyBox, rutaTexturaSuelo);
 	mundos.push_back(mundo);
 
 	elementosDecorativos[ID_PEDRA1] = 30;
@@ -56,7 +58,8 @@ void Partida::iniciarPartida() {
 
 	rutaTexturaSuelo = "recursos/texturas/sand.jpg";
 
-	mundo = new Mundo(personaxePrincipal, shaderProgram, shaderProgramTex, -50, limites, elementosDecorativos, 2, luces, rutaTexturasSkyBox, rutaTexturaSuelo);
+	mundo = new Mundo(personaxePrincipal, shaderProgram, shaderProgramTex, shaderProgramMiniMapa, 
+		-50, limites, elementosDecorativos, 2, luces, rutaTexturasSkyBox, rutaTexturaSuelo);
 	mundos.push_back(mundo);
 
 	elementosDecorativos[ID_PEDRA1] = 5;
@@ -71,7 +74,8 @@ void Partida::iniciarPartida() {
 
 	rutaTexturaSuelo = "recursos/texturas/sand2.jpg";
 
-	mundo = new Mundo(personaxePrincipal, shaderProgram, shaderProgramTex, -100, limites, elementosDecorativos, 3, luces, rutaTexturasSkyBox, rutaTexturaSuelo);
+	mundo = new Mundo(personaxePrincipal, shaderProgram, shaderProgramTex, shaderProgramMiniMapa ,
+		-100, limites, elementosDecorativos, 3, luces, rutaTexturasSkyBox, rutaTexturaSuelo);
 	mundos.push_back(mundo);
 
 	elementosDecorativos[ID_PEDRA1] = 11;
@@ -95,7 +99,8 @@ void Partida::iniciarPartida() {
 	rutaTexturasSkyBox_Nocturno[2] = "recursos/texturas/stars.jpg";
 	rutaTexturasSkyBox_Nocturno[3] = "recursos/texturas/stars.jpg";
 
-	mundo = new Mundo(personaxePrincipal, shaderProgram, shaderProgramTex, -150, limites, elementosDecorativos, 4, luces, rutaTexturasSkyBox_Nocturno, rutaTexturaSuelo);
+	mundo = new Mundo(personaxePrincipal, shaderProgram, shaderProgramTex, shaderProgramMiniMapa,
+		-150, limites, elementosDecorativos, 4, luces, rutaTexturasSkyBox_Nocturno, rutaTexturaSuelo);
 	mundos.push_back(mundo);
 
 	idMundoActual = 0;

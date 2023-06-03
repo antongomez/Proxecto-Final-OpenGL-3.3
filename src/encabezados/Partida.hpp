@@ -18,9 +18,10 @@ public:
 
 	GLuint shaderProgram;
 	GLuint shaderProgramTex;
+	GLuint shaderProgramMiniMapa;
 
 	// Construtores
-	Partida(GLuint shaderProgram, GLuint shaderProgramTex);
+	Partida(GLuint shaderProgram, GLuint shaderProgramTex, GLuint shaderProgramMiniMapa);
 
 	// Metodos
 	void iniciarPartida();

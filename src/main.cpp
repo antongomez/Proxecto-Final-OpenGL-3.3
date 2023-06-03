@@ -35,8 +35,9 @@ int main()
 	// Xeramos os Shaders
 	GLuint shaderProgram = setShaders("recursos/shaders/shader.vert", "recursos/shaders/shader.frag");
 	GLuint shaderProgramTex = setShaders("recursos/shaders/shaderTex.vert", "recursos/shaders/shaderTex.frag");
+	GLuint shaderProgramMiniMapa = setShaders("recursos/shaders/shaderMiniMapa.vert", "recursos/shaders/shaderMiniMapa.frag");
 
-	partida = new Partida(shaderProgram, shaderProgramTex);
+	partida = new Partida(shaderProgram, shaderProgramTex, shaderProgramMiniMapa);
 
 	// Obten a ubicación das matrices de vista e proxeccion no programa de shader
 	GLuint viewLoc = glGetUniformLocation(shaderProgram, "view");

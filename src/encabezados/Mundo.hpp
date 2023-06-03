@@ -38,7 +38,7 @@ public:
 		std::map<int, int> elementosDecorativos,
 		int nivelMundo, std::map<int, std::vector<Luz*>> luces,
 		std::string rutaTexturasSkyBox[],
-		std::string rutaTexturaSuelo);
+		std::string rutaTexturaSuelo, std::string rutaTexturaMuro);
 
 	// Destructor
 
@@ -54,7 +54,8 @@ public:
 
 private:
 	void xerarSkyBox(float alturaMundo, float* limites, std::string rutaTexturas[]);
-	void xerarSuelo(float alturaMundo, float* limites, std::string rutaTextura);
+	void xerarSuelo(float alturaMundo, float* limites, std::string rutaTextura, std::string rutaTexturaMuro);
+	void xerarMuro(float alturaMundo, float* limites, std::string rutaTextura);
 	void xerarElementosDecorativos(std::map<int, int> elementosDecorativos);
 	void xerarInimigos(int nivelMundo);
 

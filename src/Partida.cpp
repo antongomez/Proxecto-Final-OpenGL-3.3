@@ -36,6 +36,7 @@ void Partida::iniciarPartida() {
 	luces[LUZ_DIRECCIONAL] = luzDireccional1;
 
 	std::string rutaTexturaSuelo = "recursos/texturas/hierba.bmp";
+	std::string rutaTexturaMuro = "recursos/texturas/paredeMundo1.jpg";
 	std::string rutaTexturasSkyBox[4];
 	rutaTexturasSkyBox[0] = "recursos/texturas/left.jpg";
 	rutaTexturasSkyBox[1] = "recursos/texturas/right.jpg";
@@ -43,12 +44,12 @@ void Partida::iniciarPartida() {
 	rutaTexturasSkyBox[3] = "recursos/texturas/back.jpg";
 
 	Mundo* mundo = new Mundo(personaxePrincipal, shaderProgram, shaderProgramTex, shaderProgramMiniMapa,
-		0, limites, elementosDecorativos, 1, luces, rutaTexturasSkyBox, rutaTexturaSuelo);
+		0, limites, elementosDecorativos, 1, luces, rutaTexturasSkyBox, rutaTexturaSuelo, rutaTexturaMuro);
 	mundos.push_back(mundo);
 
-	elementosDecorativos[ID_PEDRA1] = 30;
-	elementosDecorativos[ID_PEDRA2] = 15;
-	elementosDecorativos[ID_PEDRA3] = 20;
+	elementosDecorativos[ID_PEDRA1] = 150;
+	elementosDecorativos[ID_PEDRA2] = 75;
+	elementosDecorativos[ID_PEDRA3] = 90;
 	elementosDecorativos[ID_ARBORE1] = 0;
 	elementosDecorativos[ID_HERBA] = 0;
 
@@ -56,33 +57,35 @@ void Partida::iniciarPartida() {
 	luzDireccional2.push_back(new Luz(glm::vec3(0, -5, 3), glm::vec3(0.8f), glm::vec3(1.0f), glm::vec3(1.0f)));
 	luces[LUZ_DIRECCIONAL] = luzDireccional2;
 
-	rutaTexturaSuelo = "recursos/texturas/sand.jpg";
+	rutaTexturaSuelo = "recursos/texturas/area.jpg";
+	rutaTexturaMuro = "recursos/texturas/paredeMundo2.jpg";
 
 	mundo = new Mundo(personaxePrincipal, shaderProgram, shaderProgramTex, shaderProgramMiniMapa, 
-		-50, limites, elementosDecorativos, 2, luces, rutaTexturasSkyBox, rutaTexturaSuelo);
+		-50, limites, elementosDecorativos, 2, luces, rutaTexturasSkyBox, rutaTexturaSuelo, rutaTexturaMuro);
 	mundos.push_back(mundo);
 
-	elementosDecorativos[ID_PEDRA1] = 5;
-	elementosDecorativos[ID_PEDRA2] = 2;
-	elementosDecorativos[ID_PEDRA3] = 10;
-	elementosDecorativos[ID_ARBORE1] = 20;
-	elementosDecorativos[ID_HERBA] = 20;
+	elementosDecorativos[ID_PEDRA1] = 15;
+	elementosDecorativos[ID_PEDRA2] = 20;
+	elementosDecorativos[ID_PEDRA3] = 30;
+	elementosDecorativos[ID_ARBORE1] = 75;
+	elementosDecorativos[ID_HERBA] = 200;
 
 	std::vector<Luz*> luzDireccional3;
 	luzDireccional3.push_back(new Luz(glm::vec3(0, -5, 3), glm::vec3(0.6f), glm::vec3(1.0f), glm::vec3(1.0f)));
 	luces[LUZ_DIRECCIONAL] = luzDireccional3;
 
-	rutaTexturaSuelo = "recursos/texturas/sand2.jpg";
+	rutaTexturaSuelo = "recursos/texturas/hierba.bmp";
+	rutaTexturaMuro = "recursos/texturas/paredeMundo1.jpg";
 
 	mundo = new Mundo(personaxePrincipal, shaderProgram, shaderProgramTex, shaderProgramMiniMapa ,
-		-100, limites, elementosDecorativos, 3, luces, rutaTexturasSkyBox, rutaTexturaSuelo);
+		-100, limites, elementosDecorativos, 3, luces, rutaTexturasSkyBox, rutaTexturaSuelo, rutaTexturaMuro);
 	mundos.push_back(mundo);
 
-	elementosDecorativos[ID_PEDRA1] = 11;
-	elementosDecorativos[ID_PEDRA2] = 5;
-	elementosDecorativos[ID_PEDRA3] = 15;
-	elementosDecorativos[ID_ARBORE1] = 15;
-	elementosDecorativos[ID_HERBA] = 40;
+	elementosDecorativos[ID_PEDRA1] = 30;
+	elementosDecorativos[ID_PEDRA2] = 30;
+	elementosDecorativos[ID_PEDRA3] = 35;
+	elementosDecorativos[ID_ARBORE1] = 35;
+	elementosDecorativos[ID_HERBA] = 120;
 
 	std::vector<Luz*> luzDireccional4;
 	luzDireccional4.push_back(new Luz(glm::vec3(0, -3, 5), glm::vec3(0), glm::vec3(0.3f), glm::vec3(0.1f)));
@@ -93,6 +96,7 @@ void Partida::iniciarPartida() {
 	luces[LUZ_FOCAL] = luzFocal;
 
 	rutaTexturaSuelo = "recursos/texturas/hierba.bmp";
+	rutaTexturaMuro = "recursos/texturas/paredeMundo4.jpg";
 	std::string rutaTexturasSkyBox_Nocturno[4];
 	rutaTexturasSkyBox_Nocturno[0] = "recursos/texturas/stars.jpg";
 	rutaTexturasSkyBox_Nocturno[1] = "recursos/texturas/stars.jpg";
@@ -100,7 +104,7 @@ void Partida::iniciarPartida() {
 	rutaTexturasSkyBox_Nocturno[3] = "recursos/texturas/stars.jpg";
 
 	mundo = new Mundo(personaxePrincipal, shaderProgram, shaderProgramTex, shaderProgramMiniMapa,
-		-150, limites, elementosDecorativos, 4, luces, rutaTexturasSkyBox_Nocturno, rutaTexturaSuelo);
+		-150, limites, elementosDecorativos, 4, luces, rutaTexturasSkyBox_Nocturno, rutaTexturaSuelo, rutaTexturaMuro);
 	mundos.push_back(mundo);
 
 	idMundoActual = 0;

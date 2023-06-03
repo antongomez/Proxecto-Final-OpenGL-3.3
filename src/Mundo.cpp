@@ -11,7 +11,7 @@ Mundo::Mundo(PersonaxePrincipal* personaxePrincipal, GLuint shaderProgram, GLuin
 	float alturaMundo, float* limites,
 	std::map<int, int> elementosDecorativos, int nivelMundo, std::map<int, std::vector<Luz*>> luces,
 	std::string rutaTexturasSkyBox[],
-	std::string rutaTexturaSuelo)
+	std::string rutaTexturaSuelo, std::string rutaTexturaMuro)
 {
 
 	this->personaxePrincipal = personaxePrincipal;
@@ -21,7 +21,7 @@ Mundo::Mundo(PersonaxePrincipal* personaxePrincipal, GLuint shaderProgram, GLuin
 	this->nivelMundo = nivelMundo;
 	this->luces = luces;
 
-	xerarSuelo(alturaMundo, limites, rutaTexturaSuelo);
+	xerarSuelo(alturaMundo, limites, rutaTexturaSuelo, rutaTexturaMuro);
 	xerarSkyBox(alturaMundo, limites, rutaTexturasSkyBox);
 	xerarElementosDecorativos(elementosDecorativos);
 	xerarInimigos(nivelMundo);
@@ -41,11 +41,12 @@ void Mundo::xerarSkyBox(float alturaMundo, float* limites, std::string rutaTextu
 	this->skyBox = new SkyBox(limites[1], alturaMundo, shaderProgramTex, FIGURA_CADRADO, rutaTexturas);
 }
 
-void Mundo::xerarSuelo(float alturaMundo, float* limites, std::string rutaTextura) {
-	this->suelo = new Suelo(glm::vec3(0, alturaMundo, 0), ESCALA_SUELO, limites, shaderProgramTex, FIGURA_CADRADO, rutaTextura);
+void Mundo::xerarSuelo(float alturaMundo, float* limites, std::string rutaTextura, std::string rutaTexturaMuro) {
+	this->suelo = new Suelo(glm::vec3(0, alturaMundo, 0), ESCALA_SUELO, limites, shaderProgramTex, FIGURA_CADRADO, rutaTextura, rutaTexturaMuro);
+}
 
-	// Xeramos o chan do minimapa, cun offset a esquerda
-	//this->sueloMinimapa = new Suelo(glm::vec3(0, alturaMundo, 0), ESCALA_SUELO, limites, shaderProgramTex, FIGURA_CADRADO, rutaTextura);
+void Mundo::xerarMuro(float alturaMundo, float* limites, std::string rutaTextura) {
+
 }
 
 void Mundo::xerarElementosDecorativos(std::map<int, int> elementosDecorativos) {

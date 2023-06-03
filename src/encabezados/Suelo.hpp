@@ -18,9 +18,10 @@ public:
 	unsigned int shaderProgram;
 
 	Figura* fg;
+	Figura* fgMuro;
 
 	// Construtores
-	Suelo(glm::vec3 posicion, float escala, float* limites, unsigned int shaderProgram, int tipoFigura, std::string rutaTextura);
+	Suelo(glm::vec3 posicion, float escala, float* limites, unsigned int shaderProgram, int tipoFigura, std::string rutaTextura, std::string rutaTexturaMuro);
 
 	// Metodos
 	void renderizarSuelo();

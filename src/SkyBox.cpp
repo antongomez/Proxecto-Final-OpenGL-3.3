@@ -5,7 +5,7 @@
 #include <glad.h>
 
 SkyBox::SkyBox(float distancia, float altura, unsigned int shaderProgram, int tipoFigura, std::string rutaTexturas[4]) {
-	this->distancia = distancia + 2.0f * (1 / ESCALA_SUELO);
+	this->distancia = distancia + 4.0f * (1 / ESCALA_SUELO);
 	this->altura = altura + distancia / 6.0f; // Subimos un pouco o skybox
 
 	this->shaderProgram = shaderProgram;

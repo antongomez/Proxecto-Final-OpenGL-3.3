@@ -28,7 +28,6 @@ public:
 	unsigned int textura;
 
 	// -------------- Construtores -----------------//
-	
 	Figura(int tipo, unsigned int shaderProgram, std::string inputOBJfile);
 
 	// Singleton

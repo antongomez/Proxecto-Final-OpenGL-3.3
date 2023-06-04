@@ -55,7 +55,6 @@ public:
 private:
 	void xerarSkyBox(float alturaMundo, float* limites, std::string rutaTexturas[]);
 	void xerarSuelo(float alturaMundo, float* limites, std::string rutaTextura, std::string rutaTexturaMuro);
-	void xerarMuro(float alturaMundo, float* limites, std::string rutaTextura);
 	void xerarElementosDecorativos(std::map<int, int> elementosDecorativos);
 	void xerarInimigos(int nivelMundo);
 

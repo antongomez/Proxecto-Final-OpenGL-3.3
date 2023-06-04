@@ -45,10 +45,6 @@ void Mundo::xerarSuelo(float alturaMundo, float* limites, std::string rutaTextur
 	this->suelo = new Suelo(glm::vec3(0, alturaMundo, 0), ESCALA_SUELO, limites, shaderProgramTex, FIGURA_CADRADO, rutaTextura, rutaTexturaMuro);
 }
 
-void Mundo::xerarMuro(float alturaMundo, float* limites, std::string rutaTextura) {
-
-}
-
 void Mundo::xerarElementosDecorativos(std::map<int, int> elementosDecorativos) {
 
 	std::map<int, int>::iterator iterador;
@@ -70,6 +66,12 @@ void Mundo::xerarElementosDecorativos(std::map<int, int> elementosDecorativos) {
 			break;
 		case ID_ARBORE1:
 			rutaOBJ = "recursos/modelos/arbore1.obj";
+			break;
+		case ID_ARBORE2:
+			rutaOBJ = "recursos/modelos/arbore2.obj";
+			break;
+		case ID_ARBORE3:
+			rutaOBJ = "recursos/modelos/arbore3.obj";
 			break;
 		case ID_HERBA:
 			rutaOBJ = "recursos/modelos/Herba.obj";

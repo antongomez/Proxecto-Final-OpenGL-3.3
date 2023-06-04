@@ -29,6 +29,8 @@ void Partida::iniciarPartida() {
 	elementosDecorativos[ID_PEDRA2] = 20;
 	elementosDecorativos[ID_PEDRA3] = 50;
 	elementosDecorativos[ID_ARBORE1] = 20;
+	elementosDecorativos[ID_ARBORE2] = 3;
+	elementosDecorativos[ID_ARBORE3] = 0;
 	elementosDecorativos[ID_HERBA] = 150;
 
 	std::vector<Luz*> luzDireccional1;
@@ -51,6 +53,8 @@ void Partida::iniciarPartida() {
 	elementosDecorativos[ID_PEDRA2] = 75;
 	elementosDecorativos[ID_PEDRA3] = 90;
 	elementosDecorativos[ID_ARBORE1] = 0;
+	elementosDecorativos[ID_ARBORE2] = 0;
+	elementosDecorativos[ID_ARBORE3] = 20;
 	elementosDecorativos[ID_HERBA] = 0;
 
 	std::vector<Luz*> luzDireccional2;
@@ -67,7 +71,9 @@ void Partida::iniciarPartida() {
 	elementosDecorativos[ID_PEDRA1] = 15;
 	elementosDecorativos[ID_PEDRA2] = 20;
 	elementosDecorativos[ID_PEDRA3] = 30;
-	elementosDecorativos[ID_ARBORE1] = 75;
+	elementosDecorativos[ID_ARBORE1] = 55;
+	elementosDecorativos[ID_ARBORE2] = 30;
+	elementosDecorativos[ID_ARBORE3] = 0;
 	elementosDecorativos[ID_HERBA] = 200;
 
 	std::vector<Luz*> luzDireccional3;
@@ -85,6 +91,8 @@ void Partida::iniciarPartida() {
 	elementosDecorativos[ID_PEDRA2] = 30;
 	elementosDecorativos[ID_PEDRA3] = 35;
 	elementosDecorativos[ID_ARBORE1] = 35;
+	elementosDecorativos[ID_ARBORE2] = 2;
+	elementosDecorativos[ID_ARBORE3] = 0;
 	elementosDecorativos[ID_HERBA] = 120;
 
 	std::vector<Luz*> luzDireccional4;

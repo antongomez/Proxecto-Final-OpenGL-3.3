@@ -6,11 +6,10 @@ class PersonaxePrincipal : public Obxecto
 {
 public:
 	// Atributos
-	float angulo;
 	bool moverse;
 
 	// Construtores
-	PersonaxePrincipal(glm::vec3 posicion, glm::vec3 escalado, unsigned int shaderProgram, int tipoFigura, float angulo);
+	PersonaxePrincipal(glm::vec3 posicion, glm::vec3 escalado, float angulo, unsigned int shaderProgram, int tipoFigura);
 
 	// Metodos
 	void moverPersonaxe(double tempoTranscurrido);

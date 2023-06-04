@@ -83,6 +83,9 @@ void Mundo::xerarElementosDecorativos(std::map<int, int> elementosDecorativos) {
 		std::random_device rd;
 		std::mt19937 generator(rd());
 
+		// Facemos que os obxectos aparezan xirados cun angulo aleatorio
+		std::uniform_real_distribution<float> distribucionAngulo(0, 2.0f * PI);
+
 		// Definir una distribución para generar números reales en un rango
 		std::uniform_real_distribution<float> distribucionX(0, suelo->limites[1]);
 		std::uniform_real_distribution<float> distribucionZ(0, suelo->limites[1]);
@@ -107,7 +110,7 @@ void Mundo::xerarElementosDecorativos(std::map<int, int> elementosDecorativos) {
 			glm::vec3 posicion(posX, suelo->posicion.y, posZ);
 			glm::vec3 escala(1.0f);
 
-			Obxecto* obxecto = new Obxecto(posicion, escala, shaderProgram, rutaOBJ);
+			Obxecto* obxecto = new Obxecto(posicion, escala, distribucionAngulo(generator), shaderProgram, rutaOBJ);
 			obxectosDecorativos.push_back(obxecto);
 		}
 	}
@@ -130,7 +133,7 @@ void Mundo::xerarInimigos(int nivelInimigos) {
 		glm::vec3 posicion(radio * sin(angulo), suelo->posicion.y, radio * cos(angulo));
 		glm::vec3 escala(1.0f);
 
-		Enemigo* enemigo = new Enemigo(posicion, escala, shaderProgram, FIGURA_CUBO, 1, personaxePrincipal);
+		Enemigo* enemigo = new Enemigo(posicion, escala, 0, shaderProgram, FIGURA_CUBO, 1, personaxePrincipal);
 
 		inimigos.push_back(enemigo);
 	}

@@ -8,7 +8,7 @@
 
 #include <glad.h>
 
-Enemigo::Enemigo(glm::vec3 posicion, glm::vec3 escalado, unsigned int shaderProgram, int tipoFigura, int nivel, Obxecto* target) : Obxecto(posicion, escalado, shaderProgram) {
+Enemigo::Enemigo(glm::vec3 posicion, glm::vec3 escalado, float angulo, unsigned int shaderProgram, int tipoFigura, int nivel, Obxecto* target) : Obxecto(posicion, escalado, angulo, shaderProgram) {
 	this->nivel = nivel;
 	this->target = target;
 	this->direccion = glm::vec2(1, 0); // Os trolls empezan mirando nesta direccion

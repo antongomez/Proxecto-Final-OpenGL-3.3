@@ -12,7 +12,7 @@ public:
 	glm::vec2 direccion;
 
 	// Construtores
-	Enemigo(glm::vec3 posicion, glm::vec3 escalado, unsigned int shaderProgram, int tipoFigura, int nivel, Obxecto* target);
+	Enemigo(glm::vec3 posicion, glm::vec3 escalado, float angulo, unsigned int shaderProgram, int tipoFigura, int nivel, Obxecto* target);
 
 	// Metodos
 	void moverEnemigo(double tempoTranscurrido);

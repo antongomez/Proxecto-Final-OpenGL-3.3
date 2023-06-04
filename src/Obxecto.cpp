@@ -7,24 +7,27 @@
 #include <glad.h>
 
 // Constructor para os obxectos que consisten en figuras xeometricas
-Obxecto::Obxecto(glm::vec3 posicion, glm::vec3 escalado, unsigned int shaderProgram, int tipoFigura) {
+Obxecto::Obxecto(glm::vec3 posicion, glm::vec3 escalado, float angulo, unsigned int shaderProgram, int tipoFigura) {
 	this->posicion = posicion;
 	this->escalado = escalado;
+	this->angulo = angulo;
 	this->shaderProgram = shaderProgram;
 	this->fg = Figura::GetFigura(tipoFigura, shaderProgram, "");
 }
 
 // Constructor para os obxectos cargados
-Obxecto::Obxecto(glm::vec3 posicion, glm::vec3 escalado, unsigned int shaderProgram) {
+Obxecto::Obxecto(glm::vec3 posicion, glm::vec3 escalado, float angulo, unsigned int shaderProgram) {
 	this->posicion = posicion;
 	this->escalado = escalado;
+	this->angulo = angulo;
 	this->shaderProgram = shaderProgram;
 }
 
 // Constructor para os elementos decorativos
-Obxecto::Obxecto(glm::vec3 posicion, glm::vec3 escalado, unsigned int shaderProgram, std::string inputOBJfile) {
+Obxecto::Obxecto(glm::vec3 posicion, glm::vec3 escalado, float angulo, unsigned int shaderProgram, std::string inputOBJfile) {
 	this->posicion = posicion;
 	this->escalado = escalado;
+	this->angulo = angulo;
 	this->shaderProgram = shaderProgram;
 	this->fg = Figura::GetFigura(FIGURA_CARGADA, shaderProgram, inputOBJfile);
 }
@@ -32,6 +35,7 @@ Obxecto::Obxecto(glm::vec3 posicion, glm::vec3 escalado, unsigned int shaderProg
 void Obxecto::calcularMatrizModelo() {
 	matrizModelo = glm::mat4(); // Matriz identidade
 	matrizModelo = glm::translate(matrizModelo, posicion);
+	matrizModelo = glm::rotate(matrizModelo, angulo, glm::vec3(0, 1, 0));
 	matrizModelo = glm::scale(matrizModelo, escalado);
 }
 

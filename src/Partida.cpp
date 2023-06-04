@@ -17,10 +17,10 @@ Partida::Partida(GLuint shaderProgram, GLuint shaderProgramTex, GLuint shaderPro
 
 void Partida::iniciarPartida() {
 	// Non determinamos a posicion do personaxe principal, pero si o seu escalado. A posicion variara cos mundos pero non a escala
-	this->personaxePrincipal = new PersonaxePrincipal(glm::vec3(0, 0, 0), glm::vec3(1.0f), shaderProgram, FIGURA_CARGADA, 0);
+	this->personaxePrincipal = new PersonaxePrincipal(glm::vec3(0, 0, 0), glm::vec3(1.0f), 0, shaderProgram, FIGURA_CARGADA);
 
 	// Creamos os mundos
-	float limites[] = { -25.0f, 25.0f };
+	float limites[] = { -37.5f, 37.5f };
 
 	std::map<int, int> elementosDecorativos;
 	std::map<int, std::vector<Luz*>> luces;
@@ -49,9 +49,9 @@ void Partida::iniciarPartida() {
 		0, limites, elementosDecorativos, 1, luces, rutaTexturasSkyBox, rutaTexturaSuelo, rutaTexturaMuro);
 	mundos.push_back(mundo);
 
-	elementosDecorativos[ID_PEDRA1] = 150;
-	elementosDecorativos[ID_PEDRA2] = 75;
-	elementosDecorativos[ID_PEDRA3] = 90;
+	elementosDecorativos[ID_PEDRA1] = 100;
+	elementosDecorativos[ID_PEDRA2] = 65;
+	elementosDecorativos[ID_PEDRA3] = 80;
 	elementosDecorativos[ID_ARBORE1] = 0;
 	elementosDecorativos[ID_ARBORE2] = 0;
 	elementosDecorativos[ID_ARBORE3] = 20;
@@ -63,9 +63,14 @@ void Partida::iniciarPartida() {
 
 	rutaTexturaSuelo = "recursos/texturas/area.jpg";
 	rutaTexturaMuro = "recursos/texturas/paredeMundo2.jpg";
+	std::string rutaTexturasSkyBox_Deserto[4];
+	rutaTexturasSkyBox_Deserto[0] = "recursos/texturas/leftDesert.jpg";
+	rutaTexturasSkyBox_Deserto[1] = "recursos/texturas/rightDesert.jpg";
+	rutaTexturasSkyBox_Deserto[2] = "recursos/texturas/frontDesert.jpg";
+	rutaTexturasSkyBox_Deserto[3] = "recursos/texturas/backDesert.jpg";
 
 	mundo = new Mundo(personaxePrincipal, shaderProgram, shaderProgramTex, shaderProgramMiniMapa, 
-		-50, limites, elementosDecorativos, 2, luces, rutaTexturasSkyBox, rutaTexturaSuelo, rutaTexturaMuro);
+		-50, limites, elementosDecorativos, 2, luces, rutaTexturasSkyBox_Deserto, rutaTexturaSuelo, rutaTexturaMuro);
 	mundos.push_back(mundo);
 
 	elementosDecorativos[ID_PEDRA1] = 15;

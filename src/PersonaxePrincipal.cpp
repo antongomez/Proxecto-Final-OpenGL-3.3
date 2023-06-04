@@ -7,9 +7,9 @@
 
 #include <glad.h>
 
-PersonaxePrincipal::PersonaxePrincipal(glm::vec3 posicion, glm::vec3 escalado, 
-	unsigned int shaderProgram, int tipoFigura, float angulo) : 
-	Obxecto(posicion, escalado, shaderProgram){
+PersonaxePrincipal::PersonaxePrincipal(glm::vec3 posicion, glm::vec3 escalado, float angulo,
+	unsigned int shaderProgram, int tipoFigura) : 
+	Obxecto(posicion, escalado, angulo, shaderProgram){
 	this->fg = new Figura(FIGURA_CARGADA, shaderProgram, "recursos/modelos/Chieftain_tanque.obj");
 	this->angulo = angulo;
 	this->moverse = false;

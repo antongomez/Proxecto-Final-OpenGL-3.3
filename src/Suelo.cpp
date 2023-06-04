@@ -14,11 +14,9 @@ Suelo::Suelo(glm::vec3 posicion, float escala, float* limites, unsigned int shad
 
 	this->shaderProgram = shaderProgram;
 
-	this->fg = new Figura(tipoFigura, shaderProgram);
-	this->fg->cargarTextura(rutaTextura.c_str(), GL_RGB);
+	this->fg = Figura::GetFigura(tipoFigura, shaderProgram, rutaTextura);
 
-	this->fgMuro = new Figura(tipoFigura, shaderProgram);
-	this->fgMuro->cargarTextura(rutaTexturaMuro.c_str(), GL_RGB);
+	this->fgMuro = Figura::GetFigura(tipoFigura, shaderProgram, rutaTexturaMuro);
 }
 
 void Suelo::renderizarSuelo() {

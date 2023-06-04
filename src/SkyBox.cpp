@@ -11,15 +11,10 @@ SkyBox::SkyBox(float distancia, float altura, unsigned int shaderProgram, int ti
 	this->shaderProgram = shaderProgram;
 
 	// Creamos os catro cadrados e cargamos as suas texturas
-	for (int i = 0; i < 4; i++) {
-		this->fg[i] = new Figura(tipoFigura, shaderProgram);
-	}
-
 	// Orde dos cadrados: left, right, front, back
-	this->fg[0]->cargarTextura(rutaTexturas[0].c_str(), GL_RGB);
-	this->fg[1]->cargarTextura(rutaTexturas[1].c_str(), GL_RGB);
-	this->fg[2]->cargarTextura(rutaTexturas[2].c_str(), GL_RGB);
-	this->fg[3]->cargarTextura(rutaTexturas[3].c_str(), GL_RGB);
+	for (int i = 0; i < 4; i++) {
+		this->fg[i] = Figura::GetFigura(tipoFigura, shaderProgram, rutaTexturas[i]);
+	}
 }
 
 void SkyBox::renderizarSkyBox() {

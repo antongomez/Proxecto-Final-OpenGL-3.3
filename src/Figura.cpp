@@ -11,24 +11,59 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-// Construtor para as figuras xeometricas
-Figura::Figura(int tipo, unsigned int shaderProgram) {
-	this->tipo = tipo;
-	this->shaderProgram = shaderProgram;
-	// Debuxamos o tipo de figura xeometrica que corresponda
-	debuxar();
-}
+// Singleton
+static std::map<std::string, Figura*> fgCadrados;
+static Figura* fgCubo = nullptr;
+static std::map<std::string, Figura*> fgCargadas;
 
 // Construtor para as figuras cargadas
-Figura::Figura(int tipo, unsigned int shaderProgram, std::string inputOBJfile) {
+Figura::Figura(int tipo, unsigned int shaderProgram, std::string ruta) {
 	this->tipo = tipo;
 	this->shaderProgram = shaderProgram;
-	cargarModelo(inputOBJfile);
-	debuxaFiguraCargada();
+
+	if (tipo == FIGURA_CARGADA) {	// Neste caso a ruta correspondese cun OBJ
+		cargarModelo(ruta);
+		debuxaFiguraCargada();
+	}
+	else {							// Neste caso a ruta correspondese cunha textura
+		debuxar();
+
+		if (!ruta.empty()) {
+			cargarTextura(ruta.c_str(), GL_RGB);
+		}
+	}
+
 }
 
-Figura::~Figura() {
+Figura* Figura::GetFigura(int tipo, unsigned int shaderProgram, std::string ruta) {
+	Figura* fg = nullptr;
 
+	switch(tipo) {
+	case FIGURA_CADRADO:
+		fg = fgCadrados[ruta];
+		if (fg == nullptr) {
+			fg = new Figura(tipo, shaderProgram, ruta);
+			fgCadrados[ruta] = fg;
+		}
+		break;
+	case FIGURA_CARGADA:
+		fg = fgCargadas[ruta];
+		if (fg == nullptr) {
+			fg = new Figura(tipo, shaderProgram, ruta);
+			fgCargadas[ruta] = fg;
+		}
+		break;
+	case FIGURA_CUBO:
+
+		if (fgCubo == nullptr) {
+			fg = new Figura(tipo, shaderProgram, ruta);
+			fgCubo = fg;
+		}
+		break;
+
+	}
+
+	return fg;
 }
 
 void Figura::debuxar() {

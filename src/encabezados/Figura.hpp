@@ -29,14 +29,12 @@ public:
 
 	// -------------- Construtores -----------------//
 	
-	// Construtor para as figuras xeometricas
-	Figura(int tipo, unsigned int shaderProgram);
-	// Construtor para as figuras cargadas
 	Figura(int tipo, unsigned int shaderProgram, std::string inputOBJfile);
-	// Destrutor
-	~Figura();
 
-	// -------------- Meotodos -----------------//
+	// Singleton
+	static Figura* GetFigura(int tipo, unsigned int shaderProgram, std::string inputOBJfile);
+
+	// -------------- Metodos -----------------//
 	void debuxar();
 	void renderizar();
 

@@ -11,7 +11,7 @@ Obxecto::Obxecto(glm::vec3 posicion, glm::vec3 escalado, unsigned int shaderProg
 	this->posicion = posicion;
 	this->escalado = escalado;
 	this->shaderProgram = shaderProgram;
-	this->fg = new Figura(tipoFigura, shaderProgram);
+	this->fg = Figura::GetFigura(tipoFigura, shaderProgram, "");
 }
 
 // Constructor para os obxectos cargados
@@ -26,7 +26,7 @@ Obxecto::Obxecto(glm::vec3 posicion, glm::vec3 escalado, unsigned int shaderProg
 	this->posicion = posicion;
 	this->escalado = escalado;
 	this->shaderProgram = shaderProgram;
-	this->fg = new Figura(FIGURA_CARGADA, shaderProgram, inputOBJfile);
+	this->fg = Figura::GetFigura(FIGURA_CARGADA, shaderProgram, inputOBJfile);
 }
 
 void Obxecto::calcularMatrizModelo() {

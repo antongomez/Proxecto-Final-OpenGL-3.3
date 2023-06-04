@@ -15,7 +15,7 @@ Obxecto::Obxecto(glm::vec3 posicion, glm::vec3 escalado, float angulo, unsigned 
 	this->fg = Figura::GetFigura(tipoFigura, shaderProgram, "");
 }
 
-// Constructor para os obxectos cargados
+// Constructor para os inimigos e o personaxe principal
 Obxecto::Obxecto(glm::vec3 posicion, glm::vec3 escalado, float angulo, unsigned int shaderProgram) {
 	this->posicion = posicion;
 	this->escalado = escalado;

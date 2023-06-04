@@ -267,6 +267,7 @@ void Mundo::renderizarEscena() {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	personaxePrincipal->renderizarObxecto();
+	personaxePrincipal->renderizarBalas();
 
 	for (int i = 0; i < obxectosDecorativos.size(); i++) {
 		obxectosDecorativos[i]->renderizarObxecto();
@@ -386,6 +387,11 @@ void Mundo::eventoTeclado(int tecla, int accion) {
 	}
 	else if (tecla == 51 && accion == GLFW_RELEASE) {
 		camara->modo = MODO_CAMARA_TERCEIRA_PERSOA;
+	}
+
+	// Disparo
+	if (tecla == 32 && accion == GLFW_PRESS) {
+		personaxePrincipal->disparar();
 	}
 }
 

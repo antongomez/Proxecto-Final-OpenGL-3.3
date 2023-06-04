@@ -1,5 +1,6 @@
 #include "encabezados/Partida.hpp"
 #include "encabezados/definicions.h"
+#include "encabezados/AudioHelper.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp> 
@@ -122,6 +123,12 @@ void Partida::iniciarPartida() {
 
 	idMundoActual = 0;
 	mundos[0]->iniciarMundo(Camara::SCR_WIDTH, Camara::SCR_HEIGHT);
+
+	iniciarMusica();
+}
+
+void Partida::iniciarMusica() {
+	AudioHelper::GetInstance()->reproducir2D("recursos/audio/musica-fondo.ogg", true);
 }
 
 void Partida::moverObxectos(float tempoTranscurrido) {

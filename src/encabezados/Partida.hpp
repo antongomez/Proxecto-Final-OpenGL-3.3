@@ -31,5 +31,8 @@ public:
 	void eventoTeclado(int tecla, int accion);
 	void finalizarMundo();
 	void seguinteMundo();
+
+private:
+	void iniciarMusica();
 	
 };

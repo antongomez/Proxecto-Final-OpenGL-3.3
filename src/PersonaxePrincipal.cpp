@@ -1,5 +1,6 @@
 #include "encabezados/PersonaxePrincipal.hpp"
 #include "encabezados/definicions.h"
+#include "encabezados/AudioHelper.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -51,6 +52,9 @@ void PersonaxePrincipal::disparar() {
 	glm::vec3 posicionBala = posicion + glm::vec3(0, 1.2, 0) + (2.8f * direccion);
 
 	balas.push_back(new Bala(posicionBala, glm::vec3(1), 0, shaderProgram, "recursos/modelos/bala.obj", direccion));
+
+	// Emitimos o sonido do disparo
+	AudioHelper::GetInstance()->reproducir2D("recursos/audio/shotgun-firing.ogg", false);
 }
 
 void PersonaxePrincipal::renderizarBalas() {

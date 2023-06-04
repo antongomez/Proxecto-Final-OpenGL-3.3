@@ -45,7 +45,7 @@
 // ----------------  Definicions MOVEMENTOS -------------------------- //
 #define VELOCIDADE_BASE_ENEMIGOS 0.3f
 #define VELOCIDADE_BASE_PERSONAXE 4.0f
-#define VELOCIDADE_BASE_BALA 15.0f
+#define VELOCIDADE_BASE_BALA 20.0f
 
 # define INCREMENTO_XIRO_PERSONAXE 3.0f*UNIDADE_GRAO_EN_RADIANS
 

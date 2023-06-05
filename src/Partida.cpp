@@ -21,15 +21,20 @@ void Partida::iniciarPartida() {
 	this->personaxePrincipal = new PersonaxePrincipal(glm::vec3(0, 0, 0), glm::vec3(1.0f), 0, shaderProgram, FIGURA_CARGADA);
 
 	// Creamos a pantalla de carga inicial
-	float limitesPI[] = { -25.0f, 25.0f };
+	float limitesPI[] = { 0, 0 };
 
 	std::map<int, std::vector<Luz*>> luces;
 
 	std::vector<Luz*> luzDireccional0;
-	luzDireccional0.push_back(new Luz(glm::vec3(0, -5, 3), glm::vec3(0.7f), glm::vec3(1.0f), glm::vec3(1.0f)));
+	luzDireccional0.push_back(new Luz(glm::vec3(0, -5, 3), glm::vec3(0.7f), glm::vec3(0.7f), glm::vec3(0.3f)));
 	luces[LUZ_DIRECCIONAL] = luzDireccional0;
 
-	std::string rutaTexturaSuelo = "recursos/texturas/hierba.bmp";
+	std::vector<Luz*> luzFocal0;
+	luzFocal0.push_back(new Luz(glm::vec3(-2.0f, 5.0f, 0), normalize(glm::vec3(1.0f, -5.0f, 0)), glm::vec3(0.2f, 0.0f, 1.0f), glm::vec3(0.2f, 0.0f, 1.0f), 0.89f, 0.84f));
+	luzFocal0.push_back(new Luz(glm::vec3(2.0f, 5.0f, 0), normalize(glm::vec3(-1.0f, -5.0f, 0)), glm::vec3(0.2f, 0.0f, 1.0f), glm::vec3(0.2f, 0.0f, 1.0f), 0.89f, 0.84f));
+	luces[LUZ_FOCAL] = luzFocal0;
+
+	std::string rutaTexturaSuelo = "recursos/texturas/textura-suelo-pantalla-inicial.jpg";
 	std::string rutaTexturaMetalica = "recursos/texturas/hierba.bmp";
 
 	PantallaInicial* pi = new PantallaInicial(personaxePrincipal, shaderProgram, shaderProgramTex, shaderProgramMiniMapa,
@@ -52,6 +57,9 @@ void Partida::iniciarPartida() {
 	std::vector<Luz*> luzDireccional1;
 	luzDireccional1.push_back(new Luz(glm::vec3(0, -5, 3), glm::vec3(0.7f), glm::vec3(1.0f), glm::vec3(1.0f)));
 	luces[LUZ_DIRECCIONAL] = luzDireccional1;
+
+	// Quitamos as luces focais do anterior mundo
+	luces.erase(LUZ_FOCAL);
 
 	rutaTexturaSuelo = "recursos/texturas/hierba.bmp";
 	std::string rutaTexturaMuro = "recursos/texturas/paredeMundo1.jpg";

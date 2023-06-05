@@ -23,7 +23,7 @@ PantallaInicial::PantallaInicial(PersonaxePrincipal* personaxePrincipal, GLuint 
 }
 
 void PantallaInicial::iniciar(float width, float height) {
-	this->camara = new Camara(10.0f, 0, PI / 6.0f, width, height);
+	this->camara = new Camara(9.0f, 0, PI / 8.0f, width, height);
 
 	// colocamos ao personaxe principal sobre o chan no centro do mesmo
 	personaxePrincipal->posicion = suelo->posicion;
@@ -129,6 +129,18 @@ void PantallaInicial::renderizarEscena() {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	personaxePrincipal->renderizarObxecto();
+
+	glUseProgram(shaderProgramTex);
+	// Establecemos as matrices de view e projection no shader
+	camara->actualizarMatricesShader(shaderProgram);
+	// Establecemos as luces no shader
+	establecerLucesShader(shaderProgramTex);
+
+	// Variable do shader para determinar se estamos iluminando o skyBox ou non
+	unsigned int loc_skyBox = glGetUniformLocation(shaderProgramTex, "skyBox");
+	glUniform1i(loc_skyBox, 0);
+
+	suelo->renderizarSuelo();
 }
 
 void PantallaInicial::eventoTeclado(int tecla, int accion) {}

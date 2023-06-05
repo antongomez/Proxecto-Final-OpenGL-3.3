@@ -11,6 +11,8 @@ public:
 	Obxecto* target;	// Obxecto ao que se achega o enemigo
 	glm::vec2 direccion;
 
+	bool vivo;
+
 	// Construtores
 	Enemigo(glm::vec3 posicion, glm::vec3 escalado, float angulo, unsigned int shaderProgram, int tipoFigura, int nivel, Obxecto* target);
 

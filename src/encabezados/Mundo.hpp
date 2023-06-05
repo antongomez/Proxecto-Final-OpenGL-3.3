@@ -46,6 +46,9 @@ public:
 	void iniciarMundo(float width, float height);
 
 	void moverObxectos(float tempoTranscurrido);
+	bool mundoCompletado();
+	void colisionsBalas();
+	void colisionsTanque();
 	void renderizarEscena();
 	void eventoTeclado(int tecla, int accion);
 	void reescalarVenta(GLFWwindow* window, int width, int height);

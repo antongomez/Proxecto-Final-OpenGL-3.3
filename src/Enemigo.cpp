@@ -13,6 +13,7 @@ Enemigo::Enemigo(glm::vec3 posicion, glm::vec3 escalado, float angulo, unsigned 
 	this->target = target;
 	this->direccion = glm::vec2(1, 0); // Os trolls empezan mirando nesta direccion
 	this->fg = Figura::GetFigura(FIGURA_CARGADA, shaderProgram, "recursos/modelos/troll.obj");
+	this->vivo = 1;
 }
 
 void Enemigo::moverEnemigo(double tempoTranscurrido) {

@@ -150,7 +150,39 @@ void Mundo::moverObxectos(float tempoTranscurrido) {
 	for (int i = 0; i < inimigos.size(); i++) {
 		inimigos[i]->moverEnemigo(tempoTranscurrido);
 	}
+	
+	// Comprobamos as posibles colisions
+	colisionsBalas();
+	colisionsTanque();
 }
+
+bool Mundo::mundoCompletado() {
+	bool completado = 1;
+	for (int i = 0; i < inimigos.size(); i++) {
+		if (inimigos[i]->vivo) {
+			completado = 0;
+		}
+	}
+	return completado;
+}
+
+void Mundo::colisionsBalas() {
+
+	for (int i = 0; i < personaxePrincipal->balas.size(); i++) {
+		for (int j = 0; j < inimigos.size(); j++) {
+			if (glm::distance((personaxePrincipal->balas)[i]->posicion, inimigos[j]->posicion) <= DIST_COLISION_BALA) {
+				inimigos[j]->vivo = 0;
+			}
+		}
+	}
+	
+}
+
+void Mundo::colisionsTanque() {
+
+}
+
+
 
 void Mundo::establecerLucesShader(GLuint shader) {
 	// Iluminacion
@@ -240,7 +272,9 @@ void Mundo::renderizarMiniMapa() {
 	personaxePrincipal->renderizarObxecto();
 
 	for (int i = 0; i < inimigos.size();i++) {
-		inimigos[i]->renderizarObxecto();
+		if (inimigos[i]->vivo) {
+			inimigos[i]->renderizarObxecto();
+		}
 	}
 
 	glUniform3fv(loc_color, 1, value_ptr(glm::vec3(0, 0.3f, 0)));
@@ -274,7 +308,9 @@ void Mundo::renderizarEscena() {
 	}
 
 	for (int i = 0; i < inimigos.size();i++) {
-		inimigos[i]->renderizarObxecto();
+		if (inimigos[i]->vivo) {
+			inimigos[i]->renderizarObxecto();
+		}
 	}
 
 	glUseProgram(shaderProgramTex);

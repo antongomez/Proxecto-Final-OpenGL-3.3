@@ -134,6 +134,11 @@ void Partida::iniciarMusica() {
 void Partida::moverObxectos(float tempoTranscurrido) {
 	mundos[idMundoActual]->moverObxectos(tempoTranscurrido);
 	mundos[idMundoActual]->renderizarEscena();
+
+	// Comprobamos se xa matamos a todos os inimigos deste mundo
+	if (mundos[idMundoActual]->mundoCompletado()) {
+		seguinteMundo();
+	}
 }
 
 void Partida::reescalarVenta(GLFWwindow* window, int width, int height) {

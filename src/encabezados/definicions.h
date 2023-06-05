@@ -67,3 +67,7 @@
 
 // ---------------- Definicions MINIMAPA -------------------------- //
 #define PROPORCION_MINIMAPA 0.75f
+
+// ---------------- Definicions COLISIONS -------------------------- //
+#define DIST_COLISION_BALA 1.5f
+

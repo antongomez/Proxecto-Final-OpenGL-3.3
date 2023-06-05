@@ -9,14 +9,19 @@
 #include <glad.h>
 
 PersonaxePrincipal::PersonaxePrincipal(glm::vec3 posicion, glm::vec3 escalado, float angulo,
-	unsigned int shaderProgram, int tipoFigura) :
+	unsigned int shaderProgram, int tipoFigura, std::vector<std::string> rutasPersonaxes) :
 	Obxecto(posicion, escalado, angulo, shaderProgram) {
-	this->fg = new Figura(FIGURA_CARGADA, shaderProgram, "recursos/modelos/Chieftain_tanque.obj");
+	for (int i = 0; i < rutasPersonaxes.size(); i++) {
+		this->fgPersonaxes.push_back(new Figura(FIGURA_CARGADA, shaderProgram, rutasPersonaxes[i]));
+	}
+	this->fg = fgPersonaxes[0];
+	this->fgActual = 0;
 	this->angulo = angulo;
 	this->moverse = false;
 	this->marcha_atras = false;
 	this->xirar_dereita = false;
 	this->xirar_esquerda = false;
+	this->nPersonaxes = rutasPersonaxes.size();
 }
 
 void PersonaxePrincipal::moverPersonaxe(double tempoTranscurrido) {
@@ -78,4 +83,15 @@ void PersonaxePrincipal::renderizarBalas() {
 	for (const auto& bala : balas) {
 		bala->renderizarObxecto();
 	}
+}
+
+void PersonaxePrincipal::cambiarPersonaxe(bool seguinte) {
+	if (fgActual == (nPersonaxes - 1)){
+		fgActual = 0;
+	}
+	else {
+		fgActual++;
+	}
+
+	fg = fgPersonaxes[fgActual];
 }

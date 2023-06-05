@@ -32,7 +32,10 @@ public:
 	void vistaXeral(PersonaxePrincipal* p);
 	void vistaTerceiraPersoa(PersonaxePrincipal* p);
 	void actualizarMatrizProxeccion();
+	// Para o minimapa
 	void actualizarMatrizProxeccionOrtho(float ancho);
+	// Para a pantalla inicial
+	void actualizarMatrizProxeccionOrtho();
 	void actualizarMatricesShader(GLuint shader);
 };
 

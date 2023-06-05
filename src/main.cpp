@@ -14,6 +14,8 @@
 #include "encabezados/Camara.hpp";
 #include "encabezados/Partida.hpp";
 
+#include "encabezados/TextHelper.hpp";
+
 #include "encabezados/definicions.h"
 
 // Tamanhos iniciais da venta
@@ -39,9 +41,8 @@ int main()
 
 	partida = new Partida(shaderProgram, shaderProgramTex, shaderProgramMiniMapa);
 
-	// Obten a ubicación das matrices de vista e proxeccion no programa de shader
-	GLuint viewLoc = glGetUniformLocation(shaderProgram, "view");
-	GLuint projectionLoc = glGetUniformLocation(shaderProgram, "projection");
+	// Establecemos o tamaño da venta inicial para o texto
+	TextHelper::GetInstance()->cambiarViewport(Camara::SCR_WIDTH, Camara::SCR_HEIGHT);
 
 	// Variables para o control do tempo
 	double tempoAnterior = 0;

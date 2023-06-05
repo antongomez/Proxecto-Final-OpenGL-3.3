@@ -4,6 +4,8 @@ static AudioHelper* ah = nullptr;
 
 AudioHelper::AudioHelper() {
 	this->soundEngine = irrklang::createIrrKlangDevice();
+
+	
 }
 
 AudioHelper* AudioHelper::GetInstance() {

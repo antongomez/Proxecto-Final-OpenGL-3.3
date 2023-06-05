@@ -34,7 +34,6 @@ public:
 	void moverObxectos(float tempoTranscurrido) override;
 	void renderizarEscena() override;
 	void eventoTeclado(int tecla, int accion) override;
-	void reescalarVenta(GLFWwindow* window, int width, int height) override;
 
 	bool mundoCompletado() override;
 	void colisionsBalas();

@@ -8,6 +8,7 @@
 #include <vector>
 #include <map>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <string>
 
 class PantallaInicial
@@ -37,11 +38,15 @@ public:
 	virtual void moverObxectos(float tempoTranscurrido);
 	virtual void renderizarEscena();
 	virtual void eventoTeclado(int tecla, int accion);
-	virtual void reescalarVenta(GLFWwindow* window, int width, int height);
+	void reescalarVenta(GLFWwindow* window, int width, int height);
 	virtual bool mundoCompletado();
 
 protected:
+	// Atributos para debuxar a parte de abaixo da venta inicial
+	Figura* fg;
+
 	void establecerLucesShader(GLuint shader);
 	void xerarSuelo(float* limites, std::string rutaTexturaSuelo);
+	void cambiarPersonaxe();
 
 };

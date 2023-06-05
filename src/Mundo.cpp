@@ -260,15 +260,6 @@ void Mundo::renderizarEscena() {
 	renderizarMiniMapa();
 }
 
-// Implementación de la función de callback para cambiar el tamaño de la ventana
-void Mundo::reescalarVenta(GLFWwindow* window, int width, int height)
-{
-	glViewport(0, 0, width, height);
-	camara->width = (float)width;
-	camara->height = (float)height;
-	camara->actualizarMatrizProxeccion();
-}
-
 // Funcion que xestiona os controis. Deste xeito cada mundo poderia cambiar, por exemplo, a velocidade de movemento do personaxe
 void Mundo::eventoTeclado(int tecla, int accion) {
 

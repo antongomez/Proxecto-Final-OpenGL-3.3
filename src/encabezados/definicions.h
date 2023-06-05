@@ -70,4 +70,3 @@
 
 // ---------------- Definicions COLISIONS -------------------------- //
 #define DIST_COLISION_BALA 1.5f
-

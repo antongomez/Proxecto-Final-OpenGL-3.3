@@ -6,10 +6,7 @@
 class AudioHelper
 {
 public:
-	
 
-	// -------------- Construtores ----------------- //
-	
 	// -------------- Metodos ----------------- //
 	static AudioHelper* GetInstance();
 	static void DeleteInstance();
@@ -21,7 +18,8 @@ private:
 	// --------------- Atributos ------------------- //
 	irrklang::ISoundEngine* soundEngine;
 
+
 	// -------------- Construtores ----------------- //
 	AudioHelper();
-	
+
 };

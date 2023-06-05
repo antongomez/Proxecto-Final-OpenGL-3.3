@@ -109,6 +109,12 @@ void Camara::actualizarMatrizProxeccionOrtho(float ancho) {
 	projection = glm::ortho(-ancho / 2.0f, ancho / 2.0f, -ancho * PROPORCION_MINIMAPA / 2.0f, ancho * PROPORCION_MINIMAPA / 2.0f, 0.0f, radio + 1.0f);
 }
 
+void Camara::actualizarMatrizProxeccionOrtho() {
+	float proporcion = width / height;
+	projection = glm::mat4();
+	projection = glm::ortho(-proporcion, proporcion, -1.0f, 1.0f, 0.0f, radio + 1.0f);
+}
+
 void Camara::actualizarMatricesShader(GLuint shader) {
 	unsigned int viewLoc = glGetUniformLocation(shader, "view");
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));

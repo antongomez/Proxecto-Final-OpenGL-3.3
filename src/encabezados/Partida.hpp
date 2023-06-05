@@ -34,6 +34,5 @@ public:
 
 private:
 	void iniciarMusica();
-	void crearPantallaInicial();
 	
 };

@@ -1,6 +1,7 @@
 #include "encabezados/Partida.hpp"
 #include "encabezados/definicions.h"
 #include "encabezados/AudioHelper.hpp"
+#include "encabezados/TextHelper.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp> 
@@ -18,7 +19,10 @@ Partida::Partida(GLuint shaderProgram, GLuint shaderProgramTex, GLuint shaderPro
 
 void Partida::iniciarPartida() {
 	// Non determinamos a posicion do personaxe principal, pero si o seu escalado. A posicion variara cos mundos pero non a escala
-	this->personaxePrincipal = new PersonaxePrincipal(glm::vec3(0, 0, 0), glm::vec3(1.0f), 0, shaderProgram, FIGURA_CARGADA);
+	std::vector<std::string> rutasPersonaxe;
+	rutasPersonaxe.push_back("recursos/modelos/Chieftain_tanque.obj");
+	rutasPersonaxe.push_back("recursos/modelos/BMP2_hull.obj");
+	this->personaxePrincipal = new PersonaxePrincipal(glm::vec3(0, 0, 0), glm::vec3(1.0f), 0, shaderProgram, FIGURA_CARGADA, rutasPersonaxe);
 
 	// Creamos a pantalla de carga inicial
 	float limitesPI[] = { 0, 0 };
@@ -37,7 +41,7 @@ void Partida::iniciarPartida() {
 	luces[LUZ_POSICIONAL] = luzPosicional0;
 
 	std::string rutaTexturaSuelo = "recursos/texturas/textura-suelo-pantalla-inicial.jpg";
-	std::string rutaTexturaMetalica = "recursos/texturas/hierba.bmp";
+	std::string rutaTexturaMetalica = "recursos/texturas/textura-parte-abaixo.jpg";
 
 	PantallaInicial* pi = new PantallaInicial(personaxePrincipal, shaderProgram, shaderProgramTex, shaderProgramMiniMapa,
 		limitesPI, luces, rutaTexturaSuelo, rutaTexturaMetalica);
@@ -169,6 +173,7 @@ void Partida::moverObxectos(float tempoTranscurrido) {
 }
 
 void Partida::reescalarVenta(GLFWwindow* window, int width, int height) {
+	TextHelper::GetInstance()->cambiarViewport(width, height);
 	mundos[idMundoActual]->reescalarVenta(window, width, height);
 }
 

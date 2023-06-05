@@ -1,6 +1,8 @@
 #include "encabezados/PantallaInicial.hpp"
 #include "encabezados/definicions.h"
 
+#include "encabezados/TextHelper.hpp"
+
 #include <iostream>
 
 PantallaInicial::PantallaInicial(PersonaxePrincipal* personaxePrincipal, GLuint shaderProgram, GLuint shaderProgramTex, GLuint shaderProgramBasico,
@@ -13,6 +15,7 @@ PantallaInicial::PantallaInicial(PersonaxePrincipal* personaxePrincipal, GLuint 
 	this->luces = luces;
 
 	xerarSuelo(limites, rutaTexturaSuelo);
+	this->fg = Figura::GetFigura(FIGURA_CADRADO, shaderProgram, rutaTexturaMetalica);
 }
 
 PantallaInicial::PantallaInicial(PersonaxePrincipal* personaxePrincipal, GLuint shaderProgram, GLuint shaderProgramTex, GLuint shaderProgramBasico,
@@ -31,7 +34,7 @@ void PantallaInicial::iniciar(float width, float height) {
 	personaxePrincipal->posicion = suelo->posicion;
 	personaxePrincipal->angulo = -PI / 4.0f;
 
-	this->camaraSecundaria = new Camara(10.0f, 0, 0, width, height);
+	this->camaraSecundaria = new Camara(5.0f, 0, 0, width, 250);
 }
 
 bool PantallaInicial::mundoCompletado() {
@@ -164,6 +167,7 @@ void PantallaInicial::establecerLucesShader(GLuint shader) {
 }
 
 void PantallaInicial::renderizarEscena() {
+
 	glViewport(0, 0, camara->width, camara->height);
 
 	// Utilizamos o shader para os obxectos que non tenhen texturas
@@ -193,14 +197,53 @@ void PantallaInicial::renderizarEscena() {
 	glUniform1i(loc_skyBox, 0);
 
 	suelo->renderizarSuelo();
+
+	// Renderizar Texto
+	TextHelper* t = TextHelper::GetInstance();
+	t->cambiarViewport(camara->width, camara->height);
+	t->setTexto("ENDGAME");
+	t->escribir(camara->width / 2.0f, 30, 7.0f, 1, 0);
+
+	glViewport(0, 0, camaraSecundaria->width, camaraSecundaria->height);
+	// Utilizamos o shader para os obxectos que non tenhen texturas
+	glUseProgram(shaderProgramBasico);
+
+	camaraSecundaria->establecerCamara(personaxePrincipal);
+	camaraSecundaria->actualizarMatrizProxeccionOrtho();
+	camaraSecundaria->actualizarMatricesShader(shaderProgram);
+
+	glBindTexture(GL_TEXTURE_2D, fg->textura);
+
+	unsigned int loc_cor = glGetUniformLocation(shaderProgramBasico, "cor");
+	glUniform1i(loc_cor, 0);
+
+	for (int i = -10; i <= 10; i+=2) {
+		glm::mat4 matrizModelo = glm::mat4();
+		matrizModelo = glm::translate(matrizModelo, glm::vec3(i, 0, 0));
+		matrizModelo = glm::scale(matrizModelo, glm::vec3(2.0f));
+		unsigned int transformLoc = glGetUniformLocation(shaderProgram, "transform");
+		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(matrizModelo));
+
+		fg->renderizar();
+	}
+
+	// Renderizar Texto
+	t->cambiarViewport(camaraSecundaria->width, camaraSecundaria->height);
+	t->setTexto("CHIEFTAIN");
+	t->escribir(camaraSecundaria->width / 2.0f, camaraSecundaria->height /2.0f, 3.0f, 1, 1);	
+	
 }
 
-void PantallaInicial::eventoTeclado(int tecla, int accion) {}
+void PantallaInicial::eventoTeclado(int tecla, int accion) {
+	if ((tecla == 262 || tecla == 263) && accion != GLFW_RELEASE) {
+		personaxePrincipal->cambiarPersonaxe(tecla == 262);
+	}
+}
+
 void PantallaInicial::reescalarVenta(GLFWwindow* window, int width, int height) {
-	glViewport(0, 0, width, height);
 	camara->width = (float)width;
 	camara->height = (float)height;
-	camara->actualizarMatrizProxeccion();
+	camaraSecundaria->width = (float)width;
 }
 
 

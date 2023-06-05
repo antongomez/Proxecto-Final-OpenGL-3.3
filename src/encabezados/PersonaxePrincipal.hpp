@@ -8,6 +8,9 @@ class PersonaxePrincipal : public Obxecto
 public:
 	// Atributos
 	bool moverse;
+	bool marcha_atras;
+	bool xirar_dereita;
+	bool xirar_esquerda;
 	std::vector<Bala*> balas;
 
 	// Construtores

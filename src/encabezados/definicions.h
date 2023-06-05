@@ -43,11 +43,11 @@
 #define MODO_CAMARA_TERCEIRA_PERSOA 3
 
 // ----------------  Definicions MOVEMENTOS -------------------------- //
-#define VELOCIDADE_BASE_ENEMIGOS 0.3f
-#define VELOCIDADE_BASE_PERSONAXE 4.0f
+#define VELOCIDADE_BASE_ENEMIGOS 1.0f
+#define VELOCIDADE_BASE_PERSONAXE 5.0f
 #define VELOCIDADE_BASE_BALA 20.0f
 
-# define INCREMENTO_XIRO_PERSONAXE 3.0f*UNIDADE_GRAO_EN_RADIANS
+# define INCREMENTO_XIRO_PERSONAXE 50.0f*UNIDADE_GRAO_EN_RADIANS
 
 
 // ----------------  Definicions TIPOS FIGURAS -------------------------- //

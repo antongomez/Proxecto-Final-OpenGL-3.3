@@ -6,6 +6,7 @@
 
 #include <random>
 #include <iostream>
+#include "encabezados/PantallaInicial.hpp"
 
 Mundo::Mundo(PersonaxePrincipal* personaxePrincipal, GLuint shaderProgram, GLuint shaderProgramTex, GLuint shaderProgramBasico,
 	float alturaMundo, float* limites,
@@ -274,13 +275,27 @@ void Mundo::eventoTeclado(int tecla, int accion) {
 	// --------------- personaxe principal MOVEMENTOS -------------------------- //
 	// 
 	// Tecla d: xiro do personaxe a dereita
-	if (tecla == 68 && accion != GLFW_RELEASE) {
-		personaxePrincipal->angulo -= INCREMENTO_XIRO_PERSONAXE;
+	if (tecla == 68) {
+		if (accion == GLFW_PRESS) {
+			personaxePrincipal->xirar_dereita = true;
+			personaxePrincipal->xirar_esquerda = false;
+		}
+
+		if (accion == GLFW_RELEASE) {
+			personaxePrincipal->xirar_dereita = false;
+		}
 	}
 
 	// Tecla a: xiro do personaxe a esquerda
-	if (tecla == 65 && accion != GLFW_RELEASE) {
-		personaxePrincipal->angulo += INCREMENTO_XIRO_PERSONAXE;
+	if (tecla == 65) {
+		if (accion == GLFW_PRESS) {
+			personaxePrincipal->xirar_esquerda = true;
+			personaxePrincipal->xirar_dereita = false;
+		}
+
+		if (accion == GLFW_RELEASE) {
+			personaxePrincipal->xirar_esquerda = false;
+		}
 	}
 
 	// Tecla w: desprazarse cara diante
@@ -288,6 +303,7 @@ void Mundo::eventoTeclado(int tecla, int accion) {
 
 		if (accion == GLFW_PRESS) {
 			personaxePrincipal->moverse = true;
+			personaxePrincipal->marcha_atras = false;
 		}
 
 		if (accion == GLFW_RELEASE) {
@@ -299,11 +315,12 @@ void Mundo::eventoTeclado(int tecla, int accion) {
 	if (tecla == 83) {
 
 		if (accion == GLFW_PRESS) {
-			personaxePrincipal->moverse = true;
+			personaxePrincipal->marcha_atras = true;
+			personaxePrincipal->moverse = false;
 		}
 
 		if (accion == GLFW_RELEASE) {
-			personaxePrincipal->moverse = false;
+			personaxePrincipal->marcha_atras = false;
 		}
 	}
 

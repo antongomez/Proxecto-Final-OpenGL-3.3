@@ -14,18 +14,35 @@ PersonaxePrincipal::PersonaxePrincipal(glm::vec3 posicion, glm::vec3 escalado, f
 	this->fg = new Figura(FIGURA_CARGADA, shaderProgram, "recursos/modelos/Chieftain_tanque.obj");
 	this->angulo = angulo;
 	this->moverse = false;
+	this->marcha_atras = false;
+	this->xirar_dereita = false;
+	this->xirar_esquerda = false;
 }
 
 void PersonaxePrincipal::moverPersonaxe(double tempoTranscurrido) {
-	if (moverse) {
+
+	if (xirar_dereita) {
+		angulo -= INCREMENTO_XIRO_PERSONAXE * tempoTranscurrido;
+	}
+	
+	if (xirar_esquerda) {
+		angulo += INCREMENTO_XIRO_PERSONAXE * tempoTranscurrido;
+	}
+
+	if (moverse || marcha_atras) {
 		// Calculamos a direccion de desprazamento (normalizada)
 		glm::vec3 direccion = glm::vec3(sin(angulo), 0, cos(angulo));
 		// Calculamos o desprazamento en funcion do tempo que transcurriu dende a ultima vez que o movimos
 		float desprazamento = (float)tempoTranscurrido * VELOCIDADE_BASE_PERSONAXE;
 
-		// Actualizamos a posicion do enemigo
+		if (marcha_atras) {
+			desprazamento *= -1;
+		}
+
+		// Actualizamos a posicion do tanque
 		posicion += desprazamento * direccion;
 	}
+
 
 	moverBalas(tempoTranscurrido);
 }

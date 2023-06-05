@@ -1,6 +1,6 @@
 #include "encabezados/PantallaInicial.hpp"
 #include "encabezados/definicions.h"
-
+#include "encabezados/AudioHelper.hpp"
 #include "encabezados/TextHelper.hpp"
 
 #include <iostream>
@@ -236,6 +236,7 @@ void PantallaInicial::renderizarEscena() {
 
 void PantallaInicial::eventoTeclado(int tecla, int accion) {
 	if ((tecla == 262 || tecla == 263) && accion != GLFW_RELEASE) {
+		AudioHelper::GetInstance()->reproducir2D("recursos/audio/open-doors.ogg", false);
 		personaxePrincipal->cambiarPersonaxe(tecla == 262);
 	}
 }

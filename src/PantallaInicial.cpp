@@ -38,7 +38,7 @@ void PantallaInicial::iniciar(float width, float height) {
 }
 
 bool PantallaInicial::mundoCompletado() {
-	return true;
+	return false;
 }
 
 void PantallaInicial::xerarSuelo(float* limites, std::string rutaTexturaSuelo) {

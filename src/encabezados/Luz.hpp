@@ -21,10 +21,11 @@ public:
 	float innerCutOff;
 	float outerCutOff;
 
+	bool mobil;
 	
 	// Construtores
 	Luz(glm::vec3 direccion, glm::vec3 ambiente, glm::vec3 difusa, glm::vec3 especular);
-	Luz(glm::vec3 posicionInicial, glm::vec3 direccionInicial, glm::vec3 difusa, glm::vec3 especular, float innerCutOff, float outerCutOff);
+	Luz(glm::vec3 posicionInicial, glm::vec3 direccionInicial, glm::vec3 difusa, glm::vec3 especular, float innerCutOff, float outerCutOff, bool mobil);
 
 	// Metodos
 	void actualizarLuz(glm::vec3 pos, float angulo);

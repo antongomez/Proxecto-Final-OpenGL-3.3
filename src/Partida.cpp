@@ -30,8 +30,8 @@ void Partida::iniciarPartida() {
 	luces[LUZ_DIRECCIONAL] = luzDireccional0;
 
 	std::vector<Luz*> luzFocal0;
-	luzFocal0.push_back(new Luz(glm::vec3(-2.0f, 5.0f, 0), normalize(glm::vec3(1.0f, -5.0f, 0)), glm::vec3(0.2f, 0.0f, 1.0f), glm::vec3(0.2f, 0.0f, 1.0f), 0.89f, 0.84f));
-	luzFocal0.push_back(new Luz(glm::vec3(2.0f, 5.0f, 0), normalize(glm::vec3(-1.0f, -5.0f, 0)), glm::vec3(0.2f, 0.0f, 1.0f), glm::vec3(0.2f, 0.0f, 1.0f), 0.89f, 0.84f));
+	luzFocal0.push_back(new Luz(glm::vec3(-2.0f, 5.0f, 0), normalize(glm::vec3(1.0f, -5.0f, 0)), glm::vec3(0.2f, 0.0f, 1.0f), glm::vec3(0.2f, 0.0f, 1.0f), 0.89f, 0.84f, false));
+	luzFocal0.push_back(new Luz(glm::vec3(2.0f, 5.0f, 0), normalize(glm::vec3(-1.0f, -5.0f, 0)), glm::vec3(0.2f, 0.0f, 1.0f), glm::vec3(0.2f, 0.0f, 1.0f), 0.89f, 0.84f, false));
 	luces[LUZ_FOCAL] = luzFocal0;
 
 	std::string rutaTexturaSuelo = "recursos/texturas/textura-suelo-pantalla-inicial.jpg";
@@ -128,8 +128,8 @@ void Partida::iniciarPartida() {
 	luzDireccional4.push_back(new Luz(glm::vec3(0, -3, 5), glm::vec3(0), glm::vec3(0.3f), glm::vec3(0.1f)));
 	luces[LUZ_DIRECCIONAL] = luzDireccional4;
 	std::vector<Luz*> luzFocal;
-	luzFocal.push_back(new Luz(glm::vec3(1.0f, 0.8f, 1.2f), normalize(glm::vec3(0, -0.35f, 1.0f)), glm::vec3(1.0f, 1.0f, 0.2f), glm::vec3(1.0f, 1.0f, 0.2f), 0.89f, 0.84f));
-	luzFocal.push_back(new Luz(glm::vec3(-1.0f, 0.8f, 1.2f), normalize(glm::vec3(0, -0.35f, 1.0f)), glm::vec3(1.0f, 1.0f, 0.2f), glm::vec3(1.0f, 1.0f, 0.2f), 0.89f, 0.84f));
+	luzFocal.push_back(new Luz(glm::vec3(1.0f, 0.8f, 1.2f), normalize(glm::vec3(0, -0.35f, 1.0f)), glm::vec3(1.0f, 1.0f, 0.2f), glm::vec3(1.0f, 1.0f, 0.2f), 0.89f, 0.84f, true));
+	luzFocal.push_back(new Luz(glm::vec3(-1.0f, 0.8f, 1.2f), normalize(glm::vec3(0, -0.35f, 1.0f)), glm::vec3(1.0f, 1.0f, 0.2f), glm::vec3(1.0f, 1.0f, 0.2f), 0.89f, 0.84f, true));
 	luces[LUZ_FOCAL] = luzFocal;
 
 	rutaTexturaSuelo = "recursos/texturas/hierba.bmp";
@@ -184,12 +184,12 @@ void Partida::seguinteMundo() {
 	float width =  mundos[idMundoActual]->camara->width;
 	float height = mundos[idMundoActual]->camara->height;
 
-	if (idMundoActual != 3) {
+	if (idMundoActual != (mundos.size() - 1)) {
 		idMundoActual++;
 	}
 	else {
 		idMundoActual = 0;
-		std::cout << "VOLVEMOS MUNDO1\n";
+		std::cout << "VOLVEMOS MUNDO0\n";
 	}
 	
 	mundos[idMundoActual]->iniciar(width, height);

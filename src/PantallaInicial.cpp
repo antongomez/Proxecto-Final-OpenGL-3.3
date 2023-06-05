@@ -27,7 +27,7 @@ void PantallaInicial::iniciar(float width, float height) {
 
 	// colocamos ao personaxe principal sobre o chan no centro do mesmo
 	personaxePrincipal->posicion = suelo->posicion;
-	personaxePrincipal->angulo = -PI/4.0f;
+	personaxePrincipal->angulo = -PI / 4.0f;
 
 	this->camaraSecundaria = new Camara(10.0f, 0, 0, width, height);
 }

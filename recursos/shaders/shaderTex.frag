@@ -28,8 +28,9 @@ struct PointLight {
     vec3 diffuse;
     vec3 specular;
 };  
-#define NR_POINT_LIGHTS 1  
-uniform PointLight pointLights[NR_POINT_LIGHTS];
+uniform int nr_point_lights;
+#define MAX_POINT_LIGHTS 10
+uniform PointLight pointLights[MAX_POINT_LIGHTS];
 
 // Focos
 struct SpotLight {
@@ -41,11 +42,10 @@ struct SpotLight {
     vec3 diffuse;
     vec3 specular;
 };    
-#define NR_SPOT_LIGHTS 2
-uniform SpotLight spotLights[NR_SPOT_LIGHTS];
+uniform int nr_spot_lights;
+#define MAX_SPOT_LIGHTS 10
+uniform SpotLight spotLights[MAX_SPOT_LIGHTS];
 
-// Variables para usar ou non distintos tipos de luz
-uniform int spot;
 // Variable para determinar se estamos iluminando o skyBox
 uniform int skyBox;
 
@@ -54,6 +54,7 @@ uniform sampler2D texture0;
 
 // Funcion que calcula o efecto da luz direccional
 vec3 CalcDirLight(DirLight light, vec3 normal);
+vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos);
 // Funcion que calcula o efecto dos focos de luz
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos);
 
@@ -69,11 +70,14 @@ void main()
         // add the directional light's contribution to the output
         saida += CalcDirLight(dirLight, Normal);
 
-        if(spot == 1) {
-            for(int i = 0; i < NR_SPOT_LIGHTS; i++) {
-                saida += CalcSpotLight(spotLights[i], Normal, FragPos);
-            }
+        for(int i = 0; i < nr_point_lights; i++) {
+            saida += CalcPointLight(pointLights[i], Normal, FragPos);
         }
+
+        for(int i = 0; i < nr_spot_lights; i++) {
+            saida += CalcSpotLight(spotLights[i], Normal, FragPos);
+        }
+        
     }
     
     FragColor = vec4(saida, 1.0);
@@ -89,6 +93,24 @@ vec3 CalcDirLight(DirLight light, vec3 normal)
     vec3 diffuse  = light.diffuse  * diff * vec3(texture(texture0, TexCoord));
     return (ambient + diffuse);
 }  
+
+vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos)
+{
+    vec3 lightDir = normalize(light.position - fragPos);
+    // diffuse shading
+    float diff = max(dot(normal, lightDir), 0.0);
+    
+    // attenuation
+    float distance    = length(light.position - fragPos);
+    float attenuation = 1.0 / (light.constant + light.linear * distance + 
+  			     light.quadratic * (distance * distance));    
+    // combine results
+    vec3 ambient  = light.ambient  * vec3(texture(texture0, TexCoord));
+    vec3 diffuse  = light.diffuse  * diff * vec3(texture(texture0, TexCoord));
+    ambient  *= attenuation;
+    diffuse  *= attenuation;
+    return (ambient + diffuse);
+} 
 
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos)
 {

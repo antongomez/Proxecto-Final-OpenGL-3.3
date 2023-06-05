@@ -31,7 +31,8 @@ struct PointLight {
     vec3 diffuse;
     vec3 specular;
 };  
-#define NR_POINT_LIGHTS 1  
+uniform int nr_point_lights;
+#define NR_POINT_LIGHTS 10  
 uniform PointLight pointLights[NR_POINT_LIGHTS];
 
 // Focos
@@ -44,8 +45,9 @@ struct SpotLight {
     vec3 diffuse;
     vec3 specular;
 };    
-#define NR_SPOT_LIGHTS 2
-uniform SpotLight spotLights[NR_SPOT_LIGHTS];
+uniform int nr_spot_lights;
+#define MAX_SPOT_LIGHTS 10 
+uniform SpotLight spotLights[MAX_SPOT_LIGHTS];
 
 // Propiedades do obxecto
 struct Material {
@@ -56,9 +58,6 @@ struct Material {
 }; 
   
 uniform Material material;
-
-// Variables para usar ou non distintos tipos de luz
-uniform int spot;
 
 // Funcion que calcula o efecto da luz direccional
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);  
@@ -81,15 +80,12 @@ void main()
     // add the directional light's contribution to the output
     saida += CalcDirLight(dirLight, Normal, viewDir);
 
-    // do the same for all point lights
-    //for(int i = 0; i < nr_of_point_lights; i++) {
-        //saida += CalcPointLight(pointLights[i], Normal, FragPos, viewDir);
-        //}
+    for(int i = 0; i < nr_point_lights; i++) {
+        saida += CalcPointLight(pointLights[i], Normal, FragPos, viewDir);
+    }
 
-    if(spot == 1) {
-        for(int i = 0; i < NR_SPOT_LIGHTS; i++) {
-            saida += CalcSpotLight(spotLights[i], Normal, FragPos, viewDir);
-        }
+    for(int i = 0; i < nr_spot_lights; i++) {
+        saida += CalcSpotLight(spotLights[i], Normal, FragPos, viewDir);
     }
     
     FragColor = vec4(saida, 1.0);

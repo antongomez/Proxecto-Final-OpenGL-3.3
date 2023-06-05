@@ -1,6 +1,8 @@
 #include "encabezados/PantallaInicial.hpp"
 #include "encabezados/definicions.h"
 
+#include <iostream>
+
 PantallaInicial::PantallaInicial(PersonaxePrincipal* personaxePrincipal, GLuint shaderProgram, GLuint shaderProgramTex, GLuint shaderProgramBasico,
 	float* limites, std::map<int, std::vector<Luz*>> luces,
 	std::string rutaTexturaSuelo, std::string rutaTexturaMetalica) {
@@ -68,9 +70,9 @@ void PantallaInicial::establecerLucesShader(GLuint shader) {
 		// El elemento se encontró en el mapa
 		std::vector<Luz*>& vecLuzFocal = iter->second;
 
-		// Marcamos no shader que utilizamos luz focal
-		unsigned int spot = glGetUniformLocation(shader, "spot");
-		glUniform1i(spot, 1);
+		// Indicamos cantas luces focais utilizamos
+		unsigned int nr_spot = glGetUniformLocation(shader, "nr_spot_lights");
+		glUniform1i(nr_spot, vecLuzFocal.size());
 
 		for (int i = 0; i < vecLuzFocal.size(); i++) {
 
@@ -106,8 +108,58 @@ void PantallaInicial::establecerLucesShader(GLuint shader) {
 	}
 	else {
 		// Marcamos no shader que non utilizamos luz focal
-		unsigned int spot = glGetUniformLocation(shader, "spot");
-		glUniform1i(spot, 0);
+		unsigned int nr_spot = glGetUniformLocation(shader, "nr_spot_lights");
+		glUniform1i(nr_spot, 0);
+	}
+
+	iter = luces.find(LUZ_POSICIONAL);
+
+	if (iter != luces.end()) {
+		// El elemento se encontró en el mapa
+		std::vector<Luz*>& vecLuzPosicionais = iter->second;
+
+		// Indicamos cantas luces focais utilizamos
+		unsigned int nr_point = glGetUniformLocation(shader, "nr_point_lights");
+		glUniform1i(nr_point, vecLuzPosicionais.size());
+
+		for (int i = 0; i < vecLuzPosicionais.size(); i++) {
+
+			std::string base = "pointLights[" + std::to_string(i) + "].";
+
+			std::string aux = base + "position";
+			unsigned int spotLight_position = glGetUniformLocation(shader, aux.c_str());
+			glUniform3fv(spotLight_position, 1, glm::value_ptr(vecLuzPosicionais[i]->posicion));
+
+			aux = base + "constant";
+			unsigned int spotLight_constante = glGetUniformLocation(shader, aux.c_str());
+			glUniform1f(spotLight_constante, vecLuzPosicionais[i]->constante);
+
+			aux = base + "linear";
+			unsigned int spotLight_linear = glGetUniformLocation(shader, aux.c_str());
+			glUniform1f(spotLight_linear, vecLuzPosicionais[i]->linear);
+
+			aux = base + "quadratic";
+			unsigned int spotLight_cuadratico = glGetUniformLocation(shader, aux.c_str());
+			glUniform1f(spotLight_cuadratico, vecLuzPosicionais[i]->cuadratico);
+
+			aux = base + "ambient";
+			unsigned int spotLight_ambient = glGetUniformLocation(shader, aux.c_str());
+			glUniform3fv(spotLight_ambient, 1, glm::value_ptr(vecLuzPosicionais[i]->ambiente));
+
+			aux = base + "diffuse";
+			unsigned int spotLight_diffuse = glGetUniformLocation(shader, aux.c_str());
+			glUniform3fv(spotLight_diffuse, 1, glm::value_ptr(vecLuzPosicionais[i]->difusa));
+
+			aux = base + "specular";
+			unsigned int spotLight_specular = glGetUniformLocation(shader, aux.c_str());
+			glUniform3fv(spotLight_specular, 1, glm::value_ptr(vecLuzPosicionais[i]->especular));
+		}
+
+	}
+	else {
+		// Marcamos no shader que non utilizamos luz focal
+		unsigned int nr_point = glGetUniformLocation(shader, "nr_point_lights");
+		glUniform1i(nr_point, 0);
 	}
 }
 

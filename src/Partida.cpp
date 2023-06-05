@@ -25,14 +25,16 @@ void Partida::iniciarPartida() {
 
 	std::map<int, std::vector<Luz*>> luces;
 
-	std::vector<Luz*> luzDireccional0;
-	luzDireccional0.push_back(new Luz(glm::vec3(0, -5, 3), glm::vec3(0.7f), glm::vec3(0.7f), glm::vec3(0.3f)));
-	luces[LUZ_DIRECCIONAL] = luzDireccional0;
-
 	std::vector<Luz*> luzFocal0;
-	luzFocal0.push_back(new Luz(glm::vec3(-2.0f, 5.0f, 0), normalize(glm::vec3(1.0f, -5.0f, 0)), glm::vec3(0.2f, 0.0f, 1.0f), glm::vec3(0.2f, 0.0f, 1.0f), 0.89f, 0.84f, false));
-	luzFocal0.push_back(new Luz(glm::vec3(2.0f, 5.0f, 0), normalize(glm::vec3(-1.0f, -5.0f, 0)), glm::vec3(0.2f, 0.0f, 1.0f), glm::vec3(0.2f, 0.0f, 1.0f), 0.89f, 0.84f, false));
+	luzFocal0.push_back(new Luz(glm::vec3(-2.0f, 5.0f, 0), normalize(glm::vec3(0.5f, -5.0f, 0)), glm::vec3(1.0f, 0.8f, 1.0f), glm::vec3(1.0f, 0.8f, 1.0f), 0.89f, 0.84f, false));
+	luzFocal0.push_back(new Luz(glm::vec3(2.0f, 5.0f, 0), normalize(glm::vec3(-0.5f, -5.0f, 0)), glm::vec3(1.0f, 0.8f, 1.0f), glm::vec3(1.0f, 0.8f, 1.0f), 0.89f, 0.84f, false));
+	luzFocal0.push_back(new Luz(glm::vec3(0.0f, 5.0f, 2.0f), normalize(glm::vec3(0, -5.0f, -0.5f)), glm::vec3(1.0f, 0.8f, 1.0f), glm::vec3(1.0f, 0.8f, 1.0f), 0.89f, 0.84f, false));
+	luzFocal0.push_back(new Luz(glm::vec3(0.0f, 5.0f, -2.0f), normalize(glm::vec3(0, -5.0f, 0.5f)), glm::vec3(1.0f, 0.8f, 1.0f), glm::vec3(1.0f, 0.8f, 1.0f), 0.89f, 0.84f, false));
 	luces[LUZ_FOCAL] = luzFocal0;
+
+	std::vector<Luz*> luzPosicional0;
+	luzPosicional0.push_back(new Luz(glm::vec3(0, 4, 0), glm::vec3(1.0f), glm::vec3(1.0f), glm::vec3(1.0f), 1.0f, 0.14f, 0.07f));
+	luces[LUZ_POSICIONAL] = luzPosicional0;
 
 	std::string rutaTexturaSuelo = "recursos/texturas/textura-suelo-pantalla-inicial.jpg";
 	std::string rutaTexturaMetalica = "recursos/texturas/hierba.bmp";
@@ -60,6 +62,7 @@ void Partida::iniciarPartida() {
 
 	// Quitamos as luces focais do anterior mundo
 	luces.erase(LUZ_FOCAL);
+	luces.erase(LUZ_POSICIONAL);
 
 	rutaTexturaSuelo = "recursos/texturas/hierba.bmp";
 	std::string rutaTexturaMuro = "recursos/texturas/paredeMundo1.jpg";

@@ -160,6 +160,7 @@ void Partida::moverObxectos(float tempoTranscurrido) {
 
 	// Comprobamos se xa matamos a todos os inimigos deste mundo
 	if (mundos[idMundoActual]->mundoCompletado()) {
+		AudioHelper::GetInstance()->reproducir2D("recursos/audio/game-level-completed.ogg", false);
 		seguinteMundo();
 	}
 }

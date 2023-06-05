@@ -19,6 +19,19 @@ Suelo::Suelo(glm::vec3 posicion, float escala, float* limites, unsigned int shad
 	this->fgMuro = Figura::GetFigura(tipoFigura, shaderProgram, rutaTexturaMuro);
 }
 
+Suelo::Suelo(glm::vec3 posicion, float escala, float* limites, unsigned int shaderProgram, int tipoFigura, std::string rutaTextura) {
+	this->posicion = posicion;
+	this->escala = escala;
+
+
+	this->limites[0] = limites[0];
+	this->limites[1] = limites[1];
+
+	this->shaderProgram = shaderProgram;
+
+	this->fg = Figura::GetFigura(tipoFigura, shaderProgram, rutaTextura);
+}
+
 void Suelo::renderizarSuelo() {
 
 	float escalado = (float)1.0 / escala;
@@ -40,8 +53,13 @@ void Suelo::renderizarSuelo() {
 			fg->renderizar();
 		}
 	}
+}
+
+void Suelo::renderizarMuro() {
 
 	float alturaMuro = -3.0f;
+	unsigned int transformLoc = glGetUniformLocation(shaderProgram, "transform");
+	float escalado = (float)1.0 / escala;
 
 	glBindTexture(GL_TEXTURE_2D, fgMuro->textura);
 

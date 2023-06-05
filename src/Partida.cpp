@@ -20,11 +20,26 @@ void Partida::iniciarPartida() {
 	// Non determinamos a posicion do personaxe principal, pero si o seu escalado. A posicion variara cos mundos pero non a escala
 	this->personaxePrincipal = new PersonaxePrincipal(glm::vec3(0, 0, 0), glm::vec3(1.0f), 0, shaderProgram, FIGURA_CARGADA);
 
+	// Creamos a pantalla de carga inicial
+	float limitesPI[] = { -25.0f, 25.0f };
+
+	std::map<int, std::vector<Luz*>> luces;
+
+	std::vector<Luz*> luzDireccional0;
+	luzDireccional0.push_back(new Luz(glm::vec3(0, -5, 3), glm::vec3(0.7f), glm::vec3(1.0f), glm::vec3(1.0f)));
+	luces[LUZ_DIRECCIONAL] = luzDireccional0;
+
+	std::string rutaTexturaSuelo = "recursos/texturas/hierba.bmp";
+	std::string rutaTexturaMetalica = "recursos/texturas/hierba.bmp";
+
+	PantallaInicial* pi = new PantallaInicial(personaxePrincipal, shaderProgram, shaderProgramTex, shaderProgramMiniMapa,
+		limitesPI, luces, rutaTexturaSuelo, rutaTexturaMetalica);
+	mundos.push_back(pi);
+
 	// Creamos os mundos
 	float limites[] = { -37.5f, 37.5f };
 
 	std::map<int, int> elementosDecorativos;
-	std::map<int, std::vector<Luz*>> luces;
 
 	elementosDecorativos[ID_PEDRA1] = 30;
 	elementosDecorativos[ID_PEDRA2] = 20;
@@ -38,7 +53,7 @@ void Partida::iniciarPartida() {
 	luzDireccional1.push_back(new Luz(glm::vec3(0, -5, 3), glm::vec3(0.7f), glm::vec3(1.0f), glm::vec3(1.0f)));
 	luces[LUZ_DIRECCIONAL] = luzDireccional1;
 
-	std::string rutaTexturaSuelo = "recursos/texturas/hierba.bmp";
+	rutaTexturaSuelo = "recursos/texturas/hierba.bmp";
 	std::string rutaTexturaMuro = "recursos/texturas/paredeMundo1.jpg";
 	std::string rutaTexturasSkyBox[4];
 	rutaTexturasSkyBox[0] = "recursos/texturas/left.jpg";
@@ -122,7 +137,7 @@ void Partida::iniciarPartida() {
 	mundos.push_back(mundo);
 
 	idMundoActual = 0;
-	mundos[0]->iniciarMundo(Camara::SCR_WIDTH, Camara::SCR_HEIGHT);
+	mundos[0]->iniciar(Camara::SCR_WIDTH, Camara::SCR_HEIGHT);
 
 	iniciarMusica();
 }
@@ -169,7 +184,7 @@ void Partida::seguinteMundo() {
 		std::cout << "VOLVEMOS MUNDO1\n";
 	}
 	
-	mundos[idMundoActual]->iniciarMundo(width, height);
+	mundos[idMundoActual]->iniciar(width, height);
 }
 
 void Partida::finalizarMundo() {

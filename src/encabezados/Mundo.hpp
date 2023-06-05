@@ -1,5 +1,6 @@
 #pragma once 
 
+#include "PantallaInicial.hpp"
 #include "Suelo.hpp"
 #include "SkyBox.hpp"
 #include "Enemigo.hpp"
@@ -11,26 +12,14 @@
 #include <map>
 #include <glm/glm.hpp>
 
-class Mundo
+class Mundo : public PantallaInicial
 {
 public:
 	// Atributos
-	Suelo* suelo;
 	std::vector<Obxecto*> obxectosDecorativos;
 	std::vector<Enemigo*> inimigos;
-	PersonaxePrincipal* personaxePrincipal;
-	std::map<int, std::vector<Luz*>> luces;
-	Camara* camara;
-	Camara* camaraMiniMapa;
 	int nivelMundo;
 	SkyBox* skyBox;
-
-	GLuint shaderProgram;
-	GLuint shaderProgramTex;
-	GLuint shaderProgramMiniMapa;
-
-	// Para o minimapa
-	Suelo* sueloMinimapa;
 
 	// Construtores
 	Mundo(PersonaxePrincipal* personaxe, GLuint shaderProgram, GLuint shaderProgramTex, GLuint shaderProgramMiniMapa,
@@ -40,18 +29,17 @@ public:
 		std::string rutaTexturasSkyBox[],
 		std::string rutaTexturaSuelo, std::string rutaTexturaMuro);
 
-	// Destructor
-
 	// Metodos
-	void iniciarMundo(float width, float height);
+	void iniciar(float width, float height) override;
+	void moverObxectos(float tempoTranscurrido) override;
+	void renderizarEscena() override;
+	void eventoTeclado(int tecla, int accion) override;
+	void reescalarVenta(GLFWwindow* window, int width, int height) override;
 
-	void moverObxectos(float tempoTranscurrido);
-	bool mundoCompletado();
+	bool mundoCompletado() override;
 	void colisionsBalas();
 	void colisionsTanque();
-	void renderizarEscena();
-	void eventoTeclado(int tecla, int accion);
-	void reescalarVenta(GLFWwindow* window, int width, int height);
+
 	void establecerCamara();
 	void moverCamara(int tipoMovemento);
 
@@ -60,8 +48,6 @@ private:
 	void xerarSuelo(float alturaMundo, float* limites, std::string rutaTextura, std::string rutaTexturaMuro);
 	void xerarElementosDecorativos(std::map<int, int> elementosDecorativos);
 	void xerarInimigos(int nivelMundo);
-
-	void establecerLucesShader(GLuint shader);
 
 	void renderizarMiniMapa();
 };

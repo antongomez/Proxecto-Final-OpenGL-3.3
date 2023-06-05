@@ -7,19 +7,13 @@
 #include <random>
 #include <iostream>
 
-Mundo::Mundo(PersonaxePrincipal* personaxePrincipal, GLuint shaderProgram, GLuint shaderProgramTex, GLuint shaderProgramMiniMapa,
+Mundo::Mundo(PersonaxePrincipal* personaxePrincipal, GLuint shaderProgram, GLuint shaderProgramTex, GLuint shaderProgramBasico,
 	float alturaMundo, float* limites,
 	std::map<int, int> elementosDecorativos, int nivelMundo, std::map<int, std::vector<Luz*>> luces,
 	std::string rutaTexturasSkyBox[],
-	std::string rutaTexturaSuelo, std::string rutaTexturaMuro)
+	std::string rutaTexturaSuelo, std::string rutaTexturaMuro) : PantallaInicial(personaxePrincipal, shaderProgram, shaderProgramTex, shaderProgramBasico, luces)
 {
-
-	this->personaxePrincipal = personaxePrincipal;
-	this->shaderProgram = shaderProgram;
-	this->shaderProgramTex = shaderProgramTex;
-	this->shaderProgramMiniMapa = shaderProgramMiniMapa;
 	this->nivelMundo = nivelMundo;
-	this->luces = luces;
 
 	xerarSuelo(alturaMundo, limites, rutaTexturaSuelo, rutaTexturaMuro);
 	xerarSkyBox(alturaMundo, limites, rutaTexturasSkyBox);
@@ -27,14 +21,14 @@ Mundo::Mundo(PersonaxePrincipal* personaxePrincipal, GLuint shaderProgram, GLuin
 	xerarInimigos(nivelMundo);
 }
 
-void Mundo::iniciarMundo(float width, float height) {
+void Mundo::iniciar(float width, float height) {
 	this->camara = new Camara(20.0f, PI / 2.0f, PI / 4.0f, width, height);
 
 	// colocamos ao personaxe principal sobre o chan no centro do mesmo
 	personaxePrincipal->posicion = glm::vec3(suelo->posicion.x, suelo->posicion.y, suelo->posicion.z);
 	personaxePrincipal->angulo = 0;
 
-	this->camaraMiniMapa = new Camara(10.0f, PI, PI / 2.0f - UNIDADE_GRAO_EN_RADIANS, width, height);
+	this->camaraSecundaria = new Camara(10.0f, PI, PI / 2.0f - UNIDADE_GRAO_EN_RADIANS, width, height);
 }
 
 void Mundo::xerarSkyBox(float alturaMundo, float* limites, std::string rutaTexturas[]) {
@@ -182,92 +176,23 @@ void Mundo::colisionsTanque() {
 
 }
 
-
-
-void Mundo::establecerLucesShader(GLuint shader) {
-	// Iluminacion
-	auto iter = luces.find(LUZ_DIRECCIONAL);
-	if (iter != luces.end()) {
-		// El elemento se encontró en el mapa
-		std::vector<Luz*>& vecDir = iter->second;
-
-		// Establecemos a luz direccional
-		unsigned int dirLight_direction = glGetUniformLocation(shader, "dirLight.direction");
-		glUniform3fv(dirLight_direction, 1, glm::value_ptr(vecDir[0]->direccion));
-		unsigned int dirLight_ambient = glGetUniformLocation(shader, "dirLight.ambient");
-		glUniform3fv(dirLight_ambient, 1, glm::value_ptr(vecDir[0]->ambiente));
-		unsigned int dirLight_diffuse = glGetUniformLocation(shader, "dirLight.diffuse");
-		glUniform3fv(dirLight_diffuse, 1, glm::value_ptr(vecDir[0]->difusa));
-		unsigned int dirLight_especular = glGetUniformLocation(shader, "dirLight.specular");
-		glUniform3fv(dirLight_especular, 1, glm::value_ptr(vecDir[0]->especular));
-	}
-
-	iter = luces.find(LUZ_FOCAL);
-
-	if (iter != luces.end()) {
-		// El elemento se encontró en el mapa
-		std::vector<Luz*>& vecLuzFocal = iter->second;
-
-		// Marcamos no shader que utilizamos luz focal
-		unsigned int spot = glGetUniformLocation(shader, "spot");
-		glUniform1i(spot, 1);
-
-		for (int i = 0; i < vecLuzFocal.size(); i++) {
-
-			vecLuzFocal[i]->actualizarLuz(personaxePrincipal->posicion, personaxePrincipal->angulo);
-
-			std::string base = "spotLights[" + std::to_string(i) + "].";
-
-			std::string aux = base + "position";
-			unsigned int spotLight_position = glGetUniformLocation(shader, aux.c_str());
-			glUniform3fv(spotLight_position, 1, glm::value_ptr(vecLuzFocal[i]->posicion));
-
-			aux = base + "direction";
-			unsigned int spotLight_direction = glGetUniformLocation(shader, aux.c_str());
-			glUniform3fv(spotLight_direction, 1, glm::value_ptr(vecLuzFocal[i]->direccion));
-
-			aux = base + "innerCutOff";
-			unsigned int spotLight_innerCutOff = glGetUniformLocation(shader, aux.c_str());
-			glUniform1f(spotLight_innerCutOff, vecLuzFocal[i]->innerCutOff);
-
-			aux = base + "outerCutOff";
-			unsigned int spotLight_outerCutOff = glGetUniformLocation(shader, aux.c_str());
-			glUniform1f(spotLight_outerCutOff, vecLuzFocal[i]->outerCutOff);
-
-			aux = base + "diffuse";
-			unsigned int spotLight_diffuse = glGetUniformLocation(shader, aux.c_str());
-			glUniform3fv(spotLight_diffuse, 1, glm::value_ptr(vecLuzFocal[i]->difusa));
-
-			aux = base + "specular";
-			unsigned int spotLight_specular = glGetUniformLocation(shader, aux.c_str());
-			glUniform3fv(spotLight_specular, 1, glm::value_ptr(vecLuzFocal[i]->especular));
-		}
-
-	}
-	else {
-		// Marcamos no shader que non utilizamos luz focal
-		unsigned int spot = glGetUniformLocation(shader, "spot");
-		glUniform1i(spot, 0);
-	}
-}
-
 void Mundo::renderizarMiniMapa() {
 	float ancho = 400;
 	float alto = ancho * PROPORCION_MINIMAPA;
 	glViewport(camara->width - ancho - 20, camara->height - alto - 20, ancho, alto);
 
 	// Utilizamos o shader para os obxectos que non tenhen texturas
-	glUseProgram(shaderProgramMiniMapa);
+	glUseProgram(shaderProgramBasico);
 
-	camaraMiniMapa->establecerCamara(personaxePrincipal);
-	camaraMiniMapa->actualizarMatrizProxeccionOrtho(25.0f);
-	camaraMiniMapa->actualizarMatricesShader(shaderProgram);
+	camaraSecundaria->establecerCamara(personaxePrincipal);
+	camaraSecundaria->actualizarMatrizProxeccionOrtho(25.0f);
+	camaraSecundaria->actualizarMatricesShader(shaderProgram);
 
 	// O obxecto pintamolo doutra cor
-	unsigned int loc_cor = glGetUniformLocation(shaderProgramMiniMapa, "cor");
+	unsigned int loc_cor = glGetUniformLocation(shaderProgramBasico, "cor");
 	glUniform1i(loc_cor, 1);
 
-	unsigned int loc_color = glGetUniformLocation(shaderProgramMiniMapa, "color");
+	unsigned int loc_color = glGetUniformLocation(shaderProgramBasico, "color");
 
 	personaxePrincipal->renderizarObxecto();
 
@@ -324,6 +249,7 @@ void Mundo::renderizarEscena() {
 	glUniform1i(loc_skyBox, 0);
 
 	suelo->renderizarSuelo();
+	suelo->renderizarMuro();
 
 	// Actuvamos a variable do shader para iluminar o skyBox
 	glUniform1i(loc_skyBox, 1);

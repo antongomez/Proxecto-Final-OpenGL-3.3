@@ -2,6 +2,7 @@
 
 #include "PersonaxePrincipal.hpp"
 #include "Mundo.hpp"
+#include "PantallaInicial.hpp"
 
 #include <glm/glm.hpp>
 
@@ -12,9 +13,8 @@ class Partida
 public:
 	// Atributos
 	PersonaxePrincipal* personaxePrincipal;
-	std::vector<Mundo*> mundos;
+	std::vector<PantallaInicial*> mundos;
 	int idMundoActual;
-	// Luces
 
 	GLuint shaderProgram;
 	GLuint shaderProgramTex;
@@ -34,5 +34,6 @@ public:
 
 private:
 	void iniciarMusica();
+	void crearPantallaInicial();
 	
 };

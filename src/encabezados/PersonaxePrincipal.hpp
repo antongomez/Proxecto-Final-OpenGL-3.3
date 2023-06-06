@@ -37,6 +37,8 @@ public:
 	void cambiarPersonaxe(bool seguinte);
 	std::string nomeTanqueActual();
 
+	void sumarAngulo(float ang);
+
 	bool colisionArbol(std::vector<Obxecto*> obxectosDecorativos);
 
 private:

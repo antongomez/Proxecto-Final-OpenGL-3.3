@@ -168,3 +168,10 @@ void PersonaxePrincipal::cambiarPersonaxe(bool seguinte) {
 std::string PersonaxePrincipal::nomeTanqueActual() {
 	return nomesTanques[fgActual];
 }
+
+void PersonaxePrincipal::sumarAngulo(float ang) {
+	this->angulo += ang;
+	if (this->angulo > 2.0f * PI) {
+		this->angulo -= 2.0f * PI;
+	}
+}

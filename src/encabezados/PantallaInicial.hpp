@@ -31,6 +31,9 @@ public:
 	bool musica_reproducida;
 	int instantes_pausa;
 
+	double tempoPulsoEnter;
+	float anguloPulsoEnter;
+
 	PantallaInicial(PersonaxePrincipal* personaxe, GLuint shaderProgram, GLuint shaderProgramTex, GLuint shaderProgramBasico,
 		float* limites, std::map<int, std::vector<Luz*>> luces,
 		std::string rutaTexturaSuelo, std::string rutaTexturaMetalica);
@@ -55,4 +58,6 @@ protected:
 	void establecerLucesShader(GLuint shader);
 	void xerarSuelo(float* limites, std::string rutaTexturaSuelo);
 
+private:
+	bool mundoFinalizado;
 };

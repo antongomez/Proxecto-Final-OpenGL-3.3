@@ -4,6 +4,7 @@
 #include "encabezados/TextHelper.hpp"
 
 #include <iostream>
+#include <cmath>
 
 PantallaInicial::PantallaInicial(PersonaxePrincipal* personaxePrincipal, GLuint shaderProgram, GLuint shaderProgramTex, GLuint shaderProgramBasico,
 	float* limites, std::map<int, std::vector<Luz*>> luces,
@@ -39,13 +40,15 @@ void PantallaInicial::iniciar(float width, float height) {
 
 	// colocamos ao personaxe principal sobre o chan no centro do mesmo
 	personaxePrincipal->posicion = suelo->posicion;
-	personaxePrincipal->angulo = -PI / 4.0f;
+	personaxePrincipal->angulo = PI;
 
 	this->camaraSecundaria = new Camara(5.0f, 0, 0, width, 250, MODO_CAMARA_VISTA_XERAL);
+	this->tempoPulsoEnter = -1;
+	this->mundoFinalizado = false;
 }
 
 bool PantallaInicial::mundoCompletado() {
-	return false;
+	return mundoFinalizado;
 }
 
 void PantallaInicial::xerarSuelo(float* limites, std::string rutaTexturaSuelo) {
@@ -53,7 +56,22 @@ void PantallaInicial::xerarSuelo(float* limites, std::string rutaTexturaSuelo) {
 }
 
 void PantallaInicial::moverObxectos(float tempoTranscurrido) {
-	this->personaxePrincipal->angulo += (PI / 4.0f) * tempoTranscurrido;
+	if (tempoPulsoEnter > 0) {
+
+		double tempoTrans = glfwGetTime() - tempoPulsoEnter;
+
+		if (tempoTrans <= SEGUNDOS_PAUSA_FIN_PANTALLA_INICIAL) {
+
+			this->personaxePrincipal->angulo = anguloPulsoEnter + (ANGULO_PAUSA_FIN_PANTALLA_INICIAL - anguloPulsoEnter) * (1 - tempoTrans);
+
+		} else if (tempoTrans - SEGUNDOS_PAUSA_FIN_PANTALLA_INICIAL > 1) {
+			this->mundoFinalizado = true;
+		}
+	}
+	else {
+		this->personaxePrincipal->sumarAngulo((PI / 4.0f) * tempoTranscurrido);
+	}
+
 }
 
 void PantallaInicial::establecerLucesShader(GLuint shader) {

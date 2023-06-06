@@ -13,7 +13,8 @@ Enemigo::Enemigo(glm::vec3 posicion, glm::vec3 escalado, float angulo, unsigned 
 	this->target = target;
 	this->direccion = glm::vec2(1, 0); // Os trolls empezan mirando nesta direccion
 	this->fg = Figura::GetFigura(FIGURA_CARGADA, shaderProgram, "recursos/modelos/troll.obj");
-	this->vivo = 1;
+	this->estado = 1;
+	this->instantes_animacion = 0;
 }
 
 void Enemigo::moverEnemigo(double tempoTranscurrido) {
@@ -48,6 +49,10 @@ void Enemigo::calcularMatrizModelo() {
 		angulo = -angulo;
 	}
 	matrizModelo = glm::rotate(matrizModelo, -angulo, glm::vec3(0, 1, 0));
+
+	// Rotacion de la animacion de muerte
+	matrizModelo = glm::rotate(matrizModelo, ((float)PI/2) * instantes_animacion / (float) INSTANTES_TOTAL_ANIMACION, glm::vec3(0, 0, 1));
+
 	matrizModelo = glm::scale(matrizModelo, escalado);
 }
 

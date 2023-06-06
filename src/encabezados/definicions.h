@@ -43,7 +43,9 @@
 #define MODO_CAMARA_TERCEIRA_PERSOA 3
 
 // ----------------  Definicions MOVEMENTOS -------------------------- //
-#define VELOCIDADE_BASE_ENEMIGOS 1.0f
+//#define VELOCIDADE_BASE_ENEMIGOS 1.0f
+#define VELOCIDADE_BASE_ENEMIGOS 0.0f
+
 #define VELOCIDADE_BASE_PERSONAXE 5.0f
 #define VELOCIDADE_BASE_BALA 20.0f
 
@@ -70,3 +72,10 @@
 
 // ---------------- Definicions COLISIONS -------------------------- //
 #define DIST_COLISION_BALA 1.5f
+#define RADIO_ENEMIGO 0.25f
+
+// ---------------- Definicions ANIMACIONS -------------------------- //
+#define INSTANTES_TOTAL_ANIMACION 10
+
+// ---------------- Definicions MINIPAUSA -------------------------- //
+#define INSTANTES_PAUSA_NIVEL_COMPLETADO 50

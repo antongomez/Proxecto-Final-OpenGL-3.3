@@ -66,7 +66,7 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 // Funcion que calcula o efecto dos focos de luz
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 
-
+uniform float alpha = 1.0f;
 
 void main() 
 {
@@ -88,7 +88,7 @@ void main()
         saida += CalcSpotLight(spotLights[i], Normal, FragPos, viewDir);
     }
     
-    FragColor = vec4(saida, 1.0);
+    FragColor = vec4(saida, alpha);   
 }
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)

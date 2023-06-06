@@ -22,6 +22,9 @@ PersonaxePrincipal::PersonaxePrincipal(glm::vec3 posicion, glm::vec3 escalado, f
 	this->xirar_dereita = false;
 	this->xirar_esquerda = false;
 	this->nPersonaxes = rutasPersonaxes.size();
+
+	this->largo = 3.8f;
+	this->ancho = 1.8f;
 }
 
 void PersonaxePrincipal::moverPersonaxe(double tempoTranscurrido) {

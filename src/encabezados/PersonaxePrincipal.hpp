@@ -17,6 +17,8 @@ public:
 	int nPersonaxes;
 	std::vector<Figura*> fgPersonaxes;
 	int fgActual;
+	float largo;
+	float ancho;
 
 	// Construtores
 	PersonaxePrincipal(glm::vec3 posicion, glm::vec3 escalado, float angulo, unsigned int shaderProgram, int tipoFigura, std::vector<std::string> rutasPersonaxes);

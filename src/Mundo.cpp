@@ -148,13 +148,13 @@ void Mundo::moverObxectos(float tempoTranscurrido) {
 	
 	// Comprobamos as posibles colisions
 	colisionsBalas();
-	colisionsTanque();
+	colisionsTanqueInimigo();
 }
 
 bool Mundo::mundoCompletado() {
 	bool completado = 1;
 	for (int i = 0; i < inimigos.size(); i++) {
-		if (inimigos[i]->vivo) {
+		if (inimigos[i]->estado == 1) {
 			completado = 0;
 		}
 	}
@@ -166,15 +166,39 @@ void Mundo::colisionsBalas() {
 	for (int i = 0; i < personaxePrincipal->balas.size(); i++) {
 		for (int j = 0; j < inimigos.size(); j++) {
 			if (glm::distance((personaxePrincipal->balas)[i]->posicion, inimigos[j]->posicion) <= DIST_COLISION_BALA) {
-				inimigos[j]->vivo = 0;
+				inimigos[j]->estado = 2;
 			}
 		}
 	}
 	
 }
 
-void Mundo::colisionsTanque() {
+void Mundo::colisionsTanqueInimigo() {
+	// Matriz que leva calquera punto ao local space do tanque, para simplificar a comprobacion da colision
+	glm::mat4 toLocalSpace = glm::mat4();
+	toLocalSpace = glm::rotate(toLocalSpace, personaxePrincipal->angulo, glm::vec3(0.0, -1.0, 0.0));
+	toLocalSpace = glm::translate(toLocalSpace, -personaxePrincipal->posicion);
 
+	for (int i = 0; i < inimigos.size(); i++) {
+		if (inimigos[i]->estado == 1) {
+			glm::vec3 pos_local = glm::vec3(toLocalSpace * glm::vec4(inimigos[i]->posicion, 1.0f));
+			if (pos_local.x >= -(personaxePrincipal->ancho / 2 + RADIO_ENEMIGO) &&
+				pos_local.x <= personaxePrincipal->ancho / 2 + RADIO_ENEMIGO &&
+				pos_local.z >= -(personaxePrincipal->largo / 2 + RADIO_ENEMIGO) &&
+				pos_local.z <= personaxePrincipal->largo / 2 + RADIO_ENEMIGO) {
+
+				std::cout << pos_local.x << std::endl;
+				std::cout << pos_local.x << std::endl;
+
+				// Funcion que gestiona la colision
+				ataqueProducido();
+			}
+		}
+	}
+}
+
+void Mundo::ataqueProducido() {
+	std::cout << "ATAQUE PRODUCIDO\n";
 }
 
 void Mundo::renderizarMiniMapa() {
@@ -198,7 +222,7 @@ void Mundo::renderizarMiniMapa() {
 	personaxePrincipal->renderizarObxecto();
 
 	for (int i = 0; i < inimigos.size();i++) {
-		if (inimigos[i]->vivo) {
+		if (inimigos[i]->estado == 1) {
 			inimigos[i]->renderizarObxecto();
 		}
 	}
@@ -226,6 +250,10 @@ void Mundo::renderizarEscena() {
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+	// La variable alpha la usamos para la animacion de la muerte de los enemigos
+	unsigned int alphaLoc = glGetUniformLocation(shaderProgram, "alpha");
+	glUniform1f(alphaLoc, 1.0f);
+
 	personaxePrincipal->renderizarObxecto();
 	personaxePrincipal->renderizarBalas();
 
@@ -234,8 +262,26 @@ void Mundo::renderizarEscena() {
 	}
 
 	for (int i = 0; i < inimigos.size();i++) {
-		if (inimigos[i]->vivo) {
+		// Se esta vivo, renderizamolo sen mais
+		if (inimigos[i]->estado == 1) {
 			inimigos[i]->renderizarObxecto();
+		}
+		// Se esta semivivo, continuamos coa animacion
+		else if (inimigos[i]->estado == 2) {
+			// Calculamos o valor do canal alpha para este instante
+			float alpha = (INSTANTES_TOTAL_ANIMACION - inimigos[i]->instantes_animacion / 2) / (float)INSTANTES_TOTAL_ANIMACION;
+			//std::cout << alpha << std::endl;
+			glUniform1f(alphaLoc, alpha);
+			inimigos[i]->renderizarObxecto();
+			// Devolvemos el canal alpha a su valor por defecto
+			glUniform1f(alphaLoc, 1.0f);
+
+
+			if (inimigos[i]->instantes_animacion >= INSTANTES_TOTAL_ANIMACION) {
+				// Se xa rematou a animacion, pasa a estado "morto"
+				inimigos[i]->estado = 0;
+			}
+			inimigos[i]->instantes_animacion++;
 		}
 	}
 

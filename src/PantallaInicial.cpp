@@ -13,6 +13,8 @@ PantallaInicial::PantallaInicial(PersonaxePrincipal* personaxePrincipal, GLuint 
 	this->shaderProgramTex = shaderProgramTex;
 	this->shaderProgramBasico = shaderProgramBasico;
 	this->luces = luces;
+	this->musicaReproducida = false;
+	this->instantes_pausa = 0;
 
 	xerarSuelo(limites, rutaTexturaSuelo);
 	this->fg = Figura::GetFigura(FIGURA_CADRADO, shaderProgram, rutaTexturaMetalica);
@@ -25,6 +27,10 @@ PantallaInicial::PantallaInicial(PersonaxePrincipal* personaxePrincipal, GLuint 
 	this->shaderProgramTex = shaderProgramTex;
 	this->shaderProgramBasico = shaderProgramBasico;
 	this->luces = luces;
+	this->musicaReproducida = false;
+	this->instantes_pausa = 0;
+
+
 }
 
 void PantallaInicial::iniciar(float width, float height) {

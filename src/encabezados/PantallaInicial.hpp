@@ -28,6 +28,9 @@ public:
 	GLuint shaderProgramTex;
 	GLuint shaderProgramBasico;
 
+	bool musicaReproducida;
+	int instantes_pausa;
+
 	PantallaInicial(PersonaxePrincipal* personaxe, GLuint shaderProgram, GLuint shaderProgramTex, GLuint shaderProgramBasico,
 		float* limites, std::map<int, std::vector<Luz*>> luces,
 		std::string rutaTexturaSuelo, std::string rutaTexturaMetalica);

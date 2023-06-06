@@ -37,7 +37,8 @@ public:
 
 	bool mundoCompletado() override;
 	void colisionsBalas();
-	void colisionsTanque();
+	void colisionsTanqueInimigo();
+	void ataqueProducido();
 
 	void establecerCamara();
 	void moverCamara(int tipoMovemento);

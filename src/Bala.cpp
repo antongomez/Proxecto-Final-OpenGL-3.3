@@ -10,12 +10,20 @@
 
 Bala::Bala(glm::vec3 posicion, glm::vec3 escalado, float angulo, unsigned int shaderProgram, std::string inputOBJfile, glm::vec3 direccion) : Obxecto(posicion, escalado, angulo, shaderProgram, inputOBJfile) {
 	this->direccion = direccion;
-	this->estado = 1;
 }
 
-void Bala::moverBala(double tempoTranscurrido) {
+bool Bala::moverBala(double tempoTranscurrido, float* limites) {
 	float desprazamento = (float)tempoTranscurrido * VELOCIDADE_BASE_BALA;
 	posicion += desprazamento * direccion;
+
+	if (!(posicion.x >= limites[0] && posicion.x <= limites[1] &&
+		posicion.z >= limites[0] && posicion.z <= limites[1])) {
+		std::cout << "bala fora\n";
+	}
+
+	// Comprobamos que non saia do muro
+	return !(posicion.x >= limites[0] && posicion.x <= limites[1] &&
+		posicion.z >= limites[0] && posicion.z <= limites[1]);
 }
 
 

@@ -9,7 +9,7 @@
 #include <glad.h>
 
 PersonaxePrincipal::PersonaxePrincipal(glm::vec3 posicion, glm::vec3 escalado, float angulo,
-	unsigned int shaderProgram, int tipoFigura, std::vector<std::string> rutasPersonaxes, 
+	unsigned int shaderProgram, int tipoFigura, std::vector<std::string> rutasPersonaxes,
 	std::vector<std::pair<float, float>> dimensionsTanques, std::vector<std::string> nomesTanques, float* limites) :
 	Obxecto(posicion, escalado, angulo, shaderProgram) {
 	for (int i = 0; i < rutasPersonaxes.size(); i++) {
@@ -40,7 +40,7 @@ void PersonaxePrincipal::moverPersonaxe(double tempoTranscurrido, std::vector<Ob
 		//GESTIONAR AQUÍ EN FUNCIÓN DE LA COLISIÓN
 		angulo -= INCREMENTO_XIRO_PERSONAXE * tempoTranscurrido;
 	}
-	
+
 	if (xirar_esquerda) {
 		angulo += INCREMENTO_XIRO_PERSONAXE * tempoTranscurrido;
 	}
@@ -57,23 +57,22 @@ void PersonaxePrincipal::moverPersonaxe(double tempoTranscurrido, std::vector<Ob
 
 		// Actualizamos a posicion do tanque
 		glm::vec3 nueva_posicion;
-		nueva_posicion.x = fmin(posicion.x + desprazamento * direccion.x, limites[1] - largo/2);
-		nueva_posicion.x = fmax(posicion.x + desprazamento * direccion.x, limites[0] + largo/2);
-		nueva_posicion.z = fmin(posicion.z + desprazamento * direccion.z, limites[1] - largo/2);
-		nueva_posicion.z = fmax(posicion.z + desprazamento * direccion.z, limites[0] + largo/2);
+		nueva_posicion.x = fmin(posicion.x + desprazamento * direccion.x, limites[1] - largo / 2);
+		nueva_posicion.x = fmax(posicion.x + desprazamento * direccion.x, limites[0] + largo / 2);
+		nueva_posicion.z = fmin(posicion.z + desprazamento * direccion.z, limites[1] - largo / 2);
+		nueva_posicion.z = fmax(posicion.z + desprazamento * direccion.z, limites[0] + largo / 2);
 
 		if (!colisionArbol(obxectosDecorativos)) {
 			posicion.x = nueva_posicion.x;
 			posicion.z = nueva_posicion.z;
 		}
 		else {
-			posicion.x = posicion.x - (desprazamento/(float)1000) * direccion.x;
-			posicion.z = posicion.z - (desprazamento/(float)1000) * direccion.z;
+			posicion.x = posicion.x - (desprazamento / (float)1000) * direccion.x;
+			posicion.z = posicion.z - (desprazamento / (float)1000) * direccion.z;
 		}
 
 
 	}
-
 
 	moverBalas(tempoTranscurrido);
 }
@@ -103,8 +102,17 @@ bool PersonaxePrincipal::colisionArbol(std::vector<Obxecto*> obxectosDecorativos
 
 void PersonaxePrincipal::moverBalas(double tempoTranscurrido)
 {
-	for (const auto& bala : balas) {
-		bala->moverBala(tempoTranscurrido);
+	std::vector<Bala*>::iterator iterBalaEliminar;
+	bool eliminar = false;
+
+	for (auto iterBala = balas.begin(); iterBala != balas.end(); iterBala++) {
+		if ((*iterBala)->moverBala(tempoTranscurrido, limites)) {
+			iterBalaEliminar = iterBala;
+			eliminar = true;
+		}
+	}
+	if (eliminar) {
+		balas.erase(iterBalaEliminar);
 	}
 
 }
@@ -130,17 +138,9 @@ void PersonaxePrincipal::disparar() {
 
 void PersonaxePrincipal::renderizarBalas() {
 	for (const auto& bala : balas) {
-		if (bala->estado == 1 && dentroMuro(bala)) {
-			bala->renderizarObxecto();
-		}
+		bala->renderizarObxecto();
 	}
 }
-
-bool PersonaxePrincipal::dentroMuro(Bala* bala) {
-	return bala->posicion.x >= limites[0] && bala->posicion.x <= limites[1] &&
-		bala-> posicion.z >= limites[0] && bala->posicion.z <= limites[1];
-}
-
 
 void PersonaxePrincipal::cambiarPersonaxe(bool seguinte) {
 	if (seguinte) {

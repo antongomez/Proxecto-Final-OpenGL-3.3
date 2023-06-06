@@ -212,18 +212,24 @@ bool Mundo::mundoCompletado() {
 
 void Mundo::colisionsBalas() {
 
-	for (int i = 0; i < personaxePrincipal->balas.size(); i++) {
-		for (int j = 0; j < inimigos.size(); j++) {
-			if (glm::distance((personaxePrincipal->balas)[i]->posicion, inimigos[j]->posicion) <= DIST_COLISION_BALA) {
-				if (inimigos[j]->estado == 1) {
-					inimigos[j]->estado = 2;
+	bool sair = false;
+
+	for (auto iterBala = personaxePrincipal->balas.begin(); iterBala != personaxePrincipal->balas.end(); iterBala++) {
+		Bala* bala = *iterBala;
+		for (auto inimigo : inimigos) {
+			if (glm::distance(bala->posicion, inimigo->posicion) <= DIST_COLISION_BALA) {
+				if (inimigo->estado == 1) {
+					inimigo->estado = 2;
 					AudioHelper::GetInstance()->reproducirSon(SON_INIMIGO_MATADO, 0.25f);
-					personaxePrincipal->balas[i]->estado = 0;
+					personaxePrincipal->balas.erase(iterBala);
+					sair = true;
+					break;
 				}
 			}
 		}
-	}
+		if (sair) break;
 
+	}
 }
 
 void Mundo::colisionsTanqueInimigo() {

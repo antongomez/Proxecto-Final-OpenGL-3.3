@@ -167,6 +167,8 @@ void Partida::iniciarPartida() {
 	mundos[0]->iniciar(Camara::SCR_WIDTH, Camara::SCR_HEIGHT);
 
 	iniciarMusica();
+
+	this->tempoPartida = 0;
 }
 
 void Partida::iniciarMusica() {
@@ -174,14 +176,14 @@ void Partida::iniciarMusica() {
 }
 
 void Partida::moverObxectos(float tempoTranscurrido) {
-	if (!(mundos[idMundoActual]->instantes_pausa_inicial < INSTANTES_PAUSA_INICIO_NIVEL)) {
-		mundos[idMundoActual]->moverObxectos(tempoTranscurrido);
-	}
-	else {
-		mundos[idMundoActual]->instantes_pausa_inicial++;
-	}
-	
-	mundos[idMundoActual]->renderizarEscena();
+
+	mundos[idMundoActual]->moverObxectos(tempoTranscurrido);
+
+	// Actualizamos o tempo da partida
+	double tempoActual = glfwGetTime();
+	tempoPartida = tempoActual - tempoInicioPartida;
+
+	mundos[idMundoActual]->renderizarEscena(tempoPartida);
 
 	// Comprobamos se xa matamos a todos os inimigos deste mundo
 	if (mundos[idMundoActual]->mundoCompletado()) {
@@ -223,6 +225,11 @@ void Partida::seguinteMundo() {
 	// Collemos as proporcions da camara do anterior mundo
 	float width = mundos[idMundoActual]->camara->width;
 	float height = mundos[idMundoActual]->camara->height;
+
+	// Rexistramos o inicio da partida
+	if (idMundoActual == 0) {
+		tempoInicioPartida = glfwGetTime();
+	}
 
 	if (idMundoActual != (mundos.size() - 1)) {
 		idMundoActual++;

@@ -21,6 +21,10 @@ public:
 	int nivelMundo;
 	SkyBox* skyBox;
 	int inimigosRestantes;
+	bool pitidos[4];
+
+	double tempoRestanteEmpezar;
+	double tempoInicioMundo;
 
 	// Construtores
 	Mundo(PersonaxePrincipal* personaxe, GLuint shaderProgram, GLuint shaderProgramTex, GLuint shaderProgramMiniMapa,
@@ -33,7 +37,7 @@ public:
 	// Metodos
 	void iniciar(float width, float height) override;
 	void moverObxectos(float tempoTranscurrido) override;
-	void renderizarEscena() override;
+	void renderizarEscena(float tempoTranscurrido) override;
 	void eventoTeclado(GLFWwindow* window, int tecla, int accion) override;
 	bool mundoCompletado() override;
 	void finalizarMundo() override;
@@ -54,4 +58,5 @@ private:
 	void xerarInimigos(int nivelMundo);
 
 	void renderizarMiniMapa();
+	void emitirPitidos(double tempoRestante);
 };

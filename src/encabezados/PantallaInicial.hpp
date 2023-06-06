@@ -30,7 +30,6 @@ public:
 
 	bool musica_reproducida;
 	int instantes_pausa;
-	int instantes_pausa_inicial;
 
 	PantallaInicial(PersonaxePrincipal* personaxe, GLuint shaderProgram, GLuint shaderProgramTex, GLuint shaderProgramBasico,
 		float* limites, std::map<int, std::vector<Luz*>> luces,
@@ -40,7 +39,7 @@ public:
 
 	virtual void iniciar(float width, float height);
 	virtual void moverObxectos(float tempoTranscurrido);
-	virtual void renderizarEscena();
+	virtual void renderizarEscena(float tempoTranscurrido);
 	virtual void eventoTeclado(GLFWwindow* window, int tecla, int accion);
 	void reescalarVenta(GLFWwindow* window, int width, int height);
 	virtual bool mundoCompletado();

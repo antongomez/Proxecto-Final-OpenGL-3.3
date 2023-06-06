@@ -15,7 +15,6 @@ PantallaInicial::PantallaInicial(PersonaxePrincipal* personaxePrincipal, GLuint 
 	this->luces = luces;
 	this->musica_reproducida = false;
 	this->instantes_pausa = 0;
-	this->instantes_pausa_inicial = INSTANTES_PAUSA_INICIO_NIVEL;
 
 	xerarSuelo(limites, rutaTexturaSuelo);
 	this->fg = Figura::GetFigura(FIGURA_CADRADO, shaderProgramBasico, rutaTexturaMetalica);
@@ -33,7 +32,6 @@ PantallaInicial::PantallaInicial(PersonaxePrincipal* personaxePrincipal, GLuint 
 	this->luces = luces;
 	this->musica_reproducida = false;
 	this->instantes_pausa = 0;
-	this->instantes_pausa_inicial = 0;
 }
 
 void PantallaInicial::iniciar(float width, float height) {
@@ -175,7 +173,7 @@ void PantallaInicial::establecerLucesShader(GLuint shader) {
 	}
 }
 
-void PantallaInicial::renderizarEscena() {
+void PantallaInicial::renderizarEscena(float tempoTranscurrido) {
 
 	glViewport(0, 0, camara->width, camara->height);
 

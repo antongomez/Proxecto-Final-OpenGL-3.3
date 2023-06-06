@@ -6,6 +6,10 @@
 
 #include <random>
 #include <iostream>
+#include <sstream>
+#include <iomanip>
+#include <cmath>
+
 #include "encabezados/PantallaInicial.hpp"
 #include "encabezados/AudioHelper.hpp"
 #include "encabezados/TextHelper.hpp"
@@ -34,6 +38,11 @@ void Mundo::iniciar(float width, float height) {
 	this->camaraSecundaria = new Camara(10.0f, PI, PI / 2.0f - UNIDADE_GRAO_EN_RADIANS, width, height, MODO_CAMARA_VISTA_XERAL);
 
 	inimigosRestantes = inimigos.size();
+	tempoInicioMundo = glfwGetTime();
+
+	for (int i = 0; i < 4; i++) {
+		pitidos[i] = false;
+	}
 }
 
 void Mundo::xerarSkyBox(float alturaMundo, float* limites, std::string rutaTexturas[]) {
@@ -193,14 +202,21 @@ void Mundo::establecerCamara() {
 }
 
 void Mundo::moverObxectos(float tempoTranscurrido) {
-	personaxePrincipal->moverPersonaxe(tempoTranscurrido, obxectosDecorativos);
-	for (int i = 0; i < inimigos.size(); i++) {
-		inimigos[i]->moverEnemigo(tempoTranscurrido);
-	}
 
-	// Comprobamos as posibles colisions
-	colisionsBalas();
-	colisionsTanqueInimigo();
+	// Temos o tempo que se tarda en pasar o mundo
+	tempoRestanteEmpezar = SEGUNDOS_PAUSA_INICIO_NIVEL - glfwGetTime() + tempoInicioMundo;
+
+	if (tempoRestanteEmpezar < 0) {
+
+		personaxePrincipal->moverPersonaxe(tempoTranscurrido, obxectosDecorativos);
+		for (int i = 0; i < inimigos.size(); i++) {
+			inimigos[i]->moverEnemigo(tempoTranscurrido);
+		}
+
+		// Comprobamos as posibles colisions
+		colisionsBalas();
+		colisionsTanqueInimigo();
+	}
 }
 
 bool Mundo::mundoCompletado() {
@@ -295,7 +311,7 @@ void Mundo::renderizarMiniMapa() {
 
 }
 
-void Mundo::renderizarEscena() {
+void Mundo::renderizarEscena(float tempoTranscurrido) {
 
 	glViewport(0, 0, camara->width, camara->height);
 
@@ -368,10 +384,42 @@ void Mundo::renderizarEscena() {
 
 	TextHelper* t = TextHelper::GetInstance();
 	t->cambiarViewport(camara->width, camara->height);
-	t->setTexto("Inimigos: " + std::to_string(inimigosRestantes));
+	std::stringstream ss;
+	ss << "Inimigos: " << std::to_string(inimigosRestantes) << "\n" << std::fixed << std::setprecision(3) << tempoTranscurrido;
+	t->setTexto(ss.str());
 	t->escribir(20, 20, 2.0f, 0, 0);
 
+	double tempoRestanteEmpezar = SEGUNDOS_PAUSA_INICIO_NIVEL - glfwGetTime() + tempoInicioMundo;
+	if (tempoRestanteEmpezar > 0 && tempoRestanteEmpezar <= 3) {
+		std::stringstream st;
+		st << std::fixed << std::setprecision(0) << std::ceil(tempoRestanteEmpezar);
+		t->setTexto(st.str());
+		t->escribir(camara->width * 0.5f, camara->height * 0.5f, 4.0f, 1, 1);
+	}
+	emitirPitidos(tempoRestanteEmpezar);
+
 	renderizarMiniMapa();
+}
+
+void Mundo::emitirPitidos(double tempoRestante) {
+
+	if (tempoRestante > 2 && tempoRestante <= 3 && !pitidos[3]) {
+		AudioHelper::GetInstance()->reproducirSon(SON_BEEP_BAIXO, 0.5f);
+		pitidos[3] = true;
+	}
+	else if (tempoRestante > 1 && tempoRestante <= 2 && !pitidos[2]) {
+		AudioHelper::GetInstance()->reproducirSon(SON_BEEP_BAIXO, 0.5f);
+		pitidos[2] = true;
+	}
+	else if (tempoRestante > 0 && tempoRestante <= 1 && !pitidos[1]) {
+		AudioHelper::GetInstance()->reproducirSon(SON_BEEP_BAIXO, 0.5f);
+		pitidos[1] = true;
+	}
+	else if (tempoRestante <= 0.25 && !pitidos[0]) {
+		AudioHelper::GetInstance()->reproducirSon(SON_BEEP_ALTO);
+		pitidos[0] = true;
+	}
+
 }
 
 // Funcion que xestiona os controis. Deste xeito cada mundo poderia cambiar, por exemplo, a velocidade de movemento do personaxe

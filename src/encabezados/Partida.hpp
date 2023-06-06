@@ -32,6 +32,9 @@ public:
 	void seguinteMundo();
 
 private:
+	double tempoInicioPartida;
+	double tempoPartida;
+
 	void iniciarMusica();
 	
 };

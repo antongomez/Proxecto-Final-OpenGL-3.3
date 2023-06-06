@@ -16,6 +16,7 @@ AudioHelper::AudioHelper() {
 	}
 
 	melodiaVictoria = soundEngine->play2D(MUSICA_VICTORIA, true, true);
+	melodiaDerrota = soundEngine->play2D(MUSICA_DERROTA, true, true);
 
 }
 
@@ -65,4 +66,14 @@ void AudioHelper::reproducirMelodiaVictoria() {
 
 void AudioHelper::pausarMelodiaVictoria() {
 	melodiaVictoria->setIsPaused(true);
+}
+
+void AudioHelper::reproducirMelodiaDerrota() {
+	melodiaDerrota->setPlayPosition(0);
+	melodiaDerrota->setVolume(0.35f);
+	melodiaDerrota->setIsPaused(false);
+}
+
+void AudioHelper::pausarMelodiaDerrota() {
+	melodiaDerrota->setIsPaused(true);
 }

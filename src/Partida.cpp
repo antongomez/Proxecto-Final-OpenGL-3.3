@@ -266,7 +266,7 @@ void Partida::eventoTeclado(GLFWwindow* window, int tecla, int accion) {
 
 		}
 		else if (mundos[idMundoActual]->defeat) {
-			ah->pausarMelodiaVictoria();
+			ah->pausarMelodiaDerrota();
 			reiniciarXogo();
 		}
 	}

@@ -286,19 +286,19 @@ void Mundo::ataqueProducido() {
 	personaxePrincipal->vidas--;
 	AudioHelper* ah = AudioHelper::GetInstance();
 
-	
-	
-	ah->reproducirSon(SON_NIVEL_FALLIDO);
+
+
+	ah->reproducirSon(SON_NIVEL_FALLIDO, 0.25f);
 	ah->pausarMelodiaMundo(nivelMundo);
 
 	if (personaxePrincipal->vidas == 0) {
-		ah->reproducirMelodiaVictoria();
+		ah->reproducirMelodiaDerrota();
 		defeat = true;
 	}
 	else {
 		pausa = true;
 	}
-	
+
 
 }
 
@@ -602,7 +602,10 @@ void Mundo::eventoTeclado(GLFWwindow* window, int tecla, int accion) {
 
 	// Disparo
 	if (tecla == 32 && accion == GLFW_PRESS) {
-		personaxePrincipal->disparar();
+		if (tempoRestanteEmpezar <= 0) {
+			personaxePrincipal->disparar();
+		}
+
 	}
 
 	// Finalizar pausa

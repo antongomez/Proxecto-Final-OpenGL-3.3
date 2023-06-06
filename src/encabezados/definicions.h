@@ -101,3 +101,4 @@
 #define MUSICA_MUNDO_3 "recursos/audio/game-music-loop-4.ogg"
 #define MUSICA_MUNDO_4 "recursos/audio/game-music-loop-5.ogg"
 #define MUSICA_VICTORIA "recursos/audio/game-music-loop-7.ogg"
+#define MUSICA_DERROTA "recursos/audio/relax.ogg"

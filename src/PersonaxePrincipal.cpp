@@ -10,7 +10,8 @@
 
 PersonaxePrincipal::PersonaxePrincipal(glm::vec3 posicion, glm::vec3 escalado, float angulo,
 	unsigned int shaderProgram, int tipoFigura, std::vector<std::string> rutasPersonaxes,
-	std::vector<std::pair<float, float>> dimensionsTanques, std::vector<std::string> nomesTanques, float* limites) :
+	std::vector<std::pair<float, float>> dimensionsTanques, std::vector<std::string> nomesTanques, float* limites,
+	std::vector<std::pair<float, float>> posicionTorreta) :
 	Obxecto(posicion, escalado, angulo, shaderProgram) {
 	for (int i = 0; i < rutasPersonaxes.size(); i++) {
 		this->fgPersonaxes.push_back(new Figura(FIGURA_CARGADA, shaderProgram, rutasPersonaxes[i]));
@@ -28,10 +29,16 @@ PersonaxePrincipal::PersonaxePrincipal(glm::vec3 posicion, glm::vec3 escalado, f
 	this->largo = dimensionsTanques[0].first;
 	this->ancho = dimensionsTanques[0].second;
 
+	this->posicionTorreta = posicionTorreta;
+	this->alturaTorreta = posicionTorreta[0].first;
+	this->distanciaTorreta = posicionTorreta[0].second;
+
 	this->nomesTanques = nomesTanques;
 
 	this->limites[0] = limites[0];
 	this->limites[1] = limites[1];
+
+	this->vidas = 3;
 }
 
 void PersonaxePrincipal::moverPersonaxe(double tempoTranscurrido, std::vector<Obxecto*> obxectosDecorativos) {
@@ -137,7 +144,7 @@ void PersonaxePrincipal::disparar() {
 	// Calculamos a direccion da bala
 	glm::vec3 direccion = glm::vec3(sin(angulo), 0, cos(angulo));
 
-	glm::vec3 posicionBala = posicion + glm::vec3(0, 1.2, 0) + (2.8f * direccion);
+	glm::vec3 posicionBala = posicion + glm::vec3(0, alturaTorreta, 0) + (distanciaTorreta * direccion);
 
 	balas.push_back(new Bala(posicionBala, glm::vec3(1), 0, shaderProgram, "recursos/modelos/bala.obj", direccion));
 
@@ -172,6 +179,8 @@ void PersonaxePrincipal::cambiarPersonaxe(bool seguinte) {
 	fg = fgPersonaxes[fgActual];
 	largo = dimensionsTanques[fgActual].first;
 	ancho = dimensionsTanques[fgActual].second;
+	alturaTorreta = posicionTorreta[fgActual].first;
+	distanciaTorreta = posicionTorreta[fgActual].second;
 }
 
 std::string PersonaxePrincipal::nomeTanqueActual() {

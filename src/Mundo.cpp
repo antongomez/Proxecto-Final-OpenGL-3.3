@@ -410,7 +410,7 @@ void Mundo::renderizarEscena(float tempoTranscurrido) {
 	TextHelper* t = TextHelper::GetInstance();
 	t->cambiarViewport(camara->width, camara->height);
 	std::stringstream ss;
-	ss << "Inimigos: " << std::to_string(inimigosRestantes) << "\n" << std::fixed << std::setprecision(3) << tempoTranscurrido;
+	ss << "Vidas: " << personaxePrincipal->vidas << "\nInimigos: " << std::to_string(inimigosRestantes) << "\n" << std::fixed << std::setprecision(3) << tempoTranscurrido;
 	t->setTexto(ss.str());
 	t->escribir(20, 20, 2.0f, 0, 0);
 

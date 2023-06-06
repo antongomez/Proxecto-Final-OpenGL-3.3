@@ -17,16 +17,21 @@ class PersonaxePrincipal : public Obxecto
 		int nPersonaxes;
 		std::vector<Figura*> fgPersonaxes;
 		int fgActual;
-		std::vector<float> anchoTanques;std::vector<std::pair<float, float>> dimensionsTanques;
+		std::vector<std::pair<float, float>> dimensionsTanques;
 		std::vector<std::string> nomesTanques;
 		float largo;
 		float ancho;
+		std::vector<std::pair<float, float>> posicionTorreta;
+		float alturaTorreta;
+		float distanciaTorreta;
+
 		float limites[2];
+		int vidas;
 
 		// Construtores
 		PersonaxePrincipal(glm::vec3 posicion, glm::vec3 escalado, float angulo, unsigned int shaderProgram, int tipoFigura, 
 			std::vector<std::string> rutasPersonaxes, std::vector<std::pair<float, float>> dimensionsTanques,
-			std::vector<std::string> nomesTanques, float* limites);
+			std::vector<std::string> nomesTanques, float* limites, std::vector<std::pair<float, float>> posicionTorreta);
 
 		// Metodos
 		void moverPersonaxe(double tempoTranscurrido, std::vector<Obxecto*> obxectosDecorativos);

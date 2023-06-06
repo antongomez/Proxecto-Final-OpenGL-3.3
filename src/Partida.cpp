@@ -33,9 +33,14 @@ void Partida::iniciarPartida() {
 	dimensionsTanques.push_back(std::pair<float, float>(3.54, 1.71));
 	dimensionsTanques.push_back(std::pair<float, float>(3.73, 1.75));
 
+	std::vector<std::pair<float, float>> posicionTorreta;
+	posicionTorreta.push_back(std::pair<float, float>(1.2, 2.8));
+	posicionTorreta.push_back(std::pair<float, float>(1.2, 0.8));
+	posicionTorreta.push_back(std::pair<float, float>(1.2, 2.5));
+
 	float limites[] = { -37.5f, 37.5f };
 
-	this->personaxePrincipal = new PersonaxePrincipal(glm::vec3(0, 0, 0), glm::vec3(1.0f), 0, shaderProgram, FIGURA_CARGADA, rutasPersonaxe, dimensionsTanques, nomesTanques, limites);
+	this->personaxePrincipal = new PersonaxePrincipal(glm::vec3(0, 0, 0), glm::vec3(1.0f), 0, shaderProgram, FIGURA_CARGADA, rutasPersonaxe, dimensionsTanques, nomesTanques, limites, posicionTorreta);
 
 	// Creamos a pantalla de carga inicial
 	float limitesPI[] = { 0, 0 };

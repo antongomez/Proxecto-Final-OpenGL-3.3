@@ -223,7 +223,7 @@ void PantallaInicial::renderizarEscena() {
 	unsigned int loc_cor = glGetUniformLocation(shaderProgramBasico, "cor");
 	glUniform1i(loc_cor, 0);
 
-	for (int i = -10; i <= 10; i+=2) {
+	for (int i = -10; i <= 10; i += 2) {
 		glm::mat4 matrizModelo = glm::mat4();
 		matrizModelo = glm::translate(matrizModelo, glm::vec3(i, 0, 0));
 		matrizModelo = glm::scale(matrizModelo, glm::vec3(2.0f));
@@ -236,8 +236,8 @@ void PantallaInicial::renderizarEscena() {
 	// Renderizar Texto
 	t->cambiarViewport(camaraSecundaria->width, camaraSecundaria->height);
 	t->setTexto("CHIEFTAIN");
-	t->escribir(camaraSecundaria->width / 2.0f, camaraSecundaria->height /2.0f, 3.0f, 1, 1);	
-	
+	t->escribir(camaraSecundaria->width / 2.0f, camaraSecundaria->height / 2.0f, 3.0f, 1, 1);
+
 }
 
 void PantallaInicial::eventoTeclado(int tecla, int accion) {

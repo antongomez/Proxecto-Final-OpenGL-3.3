@@ -9,6 +9,7 @@
 #include <glad.h>
 
 #include <iostream>
+#include <utility>
 
 Partida::Partida(GLuint shaderProgram, GLuint shaderProgramTex, GLuint shaderProgramMiniMapa) {
 	this->shaderProgram = shaderProgram;
@@ -22,7 +23,10 @@ void Partida::iniciarPartida() {
 	std::vector<std::string> rutasPersonaxe;
 	rutasPersonaxe.push_back("recursos/modelos/Chieftain_tanque.obj");
 	rutasPersonaxe.push_back("recursos/modelos/BMP2_hull.obj");
-	this->personaxePrincipal = new PersonaxePrincipal(glm::vec3(0, 0, 0), glm::vec3(1.0f), 0, shaderProgram, FIGURA_CARGADA, rutasPersonaxe);
+	std::vector<std::pair<float, float>> dimensionsTanques;
+	dimensionsTanques.push_back(std::pair<float, float> (3.7, 1.8));
+	dimensionsTanques.push_back(std::pair<float, float>(3.6, 1.7));
+	this->personaxePrincipal = new PersonaxePrincipal(glm::vec3(0, 0, 0), glm::vec3(1.0f), 0, shaderProgram, FIGURA_CARGADA, rutasPersonaxe, dimensionsTanques);
 
 	// Creamos a pantalla de carga inicial
 	float limitesPI[] = { 0, 0 };

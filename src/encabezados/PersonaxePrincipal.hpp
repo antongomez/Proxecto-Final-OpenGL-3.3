@@ -17,11 +17,12 @@ public:
 	int nPersonaxes;
 	std::vector<Figura*> fgPersonaxes;
 	int fgActual;
+	std::vector<float> anchoTanques;std::vector<std::pair<float, float>> dimensionsTanques;
 	float largo;
 	float ancho;
 
 	// Construtores
-	PersonaxePrincipal(glm::vec3 posicion, glm::vec3 escalado, float angulo, unsigned int shaderProgram, int tipoFigura, std::vector<std::string> rutasPersonaxes);
+	PersonaxePrincipal(glm::vec3 posicion, glm::vec3 escalado, float angulo, unsigned int shaderProgram, int tipoFigura, std::vector<std::string> rutasPersonaxes, std::vector<std::pair<float, float>> dimensionsTanques);
 
 	// Metodos
 	void moverPersonaxe(double tempoTranscurrido);

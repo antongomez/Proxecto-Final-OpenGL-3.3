@@ -9,6 +9,8 @@ public:
 	// Atributos
 	glm::vec3 direccion;
 
+	int estado;	// 1 "viva", 0 "muerta"
+
 	// Construtores
 	Bala(glm::vec3 posicion, glm::vec3 escalado, float angulo, unsigned int shaderProgram, std::string inputOBJfile, glm::vec3 direccion);
 

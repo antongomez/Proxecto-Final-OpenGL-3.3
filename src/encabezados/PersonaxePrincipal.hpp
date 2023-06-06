@@ -21,11 +21,12 @@ public:
 	std::vector<std::string> nomesTanques;
 	float largo;
 	float ancho;
+	float limites[2];
 
 	// Construtores
 	PersonaxePrincipal(glm::vec3 posicion, glm::vec3 escalado, float angulo, unsigned int shaderProgram, int tipoFigura, 
 		std::vector<std::string> rutasPersonaxes, std::vector<std::pair<float, float>> dimensionsTanques,
-		std::vector<std::string> nomesTanques);
+		std::vector<std::string> nomesTanques, float* limites);
 
 	// Metodos
 	void moverPersonaxe(double tempoTranscurrido);
@@ -35,6 +36,8 @@ public:
 	// Se seguinte e true, cambiamos ao seguinte personaxe, senon, cambiamos ao anterior
 	void cambiarPersonaxe(bool seguinte);
 	std::string nomeTanqueActual();
+
+	bool dentroMuro(Bala* bala);
 
 private:
 	void moverBalas(double tempoTranscurrido);

@@ -10,7 +10,7 @@
 
 PersonaxePrincipal::PersonaxePrincipal(glm::vec3 posicion, glm::vec3 escalado, float angulo,
 	unsigned int shaderProgram, int tipoFigura, std::vector<std::string> rutasPersonaxes, 
-	std::vector<std::pair<float, float>> dimensionsTanques, std::vector<std::string> nomesTanques) :
+	std::vector<std::pair<float, float>> dimensionsTanques, std::vector<std::string> nomesTanques, float* limites) :
 	Obxecto(posicion, escalado, angulo, shaderProgram) {
 	for (int i = 0; i < rutasPersonaxes.size(); i++) {
 		this->fgPersonaxes.push_back(new Figura(FIGURA_CARGADA, shaderProgram, rutasPersonaxes[i]));
@@ -29,6 +29,9 @@ PersonaxePrincipal::PersonaxePrincipal(glm::vec3 posicion, glm::vec3 escalado, f
 	this->ancho = dimensionsTanques[0].second;
 
 	this->nomesTanques = nomesTanques;
+
+	this->limites[0] = limites[0];
+	this->limites[1] = limites[1];
 }
 
 void PersonaxePrincipal::moverPersonaxe(double tempoTranscurrido) {
@@ -52,7 +55,11 @@ void PersonaxePrincipal::moverPersonaxe(double tempoTranscurrido) {
 		}
 
 		// Actualizamos a posicion do tanque
-		posicion += desprazamento * direccion;
+		//posicion += desprazamento * direccion;
+		posicion.x = fmin(posicion.x + desprazamento * direccion.x, limites[1] - largo/2);
+		posicion.x = fmax(posicion.x + desprazamento * direccion.x, limites[0] + largo/2);
+		posicion.z = fmin(posicion.z + desprazamento * direccion.z, limites[1] - largo/2);
+		posicion.z = fmax(posicion.z + desprazamento * direccion.z, limites[0] + largo/2);
 	}
 
 
@@ -88,9 +95,17 @@ void PersonaxePrincipal::disparar() {
 
 void PersonaxePrincipal::renderizarBalas() {
 	for (const auto& bala : balas) {
-		bala->renderizarObxecto();
+		if (bala->estado == 1 && dentroMuro(bala)) {
+			bala->renderizarObxecto();
+		}
 	}
 }
+
+bool PersonaxePrincipal::dentroMuro(Bala* bala) {
+	return bala->posicion.x >= limites[0] && bala->posicion.x <= limites[1] &&
+		bala-> posicion.z >= limites[0] && bala->posicion.z <= limites[1];
+}
+
 
 void PersonaxePrincipal::cambiarPersonaxe(bool seguinte) {
 	if (seguinte) {

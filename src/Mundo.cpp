@@ -112,7 +112,8 @@ void Mundo::xerarElementosDecorativos(std::map<int, int> elementosDecorativos) {
 }
 
 void Mundo::xerarInimigos(int nivelInimigos) {
-	int numEnemigos = nivelInimigos * 10;
+	//int numEnemigos = nivelInimigos * 10;
+	int numEnemigos = 7 + nivelInimigos * 3;
 
 	std::random_device rd;
 	std::mt19937 generator(rd());
@@ -128,7 +129,7 @@ void Mundo::xerarInimigos(int nivelInimigos) {
 		glm::vec3 posicion(radio * sin(angulo), suelo->posicion.y, radio * cos(angulo));
 		glm::vec3 escala(1.0f);
 
-		Enemigo* enemigo = new Enemigo(posicion, escala, 0, shaderProgram, FIGURA_CUBO, 1, personaxePrincipal);
+		Enemigo* enemigo = new Enemigo(posicion, escala, 0, shaderProgram, FIGURA_CUBO, nivelInimigos, personaxePrincipal);
 
 		inimigos.push_back(enemigo);
 	}
@@ -210,6 +211,7 @@ void Mundo::colisionsBalas() {
 		for (int j = 0; j < inimigos.size(); j++) {
 			if (glm::distance((personaxePrincipal->balas)[i]->posicion, inimigos[j]->posicion) <= DIST_COLISION_BALA) {
 				inimigos[j]->estado = 2;
+				personaxePrincipal->balas[i]->estado = 0;
 			}
 		}
 	}

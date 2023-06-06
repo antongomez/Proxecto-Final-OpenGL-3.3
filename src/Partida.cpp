@@ -32,7 +32,10 @@ void Partida::iniciarPartida() {
 	dimensionsTanques.push_back(std::pair<float, float>(3.58, 1.68));
 	dimensionsTanques.push_back(std::pair<float, float>(3.54, 1.71));
 	dimensionsTanques.push_back(std::pair<float, float>(3.73, 1.75));
-	this->personaxePrincipal = new PersonaxePrincipal(glm::vec3(0, 0, 0), glm::vec3(1.0f), 0, shaderProgram, FIGURA_CARGADA, rutasPersonaxe, dimensionsTanques, nomesTanques);
+
+	float limites[] = { -37.5f, 37.5f };
+
+	this->personaxePrincipal = new PersonaxePrincipal(glm::vec3(0, 0, 0), glm::vec3(1.0f), 0, shaderProgram, FIGURA_CARGADA, rutasPersonaxe, dimensionsTanques, nomesTanques, limites);
 
 	// Creamos a pantalla de carga inicial
 	float limitesPI[] = { 0, 0 };
@@ -58,7 +61,6 @@ void Partida::iniciarPartida() {
 	mundos.push_back(pi);
 
 	// Creamos os mundos
-	float limites[] = { -37.5f, 37.5f };
 
 	std::map<int, int> elementosDecorativos;
 

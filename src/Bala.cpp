@@ -10,6 +10,7 @@
 
 Bala::Bala(glm::vec3 posicion, glm::vec3 escalado, float angulo, unsigned int shaderProgram, std::string inputOBJfile, glm::vec3 direccion) : Obxecto(posicion, escalado, angulo, shaderProgram, inputOBJfile) {
 	this->direccion = direccion;
+	this->estado = 1;
 }
 
 void Bala::moverBala(double tempoTranscurrido) {

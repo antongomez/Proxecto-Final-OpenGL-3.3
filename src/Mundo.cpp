@@ -21,6 +21,7 @@ Mundo::Mundo(PersonaxePrincipal* personaxePrincipal, GLuint shaderProgram, GLuin
 	std::string rutaTexturaSuelo, std::string rutaTexturaMuro) : PantallaInicial(personaxePrincipal, shaderProgram, shaderProgramTex, shaderProgramBasico, luces)
 {
 	this->nivelMundo = nivelMundo;
+	this->pausa = false;
 
 	xerarSuelo(alturaMundo, limites, rutaTexturaSuelo, rutaTexturaMuro);
 	xerarSkyBox(alturaMundo, limites, rutaTexturasSkyBox);
@@ -202,20 +203,21 @@ void Mundo::establecerCamara() {
 }
 
 void Mundo::moverObxectos(float tempoTranscurrido) {
+	if (!pausa) {
+		// Temos o tempo que se tarda en pasar o mundo
+		tempoRestanteEmpezar = SEGUNDOS_PAUSA_INICIO_NIVEL - glfwGetTime() + tempoInicioMundo;
 
-	// Temos o tempo que se tarda en pasar o mundo
-	tempoRestanteEmpezar = SEGUNDOS_PAUSA_INICIO_NIVEL - glfwGetTime() + tempoInicioMundo;
+		if (tempoRestanteEmpezar < 0) {
 
-	if (tempoRestanteEmpezar < 0) {
+			personaxePrincipal->moverPersonaxe(tempoTranscurrido, obxectosDecorativos);
+			for (int i = 0; i < inimigos.size(); i++) {
+				inimigos[i]->moverEnemigo(tempoTranscurrido);
+			}
 
-		personaxePrincipal->moverPersonaxe(tempoTranscurrido, obxectosDecorativos);
-		for (int i = 0; i < inimigos.size(); i++) {
-			inimigos[i]->moverEnemigo(tempoTranscurrido);
+			// Comprobamos as posibles colisions
+			colisionsBalas();
+			colisionsTanqueInimigo();
 		}
-
-		// Comprobamos as posibles colisions
-		colisionsBalas();
-		colisionsTanqueInimigo();
 	}
 }
 
@@ -279,8 +281,9 @@ void Mundo::colisionsTanqueInimigo() {
 void Mundo::ataqueProducido() {
 	std::cout << "ATAQUE PRODUCIDO\n";
 
-	finalizarMundo();
-	iniciar(camara->width, camara->height);
+	/*finalizarMundo();
+	iniciar(camara->width, camara->height);*/
+	pausa = true;
 	
 }
 
@@ -546,6 +549,15 @@ void Mundo::eventoTeclado(GLFWwindow* window, int tecla, int accion) {
 	// Disparo
 	if (tecla == 32 && accion == GLFW_PRESS) {
 		personaxePrincipal->disparar();
+	}
+
+	// Finalizar pausa
+	if (tecla == 80 && accion == GLFW_PRESS) {
+		finalizarMundo();
+		iniciar(camara->width, camara->height);
+		if (pausa) {
+			pausa = false;
+		}
 	}
 }
 

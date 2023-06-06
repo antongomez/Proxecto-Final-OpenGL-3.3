@@ -23,6 +23,7 @@ PersonaxePrincipal::PersonaxePrincipal(glm::vec3 posicion, glm::vec3 escalado, f
 	this->marcha_atras = false;
 	this->xirar_dereita = false;
 	this->xirar_esquerda = false;
+	this->tecla_anterior = false;
 	this->nPersonaxes = rutasPersonaxes.size();
 
 	this->dimensionsTanques = dimensionsTanques;

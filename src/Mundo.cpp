@@ -510,11 +510,18 @@ void Mundo::eventoTeclado(GLFWwindow* window, int tecla, int accion) {
 	if (tecla == 68) {
 		if (accion == GLFW_PRESS) {
 			personaxePrincipal->xirar_dereita = true;
-			personaxePrincipal->xirar_esquerda = false;
+			if (personaxePrincipal->xirar_esquerda) {
+				personaxePrincipal->xirar_esquerda = false;
+				personaxePrincipal->tecla_anterior = true;
+			}
 		}
 
 		if (accion == GLFW_RELEASE) {
 			personaxePrincipal->xirar_dereita = false;
+			if (personaxePrincipal->tecla_anterior) {
+				personaxePrincipal->xirar_esquerda = true;
+				personaxePrincipal->tecla_anterior = false;
+			}
 		}
 	}
 
@@ -522,11 +529,18 @@ void Mundo::eventoTeclado(GLFWwindow* window, int tecla, int accion) {
 	if (tecla == 65) {
 		if (accion == GLFW_PRESS) {
 			personaxePrincipal->xirar_esquerda = true;
-			personaxePrincipal->xirar_dereita = false;
+			if (personaxePrincipal->xirar_dereita) {
+				personaxePrincipal->xirar_dereita = false;
+				personaxePrincipal->tecla_anterior = true;
+			}
 		}
 
 		if (accion == GLFW_RELEASE) {
 			personaxePrincipal->xirar_esquerda = false;
+			if (personaxePrincipal->tecla_anterior) {
+				personaxePrincipal->xirar_dereita = true;
+				personaxePrincipal->tecla_anterior = false;
+			}
 		}
 	}
 

@@ -13,6 +13,7 @@ class PersonaxePrincipal : public Obxecto
 		bool marcha_atras;
 		bool xirar_dereita;
 		bool xirar_esquerda;
+		bool tecla_anterior;
 		std::vector<Bala*> balas;
 		int nPersonaxes;
 		std::vector<Figura*> fgPersonaxes;

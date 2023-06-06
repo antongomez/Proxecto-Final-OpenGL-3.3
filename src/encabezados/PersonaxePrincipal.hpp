@@ -37,7 +37,6 @@ public:
 	void cambiarPersonaxe(bool seguinte);
 	std::string nomeTanqueActual();
 
-	bool dentroMuro(Bala* bala);
 	bool colisionArbol(std::vector<Obxecto*> obxectosDecorativos);
 
 private:

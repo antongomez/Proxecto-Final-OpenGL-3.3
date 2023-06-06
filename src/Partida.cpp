@@ -174,7 +174,13 @@ void Partida::iniciarMusica() {
 }
 
 void Partida::moverObxectos(float tempoTranscurrido) {
-	mundos[idMundoActual]->moverObxectos(tempoTranscurrido);
+	if (!(mundos[idMundoActual]->instantes_pausa_inicial < INSTANTES_PAUSA_INICIO_NIVEL)) {
+		mundos[idMundoActual]->moverObxectos(tempoTranscurrido);
+	}
+	else {
+		mundos[idMundoActual]->instantes_pausa_inicial++;
+	}
+	
 	mundos[idMundoActual]->renderizarEscena();
 
 	// Comprobamos se xa matamos a todos os inimigos deste mundo

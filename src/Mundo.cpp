@@ -8,6 +8,7 @@
 #include <iostream>
 #include "encabezados/PantallaInicial.hpp"
 #include "encabezados/AudioHelper.hpp"
+#include "encabezados/TextHelper.hpp"
 
 Mundo::Mundo(PersonaxePrincipal* personaxePrincipal, GLuint shaderProgram, GLuint shaderProgramTex, GLuint shaderProgramBasico,
 	float alturaMundo, float* limites,
@@ -31,6 +32,8 @@ void Mundo::iniciar(float width, float height) {
 	personaxePrincipal->angulo = 0;
 
 	this->camaraSecundaria = new Camara(10.0f, PI, PI / 2.0f - UNIDADE_GRAO_EN_RADIANS, width, height, MODO_CAMARA_VISTA_XERAL);
+
+	inimigosRestantes = inimigos.size();
 }
 
 void Mundo::xerarSkyBox(float alturaMundo, float* limites, std::string rutaTexturas[]) {
@@ -222,6 +225,7 @@ void Mundo::colisionsBalas() {
 					inimigo->estado = 2;
 					AudioHelper::GetInstance()->reproducirSon(SON_INIMIGO_MATADO, 0.25f);
 					personaxePrincipal->balas.erase(iterBala);
+					inimigosRestantes--;
 					sair = true;
 					break;
 				}
@@ -361,6 +365,11 @@ void Mundo::renderizarEscena() {
 	glUniform1i(loc_skyBox, 1);
 
 	skyBox->renderizarSkyBox();
+
+	TextHelper* t = TextHelper::GetInstance();
+	t->cambiarViewport(camara->width, camara->height);
+	t->setTexto("Inimigos: " + std::to_string(inimigosRestantes));
+	t->escribir(20, 20, 2.0f, 0, 0);
 
 	renderizarMiniMapa();
 }

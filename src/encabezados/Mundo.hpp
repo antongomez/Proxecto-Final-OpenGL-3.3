@@ -20,6 +20,7 @@ public:
 	std::vector<Enemigo*> inimigos;
 	int nivelMundo;
 	SkyBox* skyBox;
+	int inimigosRestantes;
 
 	// Construtores
 	Mundo(PersonaxePrincipal* personaxe, GLuint shaderProgram, GLuint shaderProgramTex, GLuint shaderProgramMiniMapa,

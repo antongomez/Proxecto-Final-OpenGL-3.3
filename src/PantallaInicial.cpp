@@ -15,6 +15,7 @@ PantallaInicial::PantallaInicial(PersonaxePrincipal* personaxePrincipal, GLuint 
 	this->luces = luces;
 	this->musica_reproducida = false;
 	this->instantes_pausa = 0;
+	this->instantes_pausa_inicial = INSTANTES_PAUSA_INICIO_NIVEL;
 
 	xerarSuelo(limites, rutaTexturaSuelo);
 	this->fg = Figura::GetFigura(FIGURA_CADRADO, shaderProgramBasico, rutaTexturaMetalica);
@@ -32,6 +33,7 @@ PantallaInicial::PantallaInicial(PersonaxePrincipal* personaxePrincipal, GLuint 
 	this->luces = luces;
 	this->musica_reproducida = false;
 	this->instantes_pausa = 0;
+	this->instantes_pausa_inicial = 0;
 }
 
 void PantallaInicial::iniciar(float width, float height) {
@@ -254,6 +256,9 @@ void PantallaInicial::renderizarEscena() {
 	t->cambiarViewport(camaraSecundaria->width, camaraSecundaria->height);
 	t->setTexto(personaxePrincipal->nomeTanqueActual());
 	t->escribir(camaraSecundaria->width / 2.0f, camaraSecundaria->height / 2.0f, 3.0f, 1, 1);
+
+	t->setTexto("Press ENTER to start");
+	t->escribir(camaraSecundaria->width / 2.0f, camaraSecundaria->height - camaraSecundaria->height / 6.0f, 1.0f, 1, 1);
 
 }
 

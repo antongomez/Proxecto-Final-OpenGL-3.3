@@ -45,7 +45,7 @@ void AudioHelper::reproducirMelodiaMundo(int i) {
 		melodiasMundos[i]->setVolume(0.75f);
 	}
 	else {
-		melodiasMundos[i]->setVolume(0.4f);
+		melodiasMundos[i]->setVolume(0.6f);
 	}
 	
 	melodiasMundos[i]->setIsPaused(false);

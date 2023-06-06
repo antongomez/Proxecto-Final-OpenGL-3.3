@@ -30,6 +30,7 @@ public:
 
 	bool musica_reproducida;
 	int instantes_pausa;
+	int instantes_pausa_inicial;
 
 	PantallaInicial(PersonaxePrincipal* personaxe, GLuint shaderProgram, GLuint shaderProgramTex, GLuint shaderProgramBasico,
 		float* limites, std::map<int, std::vector<Luz*>> luces,
@@ -54,6 +55,5 @@ protected:
 
 	void establecerLucesShader(GLuint shader);
 	void xerarSuelo(float* limites, std::string rutaTexturaSuelo);
-	void cambiarPersonaxe();
 
 };

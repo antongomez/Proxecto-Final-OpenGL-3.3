@@ -18,7 +18,6 @@ bool Bala::moverBala(double tempoTranscurrido, float* limites) {
 
 	if (!(posicion.x >= limites[0] && posicion.x <= limites[1] &&
 		posicion.z >= limites[0] && posicion.z <= limites[1])) {
-		std::cout << "bala fora\n";
 	}
 
 	// Comprobamos que non saia do muro

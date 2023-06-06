@@ -30,6 +30,7 @@ public:
 	void reescalarVenta(GLFWwindow* window, int width, int height);
 	void eventoTeclado(GLFWwindow* window, int tecla, int accion);
 	void seguinteMundo();
+	void reiniciarXogo();
 
 	bool reiniciarPartida;
 

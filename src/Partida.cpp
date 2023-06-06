@@ -185,9 +185,11 @@ void Partida::moverObxectos(float tempoTranscurrido) {
 
 	mundos[idMundoActual]->moverObxectos(tempoTranscurrido);
 
-	// Actualizamos o tempo da partida
-	double tempoActual = glfwGetTime();
-	tempoPartida = tempoActual - tempoInicioPartida;
+	// Actualizamos o tempo da partida. Non o actualizamos cando xa gañou
+	if (!mundos[idMundoActual]->win) {
+		double tempoActual = glfwGetTime();
+		tempoPartida = tempoActual - tempoInicioPartida;
+	}
 
 	mundos[idMundoActual]->renderizarEscena(tempoPartida);
 
@@ -198,9 +200,9 @@ void Partida::moverObxectos(float tempoTranscurrido) {
 			seguinteMundo();
 		}
 		else {
+			AudioHelper* ah = AudioHelper::GetInstance();
 
 			if (!mundos[idMundoActual]->musica_reproducida) {
-				AudioHelper* ah = AudioHelper::GetInstance();
 				if (idMundoActual == 4) {
 					ah->reproducirSon(SON_XOGO_COMPLETADO);
 				}
@@ -214,7 +216,12 @@ void Partida::moverObxectos(float tempoTranscurrido) {
 			if (idMundoActual == 4) {
 				if (reiniciarPartida) {
 					reiniciarPartida = false;
+					ah->pausarMelodiaVictoria();
 					seguinteMundo();
+				}
+				else if (!mundos[idMundoActual]->win) {
+					mundos[idMundoActual]->win = true;
+					ah->reproducirMelodiaVictoria();
 				}
 			}
 			else {
@@ -241,6 +248,31 @@ void Partida::eventoTeclado(GLFWwindow* window, int tecla, int accion) {
 	// Tecla ENTER
 	if (tecla == 257 && accion == GLFW_RELEASE) {
 		AudioHelper* ah = AudioHelper::GetInstance();
+		
+		if (idMundoActual == 0) {
+			ah->pausarMelodiaMundo(idMundoActual);
+			ah->reproducirSon(SON_XOGO_ARRANQUE);
+			mundos[0]->tempoPulsoEnter = glfwGetTime();
+			if (personaxePrincipal->angulo <= ANGULO_PAUSA_FIN_PANTALLA_INICIAL) {
+				mundos[0]->anguloPulsoEnter = personaxePrincipal->angulo;
+			}
+			else {
+				mundos[0]->anguloPulsoEnter = personaxePrincipal->angulo - 2.0f * PI;
+			}
+
+		}
+		else if (idMundoActual == 4 && mundos[idMundoActual]->win) {
+			reiniciarPartida = true;
+
+		}
+		else if (mundos[idMundoActual]->defeat) {
+			idMundoActual = mundos.size() - 1;
+			ah->pausarMelodiaVictoria();
+			seguinteMundo();
+		}
+	}
+	if (tecla == 80 && accion == GLFW_RELEASE) {
+		AudioHelper* ah = AudioHelper::GetInstance();
 		ah->pausarMelodiaMundo(idMundoActual);
 		if (idMundoActual == 0) {
 			ah->reproducirSon(SON_XOGO_ARRANQUE);
@@ -253,15 +285,12 @@ void Partida::eventoTeclado(GLFWwindow* window, int tecla, int accion) {
 			}
 
 		}
-		else if (idMundoActual == 4) {
-			reiniciarPartida = true;
-		}
-		else {
-			seguinteMundo();
-		}
+		seguinteMundo();
+		
 	}
-
-	mundos[idMundoActual]->eventoTeclado(window, tecla, accion);
+	else {
+		mundos[idMundoActual]->eventoTeclado(window, tecla, accion);
+	}
 }
 
 void Partida::seguinteMundo() {
@@ -284,5 +313,20 @@ void Partida::seguinteMundo() {
 	AudioHelper::GetInstance()->reproducirMelodiaMundo(idMundoActual);
 	mundos[idMundoActual]->iniciar(width, height);
 }
+
+void Partida::reiniciarXogo() {
+	mundos[idMundoActual]->finalizarMundo();
+	// Collemos as proporcions da camara do anterior mundo
+	float width = mundos[idMundoActual]->camara->width;
+	float height = mundos[idMundoActual]->camara->height;
+
+	idMundoActual = 0;
+
+	personaxePrincipal->vidas = 3;
+
+	AudioHelper::GetInstance()->reproducirMelodiaMundo(idMundoActual);
+	mundos[idMundoActual]->iniciar(width, height);
+}
+
 
 

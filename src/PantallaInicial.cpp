@@ -22,6 +22,8 @@ PantallaInicial::PantallaInicial(PersonaxePrincipal* personaxePrincipal, GLuint 
 	this->fgCentro = Figura::GetFigura(FIGURA_CADRADO, shaderProgramBasico, "recursos/texturas/textura-parte-abaixo-centro.jpg");
 	this->fgEsquerda = Figura::GetFigura(FIGURA_CADRADO, shaderProgramBasico, "recursos/texturas/textura-parte-abaixo-esquerda.jpg");
 	this->fgDereita = Figura::GetFigura(FIGURA_CADRADO, shaderProgramBasico, "recursos/texturas/textura-parte-abaixo-dereita.jpg");
+
+	this->win = false;
 }
 
 PantallaInicial::PantallaInicial(PersonaxePrincipal* personaxePrincipal, GLuint shaderProgram, GLuint shaderProgramTex, GLuint shaderProgramBasico,
@@ -33,6 +35,8 @@ PantallaInicial::PantallaInicial(PersonaxePrincipal* personaxePrincipal, GLuint 
 	this->luces = luces;
 	this->musica_reproducida = false;
 	this->instantes_pausa = 0;
+	this->win = false;
+	this->defeat = false;
 }
 
 void PantallaInicial::iniciar(float width, float height) {
@@ -40,11 +44,13 @@ void PantallaInicial::iniciar(float width, float height) {
 
 	// colocamos ao personaxe principal sobre o chan no centro do mesmo
 	personaxePrincipal->posicion = suelo->posicion;
-	personaxePrincipal->angulo = PI/4.0f;
+	personaxePrincipal->angulo = PI / 4.0f;
 
 	this->camaraSecundaria = new Camara(5.0f, 0, 0, width, 250, MODO_CAMARA_VISTA_XERAL);
 	this->tempoPulsoEnter = -1;
 	this->mundoFinalizado = false;
+	this->win = false;
+	this->defeat = false;
 }
 
 bool PantallaInicial::mundoCompletado() {
@@ -64,7 +70,8 @@ void PantallaInicial::moverObxectos(float tempoTranscurrido) {
 
 			this->personaxePrincipal->angulo = anguloPulsoEnter + (ANGULO_PAUSA_FIN_PANTALLA_INICIAL - anguloPulsoEnter) * (tempoTrans);
 
-		} else if (tempoTrans - SEGUNDOS_PAUSA_FIN_PANTALLA_INICIAL > 1) {
+		}
+		else if (tempoTrans - SEGUNDOS_PAUSA_FIN_PANTALLA_INICIAL > 1) {
 			this->mundoFinalizado = true;
 		}
 	}

@@ -29,6 +29,8 @@ public:
 	GLuint shaderProgramBasico;
 
 	bool musica_reproducida;
+	bool win;
+	bool defeat;
 	int instantes_pausa;
 
 	double tempoPulsoEnter;

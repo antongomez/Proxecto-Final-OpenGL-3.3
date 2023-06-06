@@ -90,6 +90,8 @@
 #define SON_XOGO_ARRANQUE "recursos/audio/reload.ogg"
 #define SON_NIVEL_COMPLETADO "recursos/audio/game-level-complete-2.ogg"
 #define SON_XOGO_COMPLETADO "recursos/audio/game-level-complete-2.ogg"
+#define SON_NIVEL_FALLIDO "recursos/audio/failure-1.ogg"
+#define SON_XOGO_PERDIDO "recursos/audio/failure-1.ogg"
 #define SON_BEEP_BAIXO "recursos/audio/short-beep-tone.ogg"
 #define SON_BEEP_ALTO "recursos/audio/beep3.ogg"
 
@@ -98,3 +100,4 @@
 #define MUSICA_MUNDO_2 "recursos/audio/lifelike.ogg"
 #define MUSICA_MUNDO_3 "recursos/audio/game-music-loop-4.ogg"
 #define MUSICA_MUNDO_4 "recursos/audio/game-music-loop-5.ogg"
+#define MUSICA_VICTORIA "recursos/audio/game-music-loop-7.ogg"

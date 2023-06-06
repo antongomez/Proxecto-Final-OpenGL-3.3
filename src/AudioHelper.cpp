@@ -15,6 +15,8 @@ AudioHelper::AudioHelper() {
 		melodiasMundos.push_back(soundEngine->play2D(rutasMelodiasMundos[i].c_str(), true, true));
 	}
 
+	melodiaVictoria = soundEngine->play2D(MUSICA_VICTORIA, true, true);
+
 }
 
 AudioHelper* AudioHelper::GetInstance() {
@@ -47,10 +49,20 @@ void AudioHelper::reproducirMelodiaMundo(int i) {
 	else {
 		melodiasMundos[i]->setVolume(0.6f);
 	}
-	
+
 	melodiasMundos[i]->setIsPaused(false);
 }
 
 void AudioHelper::pausarMelodiaMundo(int i) {
 	melodiasMundos[i]->setIsPaused(true);
+}
+
+void AudioHelper::reproducirMelodiaVictoria() {
+	melodiaVictoria->setPlayPosition(0);
+	melodiaVictoria->setVolume(0.75f);
+	melodiaVictoria->setIsPaused(false);
+}
+
+void AudioHelper::pausarMelodiaVictoria() {
+	melodiaVictoria->setIsPaused(true);
 }

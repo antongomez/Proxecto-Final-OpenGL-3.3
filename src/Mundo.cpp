@@ -45,6 +45,9 @@ void Mundo::iniciar(float width, float height) {
 	for (int i = 0; i < 4; i++) {
 		pitidos[i] = false;
 	}
+
+	this->win = false;
+	this->defeat = false;
 }
 
 void Mundo::xerarSkyBox(float alturaMundo, float* limites, std::string rutaTexturas[]) {
@@ -204,7 +207,7 @@ void Mundo::establecerCamara() {
 }
 
 void Mundo::moverObxectos(float tempoTranscurrido) {
-	if (!pausa) {
+	if (!pausa && !defeat) {
 		// Temos o tempo que se tarda en pasar o mundo
 		tempoRestanteEmpezar = SEGUNDOS_PAUSA_INICIO_NIVEL - glfwGetTime() + tempoInicioMundo;
 
@@ -280,12 +283,23 @@ void Mundo::colisionsTanqueInimigo() {
 }
 
 void Mundo::ataqueProducido() {
-	std::cout << "ATAQUE PRODUCIDO\n";
+	personaxePrincipal->vidas--;
+	AudioHelper* ah = AudioHelper::GetInstance();
 
-	/*finalizarMundo();
-	iniciar(camara->width, camara->height);*/
-	pausa = true;
 	
+	
+	ah->reproducirSon(SON_NIVEL_FALLIDO);
+	ah->pausarMelodiaMundo(nivelMundo);
+
+	if (personaxePrincipal->vidas == 0) {
+		ah->reproducirMelodiaVictoria();
+		defeat = true;
+	}
+	else {
+		pausa = true;
+	}
+	
+
 }
 
 void Mundo::renderizarMiniMapa() {
@@ -424,9 +438,46 @@ void Mundo::renderizarEscena(float tempoTranscurrido) {
 	}
 	emitirPitidos(tempoRestanteEmpezar);
 
+	if (pausa) {
+		TextHelper* t = TextHelper::GetInstance();
+		t->cambiarViewport(camara->width, camara->height);
+		t->setTexto("Os trolls devoraronte!");
+		t->escribir(camara->width / 2.0f, camara->height / 2.0f - 20, 2.0f, 1, 1);
+		t->setTexto("Presiona ENTER para reitentar o nivel");
+		t->escribir(camara->width / 2.0f, camara->height / 2.0f + 20, 1.5f, 1, 1);
+	}
+	else if (mundoCompletado() && !win) {
+		TextHelper* t = TextHelper::GetInstance();
+		t->cambiarViewport(camara->width, camara->height);
+		t->setTexto("Nivel completado!");
+		t->escribir(camara->width / 2.0f, camara->height / 2.0f, 2.0f, 1, 1);
+	}
+	else if (win) {
+		TextHelper* t = TextHelper::GetInstance();
+		t->cambiarViewport(camara->width, camara->height);
+		t->setTexto("XOGO COMPLETADO");
+		t->escribir(camara->width / 2.0f, camara->height / 2.0f - 50, 4.0f, 1, 1);
+		std::stringstream sw;
+		sw << "Tempo empregado: " << std::fixed << std::setprecision(3) << tempoTranscurrido;
+		t->setTexto(sw.str());
+		t->escribir(camara->width / 2.0f, camara->height / 2.0f + 10, 3.0f, 1, 1);
+		t->setTexto("Presiona ENTRER para reiniciar o xogo");
+		t->escribir(camara->width / 2.0f, camara->height / 2.0f + 60, 2.0f, 1, 1);
+	}
+	else if (defeat) {
+		TextHelper* t = TextHelper::GetInstance();
+		t->cambiarViewport(camara->width, camara->height);
+		t->setTexto("Derrota!");
+		t->escribir(camara->width / 2.0f, camara->height / 2.0f - 30, 4.0f, 1, 1);
+		t->setTexto("Presiona ENTER para reiniciar o xogo");
+		t->escribir(camara->width / 2.0f, camara->height / 2.0f + 20, 1.5f, 1, 1);
+	}
+
 	if (minimapa) {
 		renderizarMiniMapa();
 	}
+
+
 }
 
 void Mundo::emitirPitidos(double tempoRestante) {
@@ -555,10 +606,12 @@ void Mundo::eventoTeclado(GLFWwindow* window, int tecla, int accion) {
 	}
 
 	// Finalizar pausa
-	if (tecla == 80 && accion == GLFW_PRESS) {
-		finalizarMundo();
-		iniciar(camara->width, camara->height);
+	if (tecla == 257 && accion == GLFW_PRESS) {
+
 		if (pausa) {
+			finalizarMundo();
+			iniciar(camara->width, camara->height);
+			AudioHelper::GetInstance()->reproducirMelodiaMundo(nivelMundo);
 			pausa = false;
 		}
 	}

@@ -17,6 +17,9 @@ public:
 	void reproducirMelodiaMundo(int i);
 	void pausarMelodiaMundo(int i);
 
+	void reproducirMelodiaVictoria();
+	void pausarMelodiaVictoria();
+
 
 private:
 
@@ -24,6 +27,7 @@ private:
 	irrklang::ISoundEngine* soundEngine;
 	std::vector<irrklang::ISound*> melodiasMundos;
 	std::vector<std::string> rutasMelodiasMundos;
+	irrklang::ISound* melodiaVictoria;
 
 
 	// -------------- Construtores ----------------- //

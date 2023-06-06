@@ -289,7 +289,7 @@ void Mundo::renderizarMiniMapa() {
 	glUseProgram(shaderProgramBasico);
 
 	camaraSecundaria->establecerCamara(personaxePrincipal);
-	camaraSecundaria->actualizarMatrizProxeccionOrtho(25.0f);
+	camaraSecundaria->actualizarMatrizProxeccionOrtho(35.0f);
 	camaraSecundaria->actualizarMatricesShader(shaderProgram);
 
 	// O obxecto pintamolo doutra cor
@@ -308,6 +308,9 @@ void Mundo::renderizarMiniMapa() {
 
 	glUniform3fv(loc_color, 1, value_ptr(glm::vec3(0, 0.3f, 0)));
 	suelo->renderizarSuelo();
+
+	glUniform3fv(loc_color, 1, value_ptr(glm::vec3(0.5f, 0.5f, 0.5f)));
+	suelo->renderizarParteArribaMuro();
 
 }
 

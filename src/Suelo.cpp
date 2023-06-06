@@ -114,3 +114,57 @@ void Suelo::renderizarMuro() {
 
 	}
 }
+
+void Suelo::renderizarParteArribaMuro() {
+
+	unsigned int transformLoc = glGetUniformLocation(shaderProgram, "transform");
+	float grosor = (float)(1.0 / escala) / 6.0f;
+	float esc = limites[1] - limites[0] + grosor;
+
+	// Debuxamos a parte de atras do murito
+	matrizModelo = glm::mat4();
+	matrizModelo = glm::translate(matrizModelo, glm::vec3(0, 0.1f, limites[0]) + posicion);
+	matrizModelo = glm::rotate(matrizModelo, (float)(-PI / 2.0f), glm::vec3(1.0, 0.0, 0.0));
+	matrizModelo = glm::scale(matrizModelo, glm::vec3(esc, grosor, 0));
+
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(matrizModelo));
+	fg->renderizar();
+
+	// Debuxamos a parte de diante do murito
+	matrizModelo = glm::mat4();
+	matrizModelo = glm::translate(matrizModelo, glm::vec3(0, 0.1f, limites[1]) + posicion);
+	matrizModelo = glm::rotate(matrizModelo, (float)PI, glm::vec3(0.0, 1.0, 0.0));
+	matrizModelo = glm::rotate(matrizModelo, (float)(-PI / 2.0f), glm::vec3(1.0, 0.0, 0.0));
+	matrizModelo = glm::scale(matrizModelo, glm::vec3(esc, grosor, 0));
+
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(matrizModelo));
+	fg->renderizar();
+
+
+	// Debuxamos a parte da esquerda do murito
+	matrizModelo = glm::mat4();
+	matrizModelo = glm::translate(matrizModelo, glm::vec3(limites[0], 0.1f, 0) + posicion);
+	matrizModelo = glm::rotate(matrizModelo, (float)(PI / 2.0f), glm::vec3(0.0, 1.0, 0.0));
+	matrizModelo = glm::rotate(matrizModelo, (float)(-PI / 2.0f), glm::vec3(1.0, 0.0, 0.0));
+	matrizModelo = glm::scale(matrizModelo, glm::vec3(esc, grosor, 0));
+
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(matrizModelo));
+	fg->renderizar();
+
+
+
+
+	// Debuxamos a parte de atras do muro
+	matrizModelo = glm::mat4();
+	matrizModelo = glm::translate(matrizModelo, glm::vec3(limites[1], 0.1f, 0) + posicion);
+	matrizModelo = glm::rotate(matrizModelo, (float)(-PI / 2.0f), glm::vec3(0.0, 1.0, 0.0));
+	matrizModelo = glm::rotate(matrizModelo, (float)(-PI / 2.0f), glm::vec3(1.0, 0.0, 0.0));
+	matrizModelo = glm::scale(matrizModelo, glm::vec3(esc, grosor, 0));
+
+	glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(matrizModelo));
+	fg->renderizar();
+
+
+
+
+}

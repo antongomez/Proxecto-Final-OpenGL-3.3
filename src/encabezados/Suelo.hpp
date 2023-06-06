@@ -27,4 +27,5 @@ public:
 	// Metodos
 	void renderizarSuelo();
 	void renderizarMuro();
+	void renderizarParteArribaMuro();
 };

@@ -179,11 +179,14 @@ void Partida::moverObxectos(float tempoTranscurrido) {
 	if (mundos[idMundoActual]->mundoCompletado()) {
 
 		if (!mundos[idMundoActual]->musica_reproducida) {
-			AudioHelper::GetInstance()->reproducirSon("recursos/audio/game-level-completed.ogg");
+			AudioHelper* ah = AudioHelper::GetInstance();
+			ah->reproducirSon("recursos/audio/game-level-completed.ogg");
+			ah->pausarMelodiaMundos();
 			mundos[idMundoActual]->musica_reproducida = true;
 		}
 
 		if (mundos[idMundoActual]->instantes_pausa >= INSTANTES_PAUSA_NIVEL_COMPLETADO) {
+			AudioHelper::GetInstance()->continuarMelodiaMundos();
 			seguinteMundo();
 		}
 		else {
@@ -198,13 +201,13 @@ void Partida::reescalarVenta(GLFWwindow* window, int width, int height) {
 }
 
 void Partida::eventoTeclado(GLFWwindow* window, int tecla, int accion) {
+
 	// Tecla ENTER
 	if (tecla == 257 && accion == GLFW_RELEASE) {
 		seguinteMundo();
 	}
-	else {
-		mundos[idMundoActual]->eventoTeclado(window, tecla, accion);
-	}
+
+	mundos[idMundoActual]->eventoTeclado(window, tecla, accion);
 }
 
 void Partida::seguinteMundo() {
@@ -218,7 +221,8 @@ void Partida::seguinteMundo() {
 	}
 	else {
 		idMundoActual = 0;
-		std::cout << "VOLVEMOS MUNDO0\n";
+		AudioHelper* ah = AudioHelper::GetInstance();
+		ah->pausarMelodiaMundos();
 	}
 
 	mundos[idMundoActual]->iniciar(width, height);

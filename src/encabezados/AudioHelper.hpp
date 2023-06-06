@@ -14,6 +14,11 @@ public:
 	void reproducirMelodiaInicial();
 	void reproducirMelodiaMundos();
 
+	void pausarMelodiaMundos();
+	void continuarMelodiaMundos();
+
+	void pausarMelodiaInicial();
+
 
 private:
 

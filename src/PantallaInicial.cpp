@@ -258,6 +258,8 @@ void PantallaInicial::renderizarEscena() {
 }
 
 void PantallaInicial::eventoTeclado(GLFWwindow* window, int tecla, int accion) {
+
+	// Fechas
 	if ((tecla == 262 || tecla == 263) && accion != GLFW_RELEASE) {
 		AudioHelper::GetInstance()->reproducirSon("recursos/audio/open-doors.ogg");
 		personaxePrincipal->cambiarPersonaxe(tecla == 262);
@@ -293,6 +295,10 @@ void PantallaInicial::reescalarVenta(GLFWwindow* window, int width, int height) 
 }
 
 void PantallaInicial::finalizarMundo() {
+	AudioHelper* ah = AudioHelper::GetInstance();
+	ah->pausarMelodiaInicial();
+	ah->reproducirMelodiaMundos();
+
 	musica_reproducida = false;
 	instantes_pausa = 0;
 }

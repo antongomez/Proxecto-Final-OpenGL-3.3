@@ -78,7 +78,7 @@
 #define INSTANTES_TOTAL_ANIMACION 10
 
 // ---------------- Definicions MINIPAUSA -------------------------- //
-#define INSTANTES_PAUSA_NIVEL_COMPLETADO 200
+#define INSTANTES_PAUSA_NIVEL_COMPLETADO 175
 
-#define MELODIA_INICIAL "recursos/audio/musica-fondo.ogg"
+#define MELODIA_INICIAL "recursos/audio/game-level-completed.ogg"
 #define MELODIA_MUNDOS "recursos/audio/musica-fondo.ogg"

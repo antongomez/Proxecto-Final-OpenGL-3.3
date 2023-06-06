@@ -278,6 +278,10 @@ void Mundo::colisionsTanqueInimigo() {
 
 void Mundo::ataqueProducido() {
 	std::cout << "ATAQUE PRODUCIDO\n";
+
+	finalizarMundo();
+	iniciar(camara->width, camara->height);
+	
 }
 
 void Mundo::renderizarMiniMapa() {

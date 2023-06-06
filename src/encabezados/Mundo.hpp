@@ -26,6 +26,7 @@ public:
 	double tempoRestanteEmpezar;
 	double tempoInicioMundo;
 
+
 	// Construtores
 	Mundo(PersonaxePrincipal* personaxe, GLuint shaderProgram, GLuint shaderProgramTex, GLuint shaderProgramMiniMapa,
 		float alturaMundo, float* limites,

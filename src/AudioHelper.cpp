@@ -5,8 +5,16 @@ static AudioHelper* ah = nullptr;
 
 AudioHelper::AudioHelper() {
 	this->soundEngine = irrklang::createIrrKlangDevice();
-	this->melodiaInicial = nullptr;
-	this->melodiaMundos = nullptr;
+	// Cragamos as melodias dos mundos
+	rutasMelodiasMundos.push_back("recursos/audio/musica-fondo.ogg");
+	rutasMelodiasMundos.push_back("recursos/audio/game-music-loop-3.ogg");
+	rutasMelodiasMundos.push_back("recursos/audio/lifelike.ogg");
+	rutasMelodiasMundos.push_back("recursos/audio/game-music-loop-4.ogg");
+	rutasMelodiasMundos.push_back("recursos/audio/game-music-loop-5.ogg");
+	for (int i = 0; i < rutasMelodiasMundos.size();i++) {
+		melodiasMundos.push_back(soundEngine->play2D(rutasMelodiasMundos[i].c_str(), true, true));
+	}
+
 }
 
 AudioHelper* AudioHelper::GetInstance() {
@@ -25,26 +33,24 @@ void AudioHelper::reproducirSon(std::string rutaAudio) {
 	soundEngine->play2D(rutaAudio.c_str());
 }
 
-
-
-void AudioHelper::reproducirMelodiaInicial() {
-	melodiaInicial = soundEngine->play2D(MELODIA_INICIAL, true, false, true);
+void AudioHelper::reproducirSon(std::string rutaAudio, float volume) {
+	irrklang::ISound* sound = soundEngine->play2D(rutaAudio.c_str(), false, true);
+	sound->setVolume(volume);
+	sound->setIsPaused(false);
 }
 
-void AudioHelper::pausarMelodiaInicial() {
-	melodiaInicial->setIsPaused(true);
+void AudioHelper::reproducirMelodiaMundo(int i) {
+	melodiasMundos[i]->setPlayPosition(0);
+	if (i == 0) {
+		melodiasMundos[i]->setVolume(0.75f);
+	}
+	else {
+		melodiasMundos[i]->setVolume(0.4f);
+	}
+	
+	melodiasMundos[i]->setIsPaused(false);
 }
 
-
-
-void AudioHelper::reproducirMelodiaMundos() {
-	melodiaMundos = soundEngine->play2D(MELODIA_MUNDOS, true, false, true);
-}
-
-void AudioHelper::pausarMelodiaMundos() {
-	melodiaMundos->setIsPaused(true);
-}
-
-void AudioHelper::continuarMelodiaMundos() {
-	melodiaMundos->setIsPaused(false);
+void AudioHelper::pausarMelodiaMundo(int i) {
+	melodiasMundos[i]->setIsPaused(true);
 }

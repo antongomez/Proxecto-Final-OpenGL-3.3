@@ -2,6 +2,7 @@
 
 #include <irrKlang/irrKlang.h>
 #include <string>
+#include <vector>
 
 class AudioHelper
 {
@@ -11,21 +12,18 @@ public:
 	static AudioHelper* GetInstance();
 	static void DeleteInstance();
 	void reproducirSon(std::string rutaAudio);
-	void reproducirMelodiaInicial();
-	void reproducirMelodiaMundos();
+	void reproducirSon(std::string rutaAudio, float volume);
 
-	void pausarMelodiaMundos();
-	void continuarMelodiaMundos();
-
-	void pausarMelodiaInicial();
+	void reproducirMelodiaMundo(int i);
+	void pausarMelodiaMundo(int i);
 
 
 private:
 
 	// --------------- Atributos ------------------- //
 	irrklang::ISoundEngine* soundEngine;
-	irrklang::ISound* melodiaInicial;
-	irrklang::ISound* melodiaMundos;
+	std::vector<irrklang::ISound*> melodiasMundos;
+	std::vector<std::string> rutasMelodiasMundos;
 
 
 	// -------------- Construtores ----------------- //

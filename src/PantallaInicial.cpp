@@ -295,10 +295,6 @@ void PantallaInicial::reescalarVenta(GLFWwindow* window, int width, int height) 
 }
 
 void PantallaInicial::finalizarMundo() {
-	AudioHelper* ah = AudioHelper::GetInstance();
-	ah->pausarMelodiaInicial();
-	ah->reproducirMelodiaMundos();
-
 	musica_reproducida = false;
 	instantes_pausa = 0;
 }

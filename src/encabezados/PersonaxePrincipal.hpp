@@ -29,7 +29,7 @@ public:
 		std::vector<std::string> nomesTanques, float* limites);
 
 	// Metodos
-	void moverPersonaxe(double tempoTranscurrido);
+	void moverPersonaxe(double tempoTranscurrido, std::vector<Obxecto*> obxectosDecorativos);
 	void calcularMatrizModelo() override;
 	void disparar();
 	void renderizarBalas();
@@ -38,6 +38,7 @@ public:
 	std::string nomeTanqueActual();
 
 	bool dentroMuro(Bala* bala);
+	bool colisionArbol(std::vector<Obxecto*> obxectosDecorativos);
 
 private:
 	void moverBalas(double tempoTranscurrido);

@@ -49,6 +49,7 @@ void Mundo::xerarElementosDecorativos(std::map<int, int> elementosDecorativos) {
 		int idElemento = iterador->first;
 
 		std::string rutaOBJ;
+		bool hittable = false;
 		switch (idElemento) {
 		case ID_PEDRA1:
 			rutaOBJ = "recursos/modelos/pedra1.obj";
@@ -61,12 +62,15 @@ void Mundo::xerarElementosDecorativos(std::map<int, int> elementosDecorativos) {
 			break;
 		case ID_ARBORE1:
 			rutaOBJ = "recursos/modelos/arbore1.obj";
+			hittable = true;
 			break;
 		case ID_ARBORE2:
 			rutaOBJ = "recursos/modelos/arbore2.obj";
+			hittable = true;
 			break;
 		case ID_ARBORE3:
 			rutaOBJ = "recursos/modelos/arbore3.obj";
+			hittable = true;
 			break;
 		case ID_HERBA:
 			rutaOBJ = "recursos/modelos/Herba.obj";
@@ -105,7 +109,7 @@ void Mundo::xerarElementosDecorativos(std::map<int, int> elementosDecorativos) {
 			glm::vec3 posicion(posX, suelo->posicion.y, posZ);
 			glm::vec3 escala(1.0f);
 
-			Obxecto* obxecto = new Obxecto(posicion, escala, distribucionAngulo(generator), shaderProgram, rutaOBJ);
+			Obxecto* obxecto = new Obxecto(posicion, escala, distribucionAngulo(generator), shaderProgram, rutaOBJ, hittable);
 			obxectosDecorativos.push_back(obxecto);
 		}
 	}
@@ -185,7 +189,7 @@ void Mundo::establecerCamara() {
 }
 
 void Mundo::moverObxectos(float tempoTranscurrido) {
-	personaxePrincipal->moverPersonaxe(tempoTranscurrido);
+	personaxePrincipal->moverPersonaxe(tempoTranscurrido, obxectosDecorativos);
 	for (int i = 0; i < inimigos.size(); i++) {
 		inimigos[i]->moverEnemigo(tempoTranscurrido);
 	}

@@ -13,6 +13,7 @@ Obxecto::Obxecto(glm::vec3 posicion, glm::vec3 escalado, float angulo, unsigned 
 	this->angulo = angulo;
 	this->shaderProgram = shaderProgram;
 	this->fg = Figura::GetFigura(tipoFigura, shaderProgram, "");
+	this->hittable = false;
 }
 
 // Constructor para os inimigos e o personaxe principal
@@ -21,6 +22,8 @@ Obxecto::Obxecto(glm::vec3 posicion, glm::vec3 escalado, float angulo, unsigned 
 	this->escalado = escalado;
 	this->angulo = angulo;
 	this->shaderProgram = shaderProgram;
+	this->hittable = false;
+	this->fg = 0;
 }
 
 // Constructor para os elementos decorativos
@@ -30,6 +33,16 @@ Obxecto::Obxecto(glm::vec3 posicion, glm::vec3 escalado, float angulo, unsigned 
 	this->angulo = angulo;
 	this->shaderProgram = shaderProgram;
 	this->fg = Figura::GetFigura(FIGURA_CARGADA, shaderProgram, inputOBJfile);
+}
+
+// Constructor para os elementos decorativos
+Obxecto::Obxecto(glm::vec3 posicion, glm::vec3 escalado, float angulo, unsigned int shaderProgram, std::string inputOBJfile, bool hittable) {
+	this->posicion = posicion;
+	this->escalado = escalado;
+	this->angulo = angulo;
+	this->shaderProgram = shaderProgram;
+	this->fg = Figura::GetFigura(FIGURA_CARGADA, shaderProgram, inputOBJfile);
+	this->hittable = hittable;
 }
 
 void Obxecto::calcularMatrizModelo() {

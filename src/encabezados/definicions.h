@@ -73,6 +73,7 @@
 // ---------------- Definicions COLISIONS -------------------------- //
 #define DIST_COLISION_BALA 1.5f
 #define RADIO_ENEMIGO 0.25f
+#define RADIO_ARBORE 0.1f
 
 // ---------------- Definicions ANIMACIONS -------------------------- //
 #define INSTANTES_TOTAL_ANIMACION 10

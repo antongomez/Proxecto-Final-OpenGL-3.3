@@ -13,6 +13,7 @@ public:
 	float angulo;		// Determina o angulo de rotacion do obxecto
 	glm::mat4 matrizModelo; // Matriz que representa a transformacion linear que se aplica sobre o obxecto
 	Figura* fg; // Obxecto que se encarga de debuxar
+	bool hittable;//Sera 1 para elementos decorativos con los que se pueda chocar
 
 	unsigned int shaderProgram;
 
@@ -24,6 +25,9 @@ public:
 	Obxecto(glm::vec3 posicion, glm::vec3 escalado, float angulo, unsigned int shaderProgram);
 	// Para os elementos decorativos
 	Obxecto(glm::vec3 posicion, glm::vec3 escalado, float angulo, unsigned int shaderProgram, std::string inputOBJfile);
+	// Para os elementos decorativos
+	Obxecto(glm::vec3 posicion, glm::vec3 escalado, float angulo, unsigned int shaderProgram, std::string inputOBJfile, bool hittable);
+
 
 	// Metodos
 	void renderizarObxecto();

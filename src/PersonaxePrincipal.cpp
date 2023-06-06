@@ -34,9 +34,10 @@ PersonaxePrincipal::PersonaxePrincipal(glm::vec3 posicion, glm::vec3 escalado, f
 	this->limites[1] = limites[1];
 }
 
-void PersonaxePrincipal::moverPersonaxe(double tempoTranscurrido) {
+void PersonaxePrincipal::moverPersonaxe(double tempoTranscurrido, std::vector<Obxecto*> obxectosDecorativos) {
 
 	if (xirar_dereita) {
+		//GESTIONAR AQUÍ EN FUNCIÓN DE LA COLISIÓN
 		angulo -= INCREMENTO_XIRO_PERSONAXE * tempoTranscurrido;
 	}
 	
@@ -55,15 +56,49 @@ void PersonaxePrincipal::moverPersonaxe(double tempoTranscurrido) {
 		}
 
 		// Actualizamos a posicion do tanque
-		//posicion += desprazamento * direccion;
-		posicion.x = fmin(posicion.x + desprazamento * direccion.x, limites[1] - largo/2);
-		posicion.x = fmax(posicion.x + desprazamento * direccion.x, limites[0] + largo/2);
-		posicion.z = fmin(posicion.z + desprazamento * direccion.z, limites[1] - largo/2);
-		posicion.z = fmax(posicion.z + desprazamento * direccion.z, limites[0] + largo/2);
+		glm::vec3 nueva_posicion;
+		nueva_posicion.x = fmin(posicion.x + desprazamento * direccion.x, limites[1] - largo/2);
+		nueva_posicion.x = fmax(posicion.x + desprazamento * direccion.x, limites[0] + largo/2);
+		nueva_posicion.z = fmin(posicion.z + desprazamento * direccion.z, limites[1] - largo/2);
+		nueva_posicion.z = fmax(posicion.z + desprazamento * direccion.z, limites[0] + largo/2);
+
+		if (!colisionArbol(obxectosDecorativos)) {
+			posicion.x = nueva_posicion.x;
+			posicion.z = nueva_posicion.z;
+		}
+		else {
+			posicion.x = posicion.x - (desprazamento/(float)1000) * direccion.x;
+			posicion.z = posicion.z - (desprazamento/(float)1000) * direccion.z;
+		}
+
+
 	}
 
 
 	moverBalas(tempoTranscurrido);
+}
+
+bool PersonaxePrincipal::colisionArbol(std::vector<Obxecto*> obxectosDecorativos) {
+	bool colision = false;
+	// Matriz que leva calquera punto ao local space do tanque, para simplificar a comprobacion da colision
+	glm::mat4 toLocalSpace = glm::mat4();
+	toLocalSpace = glm::rotate(toLocalSpace, angulo, glm::vec3(0.0, -1.0, 0.0));
+	toLocalSpace = glm::translate(toLocalSpace, -posicion);
+
+	for (int i = 0; i < obxectosDecorativos.size(); i++) {
+		if (obxectosDecorativos[i]->hittable == true) {
+			glm::vec3 pos_local = glm::vec3(toLocalSpace * glm::vec4(obxectosDecorativos[i]->posicion, 1.0f));
+			if (pos_local.x >= -(ancho / 2 + RADIO_ARBORE) &&
+				pos_local.x <= ancho / 2 + RADIO_ARBORE &&
+				pos_local.z >= -(largo / 2 + RADIO_ARBORE) &&
+				pos_local.z <= largo / 2 + RADIO_ARBORE) {
+
+				colision = true;
+			}
+		}
+	}
+
+	return colision;
 }
 
 void PersonaxePrincipal::moverBalas(double tempoTranscurrido)

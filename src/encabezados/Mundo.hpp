@@ -33,12 +33,15 @@ public:
 	void iniciar(float width, float height) override;
 	void moverObxectos(float tempoTranscurrido) override;
 	void renderizarEscena() override;
-	void eventoTeclado(int tecla, int accion) override;
-
+	void eventoTeclado(GLFWwindow* window, int tecla, int accion) override;
 	bool mundoCompletado() override;
+	void finalizarMundo() override;
+
 	void colisionsBalas();
 	void colisionsTanqueInimigo();
 	void ataqueProducido();
+
+	void recolocarInimigos();
 
 	void establecerCamara();
 	void moverCamara(int tipoMovemento);

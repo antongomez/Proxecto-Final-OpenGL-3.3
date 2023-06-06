@@ -24,11 +24,15 @@ void Partida::iniciarPartida() {
 	rutasPersonaxe.push_back("recursos/modelos/Chieftain_tanque.obj");
 	rutasPersonaxe.push_back("recursos/modelos/BMP2_hull.obj");
 	rutasPersonaxe.push_back("recursos/modelos/Leopard_2A4.obj");
+	std::vector<std::string> nomesTanques;
+	nomesTanques.push_back("CHIEFTAIN");
+	nomesTanques.push_back("BMP2");
+	nomesTanques.push_back("LEOPARD");
 	std::vector<std::pair<float, float>> dimensionsTanques;
-	dimensionsTanques.push_back(std::pair<float, float> (3.7, 1.8));
-	dimensionsTanques.push_back(std::pair<float, float>(3.6, 1.7));
-	dimensionsTanques.push_back(std::pair<float, float>(3.9, 1.8));
-	this->personaxePrincipal = new PersonaxePrincipal(glm::vec3(0, 0, 0), glm::vec3(1.0f), 0, shaderProgram, FIGURA_CARGADA, rutasPersonaxe, dimensionsTanques);
+	dimensionsTanques.push_back(std::pair<float, float>(3.58, 1.68));
+	dimensionsTanques.push_back(std::pair<float, float>(3.54, 1.71));
+	dimensionsTanques.push_back(std::pair<float, float>(3.73, 1.75));
+	this->personaxePrincipal = new PersonaxePrincipal(glm::vec3(0, 0, 0), glm::vec3(1.0f), 0, shaderProgram, FIGURA_CARGADA, rutasPersonaxe, dimensionsTanques, nomesTanques);
 
 	// Creamos a pantalla de carga inicial
 	float limitesPI[] = { 0, 0 };
@@ -106,7 +110,7 @@ void Partida::iniciarPartida() {
 	rutaTexturasSkyBox_Deserto[2] = "recursos/texturas/frontDesert.jpg";
 	rutaTexturasSkyBox_Deserto[3] = "recursos/texturas/backDesert.jpg";
 
-	mundo = new Mundo(personaxePrincipal, shaderProgram, shaderProgramTex, shaderProgramMiniMapa, 
+	mundo = new Mundo(personaxePrincipal, shaderProgram, shaderProgramTex, shaderProgramMiniMapa,
 		-50, limites, elementosDecorativos, 2, luces, rutaTexturasSkyBox_Deserto, rutaTexturaSuelo, rutaTexturaMuro);
 	mundos.push_back(mundo);
 
@@ -125,7 +129,7 @@ void Partida::iniciarPartida() {
 	rutaTexturaSuelo = "recursos/texturas/hierba.bmp";
 	rutaTexturaMuro = "recursos/texturas/paredeMundo1.jpg";
 
-	mundo = new Mundo(personaxePrincipal, shaderProgram, shaderProgramTex, shaderProgramMiniMapa ,
+	mundo = new Mundo(personaxePrincipal, shaderProgram, shaderProgramTex, shaderProgramMiniMapa,
 		-100, limites, elementosDecorativos, 3, luces, rutaTexturasSkyBox, rutaTexturaSuelo, rutaTexturaMuro);
 	mundos.push_back(mundo);
 
@@ -173,10 +177,9 @@ void Partida::moverObxectos(float tempoTranscurrido) {
 
 	// Comprobamos se xa matamos a todos os inimigos deste mundo
 	if (mundos[idMundoActual]->mundoCompletado()) {
-		if (!mundos[idMundoActual]->musicaReproducida) {
-			AudioHelper::GetInstance()->reproducir2D("recursos/audio/game-level-completed.ogg", false);
-			mundos[idMundoActual]->musicaReproducida = true;
-		}
+
+		AudioHelper::GetInstance()->reproducir2D("recursos/audio/game-level-completed.ogg", false);
+
 		if (mundos[idMundoActual]->instantes_pausa >= INSTANTES_PAUSA_NIVEL_COMPLETADO) {
 			seguinteMundo();
 		}
@@ -191,20 +194,20 @@ void Partida::reescalarVenta(GLFWwindow* window, int width, int height) {
 	mundos[idMundoActual]->reescalarVenta(window, width, height);
 }
 
-void Partida::eventoTeclado(int tecla, int accion) {
-	// Tecla ñ
-	if (tecla == 59 && accion == GLFW_RELEASE) {
+void Partida::eventoTeclado(GLFWwindow* window, int tecla, int accion) {
+	// Tecla ENTER
+	if (tecla == 257 && accion == GLFW_RELEASE) {
 		seguinteMundo();
 	}
-	else if (tecla != 1) {
-		mundos[idMundoActual]->eventoTeclado(tecla, accion);
+	else {
+		mundos[idMundoActual]->eventoTeclado(window, tecla, accion);
 	}
 }
 
 void Partida::seguinteMundo() {
-	finalizarMundo();
+	mundos[idMundoActual]->finalizarMundo();
 	// Collemos as proporcions da camara do anterior mundo
-	float width =  mundos[idMundoActual]->camara->width;
+	float width = mundos[idMundoActual]->camara->width;
 	float height = mundos[idMundoActual]->camara->height;
 
 	if (idMundoActual != (mundos.size() - 1)) {
@@ -214,12 +217,8 @@ void Partida::seguinteMundo() {
 		idMundoActual = 0;
 		std::cout << "VOLVEMOS MUNDO0\n";
 	}
-	
+
 	mundos[idMundoActual]->iniciar(width, height);
-}
-
-void Partida::finalizarMundo() {
-
 }
 
 

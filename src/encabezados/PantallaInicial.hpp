@@ -28,7 +28,6 @@ public:
 	GLuint shaderProgramTex;
 	GLuint shaderProgramBasico;
 
-	bool musicaReproducida;
 	int instantes_pausa;
 
 	PantallaInicial(PersonaxePrincipal* personaxe, GLuint shaderProgram, GLuint shaderProgramTex, GLuint shaderProgramBasico,
@@ -40,13 +39,17 @@ public:
 	virtual void iniciar(float width, float height);
 	virtual void moverObxectos(float tempoTranscurrido);
 	virtual void renderizarEscena();
-	virtual void eventoTeclado(int tecla, int accion);
+	virtual void eventoTeclado(GLFWwindow* window, int tecla, int accion);
 	void reescalarVenta(GLFWwindow* window, int width, int height);
 	virtual bool mundoCompletado();
+	virtual void finalizarMundo();
 
 protected:
 	// Atributos para debuxar a parte de abaixo da venta inicial
 	Figura* fg;
+	Figura* fgCentro;
+	Figura* fgDereita;
+	Figura* fgEsquerda;
 
 	void establecerLucesShader(GLuint shader);
 	void xerarSuelo(float* limites, std::string rutaTexturaSuelo);

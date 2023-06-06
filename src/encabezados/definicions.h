@@ -78,4 +78,4 @@
 #define INSTANTES_TOTAL_ANIMACION 10
 
 // ---------------- Definicions MINIPAUSA -------------------------- //
-#define INSTANTES_PAUSA_NIVEL_COMPLETADO 50
+#define INSTANTES_PAUSA_NIVEL_COMPLETADO 200

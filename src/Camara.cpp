@@ -14,13 +14,13 @@
 #define M_PI 3.14159265358979323846
 #endif
 
-Camara::Camara(float radio, float alpha, float beta, float width, float height) {
+Camara::Camara(float radio, float alpha, float beta, float width, float height, int modo) {
 	this->radio = radio;
 	this->alpha = alpha;
 	this->beta = beta;
 	this->width = width;
 	this->height = height;
-	this->modo = MODO_CAMARA_VISTA_XERAL;
+	this->modo = modo;
 	this->posicionCamara = glm::vec3(0, 0, 0);
 }
 

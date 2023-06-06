@@ -28,8 +28,7 @@ public:
 	//Move e renderiza os obxectos
 	void moverObxectos(float tempoTranscurrido);
 	void reescalarVenta(GLFWwindow* window, int width, int height);
-	void eventoTeclado(int tecla, int accion);
-	void finalizarMundo();
+	void eventoTeclado(GLFWwindow* window, int tecla, int accion);
 	void seguinteMundo();
 
 private:

@@ -24,7 +24,7 @@ public:
 	glm::mat4 projection;
 
 	// Construtores
-	Camara(float radio, float alpha, float beta, float width, float height);
+	Camara(float radio, float alpha, float beta, float width, float height, int modo);
 
 	// Metodos
 	void establecerCamara(PersonaxePrincipal* p);

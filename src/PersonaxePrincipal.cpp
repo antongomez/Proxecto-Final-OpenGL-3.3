@@ -9,7 +9,8 @@
 #include <glad.h>
 
 PersonaxePrincipal::PersonaxePrincipal(glm::vec3 posicion, glm::vec3 escalado, float angulo,
-	unsigned int shaderProgram, int tipoFigura, std::vector<std::string> rutasPersonaxes, std::vector<std::pair<float, float>> dimensionsTanques) :
+	unsigned int shaderProgram, int tipoFigura, std::vector<std::string> rutasPersonaxes, 
+	std::vector<std::pair<float, float>> dimensionsTanques, std::vector<std::string> nomesTanques) :
 	Obxecto(posicion, escalado, angulo, shaderProgram) {
 	for (int i = 0; i < rutasPersonaxes.size(); i++) {
 		this->fgPersonaxes.push_back(new Figura(FIGURA_CARGADA, shaderProgram, rutasPersonaxes[i]));
@@ -26,6 +27,8 @@ PersonaxePrincipal::PersonaxePrincipal(glm::vec3 posicion, glm::vec3 escalado, f
 	this->dimensionsTanques = dimensionsTanques;
 	this->largo = dimensionsTanques[0].first;
 	this->ancho = dimensionsTanques[0].second;
+
+	this->nomesTanques = nomesTanques;
 }
 
 void PersonaxePrincipal::moverPersonaxe(double tempoTranscurrido) {
@@ -110,4 +113,8 @@ void PersonaxePrincipal::cambiarPersonaxe(bool seguinte) {
 	fg = fgPersonaxes[fgActual];
 	largo = dimensionsTanques[fgActual].first;
 	ancho = dimensionsTanques[fgActual].second;
+}
+
+std::string PersonaxePrincipal::nomeTanqueActual() {
+	return nomesTanques[fgActual];
 }

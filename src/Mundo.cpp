@@ -23,13 +23,13 @@ Mundo::Mundo(PersonaxePrincipal* personaxePrincipal, GLuint shaderProgram, GLuin
 }
 
 void Mundo::iniciar(float width, float height) {
-	this->camara = new Camara(20.0f, PI / 2.0f, PI / 4.0f, width, height);
+	this->camara = new Camara(20.0f, PI / 2.0f, PI / 4.0f, width, height, MODO_CAMARA_TERCEIRA_PERSOA);
 
 	// colocamos ao personaxe principal sobre o chan no centro do mesmo
 	personaxePrincipal->posicion = glm::vec3(suelo->posicion.x, suelo->posicion.y, suelo->posicion.z);
 	personaxePrincipal->angulo = 0;
 
-	this->camaraSecundaria = new Camara(10.0f, PI, PI / 2.0f - UNIDADE_GRAO_EN_RADIANS, width, height);
+	this->camaraSecundaria = new Camara(10.0f, PI, PI / 2.0f - UNIDADE_GRAO_EN_RADIANS, width, height, MODO_CAMARA_VISTA_XERAL);
 }
 
 void Mundo::xerarSkyBox(float alturaMundo, float* limites, std::string rutaTexturas[]) {
@@ -134,6 +134,46 @@ void Mundo::xerarInimigos(int nivelInimigos) {
 	}
 }
 
+void Mundo::recolocarInimigos() {
+
+	std::random_device rd;
+	std::mt19937 generator(rd());
+
+	// Definir una distribución para generar números reales en un rango
+	std::uniform_real_distribution<float> distribucionRadio(8, suelo->limites[1]);
+	std::uniform_real_distribution<float> distribucionAngulo(0, 2 * PI);
+
+	for (const auto& inimigo: inimigos) {
+		float radio = distribucionRadio(generator);
+		float angulo = distribucionAngulo(generator);
+
+		glm::vec3 posicion(radio * sin(angulo), suelo->posicion.y, radio * cos(angulo));
+
+		inimigo->posicion = posicion;
+	}
+}
+
+void Mundo::finalizarMundo() {
+	// Recolocamos aleatoriamente os inimigos e marcamolos a todos como vivos
+	std::random_device rd;
+	std::mt19937 generator(rd());
+
+	// Definir una distribución para generar números reales en un rango
+	std::uniform_real_distribution<float> distribucionRadio(8, suelo->limites[1]);
+	std::uniform_real_distribution<float> distribucionAngulo(0, 2 * PI);
+
+	for (const auto& inimigo : inimigos) {
+		float radio = distribucionRadio(generator);
+		float angulo = distribucionAngulo(generator);
+
+		glm::vec3 posicion(radio * sin(angulo), suelo->posicion.y, radio * cos(angulo));
+
+		inimigo->posicion = posicion;
+		inimigo->estado = 1;
+		inimigo->instantes_animacion = 0;
+	}
+}
+
 void Mundo::establecerCamara() {
 	camara->establecerCamara(personaxePrincipal);
 	// Actualizamos a matriz de proxeccion
@@ -152,10 +192,10 @@ void Mundo::moverObxectos(float tempoTranscurrido) {
 }
 
 bool Mundo::mundoCompletado() {
-	bool completado = 1;
+	bool completado = true;
 	for (int i = 0; i < inimigos.size(); i++) {
 		if (inimigos[i]->estado == 1) {
-			completado = 0;
+			completado = false;
 		}
 	}
 	return completado;
@@ -307,7 +347,7 @@ void Mundo::renderizarEscena() {
 }
 
 // Funcion que xestiona os controis. Deste xeito cada mundo poderia cambiar, por exemplo, a velocidade de movemento do personaxe
-void Mundo::eventoTeclado(int tecla, int accion) {
+void Mundo::eventoTeclado(GLFWwindow* window, int tecla, int accion) {
 
 	// --------------- personaxe principal MOVEMENTOS -------------------------- //
 	// 

@@ -95,7 +95,11 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	std::cout << key << std::endl;
 
-	partida->eventoTeclado(key, action);
+	partida->eventoTeclado(window, key, action);
+}
+
+void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
+	partida->eventoTeclado(window, button, action);
 }
 
 
@@ -139,6 +143,8 @@ GLFWwindow* crearVenta() {
 
 	// Funcion que rexistra as pulsacions de teclado
 	glfwSetKeyCallback(window, keyCallback);
+
+	glfwSetMouseButtonCallback(window, mouseButtonCallback);
 
 	openGLInit();
 

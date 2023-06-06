@@ -17,7 +17,10 @@ PantallaInicial::PantallaInicial(PersonaxePrincipal* personaxePrincipal, GLuint 
 	this->instantes_pausa = 0;
 
 	xerarSuelo(limites, rutaTexturaSuelo);
-	this->fg = Figura::GetFigura(FIGURA_CADRADO, shaderProgram, rutaTexturaMetalica);
+	this->fg = Figura::GetFigura(FIGURA_CADRADO, shaderProgramBasico, rutaTexturaMetalica);
+	this->fgCentro = Figura::GetFigura(FIGURA_CADRADO, shaderProgramBasico, "recursos/texturas/textura-parte-abaixo-centro.jpg");
+	this->fgEsquerda = Figura::GetFigura(FIGURA_CADRADO, shaderProgramBasico, "recursos/texturas/textura-parte-abaixo-esquerda.jpg");
+	this->fgDereita = Figura::GetFigura(FIGURA_CADRADO, shaderProgramBasico, "recursos/texturas/textura-parte-abaixo-dereita.jpg");
 }
 
 PantallaInicial::PantallaInicial(PersonaxePrincipal* personaxePrincipal, GLuint shaderProgram, GLuint shaderProgramTex, GLuint shaderProgramBasico,
@@ -29,18 +32,16 @@ PantallaInicial::PantallaInicial(PersonaxePrincipal* personaxePrincipal, GLuint 
 	this->luces = luces;
 	this->musicaReproducida = false;
 	this->instantes_pausa = 0;
-
-
 }
 
 void PantallaInicial::iniciar(float width, float height) {
-	this->camara = new Camara(9.0f, 0, PI / 8.0f, width, height);
+	this->camara = new Camara(9.0f, 0, PI / 8.0f, width, height, MODO_CAMARA_VISTA_XERAL);
 
 	// colocamos ao personaxe principal sobre o chan no centro do mesmo
 	personaxePrincipal->posicion = suelo->posicion;
 	personaxePrincipal->angulo = -PI / 4.0f;
 
-	this->camaraSecundaria = new Camara(5.0f, 0, 0, width, 250);
+	this->camaraSecundaria = new Camara(5.0f, 0, 0, width, 250, MODO_CAMARA_VISTA_XERAL);
 }
 
 bool PantallaInicial::mundoCompletado() {
@@ -218,7 +219,7 @@ void PantallaInicial::renderizarEscena() {
 	camaraSecundaria->actualizarMatrizProxeccionOrtho();
 	camaraSecundaria->actualizarMatricesShader(shaderProgram);
 
-	glBindTexture(GL_TEXTURE_2D, fg->textura);
+
 
 	unsigned int loc_cor = glGetUniformLocation(shaderProgramBasico, "cor");
 	glUniform1i(loc_cor, 0);
@@ -230,20 +231,58 @@ void PantallaInicial::renderizarEscena() {
 		unsigned int transformLoc = glGetUniformLocation(shaderProgram, "transform");
 		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(matrizModelo));
 
-		fg->renderizar();
+		if (i == 0) {
+			glBindTexture(GL_TEXTURE_2D, fgCentro->textura);
+			fgCentro->renderizar();
+		}
+		else if (i == -2) {
+			glBindTexture(GL_TEXTURE_2D, fgEsquerda->textura);
+			fgEsquerda->renderizar();
+		}
+		else if (i == 2) {
+			glBindTexture(GL_TEXTURE_2D, fgDereita->textura);
+			fgDereita->renderizar();
+		}
+		else {
+			glBindTexture(GL_TEXTURE_2D, fg->textura);
+			fg->renderizar();
+		}
+
 	}
 
 	// Renderizar Texto
 	t->cambiarViewport(camaraSecundaria->width, camaraSecundaria->height);
-	t->setTexto("CHIEFTAIN");
+	t->setTexto(personaxePrincipal->nomeTanqueActual());
 	t->escribir(camaraSecundaria->width / 2.0f, camaraSecundaria->height / 2.0f, 3.0f, 1, 1);
 
 }
 
-void PantallaInicial::eventoTeclado(int tecla, int accion) {
+void PantallaInicial::eventoTeclado(GLFWwindow* window, int tecla, int accion) {
 	if ((tecla == 262 || tecla == 263) && accion != GLFW_RELEASE) {
 		AudioHelper::GetInstance()->reproducir2D("recursos/audio/open-doors.ogg", false);
 		personaxePrincipal->cambiarPersonaxe(tecla == 262);
+	}
+
+	if (tecla == GLFW_MOUSE_BUTTON_LEFT && accion == GLFW_PRESS) {
+		double xpos, ypos;
+		//getting cursor position
+		glfwGetCursorPos(window, &xpos, &ypos);
+		if (
+			(ypos <= (camara->height - camaraSecundaria->height / 2.0f) + 39)
+			&& (ypos >= (camara->height - camaraSecundaria->height / 2.0f) - 39))
+		{
+			if ((xpos > camaraSecundaria->width / 2.0f + 142)
+				&& (xpos <= camaraSecundaria->width / 2.0f + 198)) {
+				AudioHelper::GetInstance()->reproducir2D("recursos/audio/open-doors.ogg", false);
+				personaxePrincipal->cambiarPersonaxe(true);
+			}
+			else if ((xpos < camaraSecundaria->width / 2.0f - 142)
+				&& (xpos >= camaraSecundaria->width / 2.0f - 198)) {
+				AudioHelper::GetInstance()->reproducir2D("recursos/audio/open-doors.ogg", false);
+				personaxePrincipal->cambiarPersonaxe(false);
+			}
+		}
+
 	}
 }
 
@@ -251,6 +290,10 @@ void PantallaInicial::reescalarVenta(GLFWwindow* window, int width, int height) 
 	camara->width = (float)width;
 	camara->height = (float)height;
 	camaraSecundaria->width = (float)width;
+}
+
+void PantallaInicial::finalizarMundo() {
+
 }
 
 

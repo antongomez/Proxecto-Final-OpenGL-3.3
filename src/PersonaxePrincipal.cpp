@@ -45,12 +45,12 @@ void PersonaxePrincipal::moverPersonaxe(double tempoTranscurrido, std::vector<Ob
 
 	float viejo_angulo = angulo;
 
-	if (xirar_dereita) {
+	if (xirar_dereita && !marcha_atras || xirar_esquerda && marcha_atras) {
 		angulo -= INCREMENTO_XIRO_PERSONAXE * tempoTranscurrido;
 
 	}
 
-	if (xirar_esquerda) {
+	if (xirar_esquerda && !marcha_atras || xirar_dereita && marcha_atras) {
 		angulo += INCREMENTO_XIRO_PERSONAXE * tempoTranscurrido;
 
 	}

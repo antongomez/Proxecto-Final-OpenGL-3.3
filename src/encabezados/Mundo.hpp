@@ -27,6 +27,7 @@ public:
 	double tempoInicioMundo;
 
 	bool pausa;
+	bool minimapa;
 
 
 	// Construtores

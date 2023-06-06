@@ -22,6 +22,7 @@ Mundo::Mundo(PersonaxePrincipal* personaxePrincipal, GLuint shaderProgram, GLuin
 {
 	this->nivelMundo = nivelMundo;
 	this->pausa = false;
+	this->minimapa = true;
 
 	xerarSuelo(alturaMundo, limites, rutaTexturaSuelo, rutaTexturaMuro);
 	xerarSkyBox(alturaMundo, limites, rutaTexturasSkyBox);
@@ -423,7 +424,9 @@ void Mundo::renderizarEscena(float tempoTranscurrido) {
 	}
 	emitirPitidos(tempoRestanteEmpezar);
 
-	renderizarMiniMapa();
+	if (minimapa) {
+		renderizarMiniMapa();
+	}
 }
 
 void Mundo::emitirPitidos(double tempoRestante) {
@@ -558,6 +561,11 @@ void Mundo::eventoTeclado(GLFWwindow* window, int tecla, int accion) {
 		if (pausa) {
 			pausa = false;
 		}
+	}
+
+	// Activar/desactivar minimapa
+	if (tecla == 77 && accion == GLFW_PRESS) {
+		minimapa = !minimapa;
 	}
 }
 

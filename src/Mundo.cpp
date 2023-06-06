@@ -306,10 +306,25 @@ void Mundo::renderizarMiniMapa() {
 		}
 	}
 
-	glUniform3fv(loc_color, 1, value_ptr(glm::vec3(0, 0.3f, 0)));
+	glm::vec3 corChan;
+	glm::vec3 corMuro;
+	if (nivelMundo == 1 || nivelMundo == 3) {
+		corChan = glm::vec3(0, 0.3f, 0);
+		corMuro = glm::vec3(0.5f, 0.5f, 0.5f);
+	}
+	else if (nivelMundo == 2) {
+		corChan = glm::vec3(0.75f, 0.64f, 0.40f);
+		corMuro = glm::vec3(0.5f, 0.4f, 0.3f);
+	}
+	else {
+		corChan = glm::vec3(0, 0.3f, 0);
+		corMuro = glm::vec3(1.0f, 0.7f, 0.4f);
+	}
+
+	glUniform3fv(loc_color, 1, value_ptr(corChan));
 	suelo->renderizarSuelo();
 
-	glUniform3fv(loc_color, 1, value_ptr(glm::vec3(0.5f, 0.5f, 0.5f)));
+	glUniform3fv(loc_color, 1, value_ptr(corMuro));
 	suelo->renderizarParteArribaMuro();
 
 }

@@ -36,14 +36,22 @@ PersonaxePrincipal::PersonaxePrincipal(glm::vec3 posicion, glm::vec3 escalado, f
 
 void PersonaxePrincipal::moverPersonaxe(double tempoTranscurrido, std::vector<Obxecto*> obxectosDecorativos) {
 
+	float viejo_angulo = angulo;
+
 	if (xirar_dereita) {
-		//GESTIONAR AQUÍ EN FUNCIÓN DE LA COLISIÓN
 		angulo -= INCREMENTO_XIRO_PERSONAXE * tempoTranscurrido;
+
 	}
 
 	if (xirar_esquerda) {
 		angulo += INCREMENTO_XIRO_PERSONAXE * tempoTranscurrido;
+
 	}
+
+		if (colisionArbol(obxectosDecorativos)) {
+			 //Si hay colision rectificamos
+			angulo = viejo_angulo;
+		}
 
 	if (moverse || marcha_atras) {
 		// Calculamos a direccion de desprazamento (normalizada)
@@ -55,20 +63,21 @@ void PersonaxePrincipal::moverPersonaxe(double tempoTranscurrido, std::vector<Ob
 			desprazamento *= -1;
 		}
 
-		// Actualizamos a posicion do tanque
-		glm::vec3 nueva_posicion;
-		nueva_posicion.x = fmin(posicion.x + desprazamento * direccion.x, limites[1] - largo / 2);
-		nueva_posicion.x = fmax(posicion.x + desprazamento * direccion.x, limites[0] + largo / 2);
-		nueva_posicion.z = fmin(posicion.z + desprazamento * direccion.z, limites[1] - largo / 2);
-		nueva_posicion.z = fmax(posicion.z + desprazamento * direccion.z, limites[0] + largo / 2);
+		glm::vec3 vieja_posicion;
+		vieja_posicion.x = posicion.x;
+		vieja_posicion.z = posicion.z;
 
-		if (!colisionArbol(obxectosDecorativos)) {
-			posicion.x = nueva_posicion.x;
-			posicion.z = nueva_posicion.z;
-		}
-		else {
-			posicion.x = posicion.x - (desprazamento / (float)1000) * direccion.x;
-			posicion.z = posicion.z - (desprazamento / (float)1000) * direccion.z;
+		posicion.x = fmin(posicion.x + desprazamento * direccion.x, limites[1] - largo / 2);
+		posicion.x = fmax(posicion.x + desprazamento * direccion.x, limites[0] + largo / 2);
+		posicion.z = fmin(posicion.z + desprazamento * direccion.z, limites[1] - largo / 2);
+		posicion.z = fmax(posicion.z + desprazamento * direccion.z, limites[0] + largo / 2);
+
+		if (colisionArbol(obxectosDecorativos)) {
+			// Si hay colision rectificamos
+			posicion.x = vieja_posicion.x;
+			posicion.z = vieja_posicion.z;
+
+			//angulo = viejo_angulo;
 		}
 
 

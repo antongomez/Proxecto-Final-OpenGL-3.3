@@ -82,7 +82,7 @@
 #define INSTANTES_PAUSA_NIVEL_COMPLETADO 100
 #define SEGUNDOS_PAUSA_INICIO_NIVEL 4.0
 #define SEGUNDOS_PAUSA_FIN_PANTALLA_INICIAL 1.0
-#define ANGULO_PAUSA_FIN_PANTALLA_INICIAL PI
+#define ANGULO_PAUSA_FIN_PANTALLA_INICIAL (7.0f*PI/4.0f)
 
 // ---------------- Definicions SONS -------------------------- //
 #define SON_DISPARO "recursos/audio/shotgun-firing.ogg"

@@ -40,7 +40,7 @@ void PantallaInicial::iniciar(float width, float height) {
 
 	// colocamos ao personaxe principal sobre o chan no centro do mesmo
 	personaxePrincipal->posicion = suelo->posicion;
-	personaxePrincipal->angulo = PI;
+	personaxePrincipal->angulo = PI/4.0f;
 
 	this->camaraSecundaria = new Camara(5.0f, 0, 0, width, 250, MODO_CAMARA_VISTA_XERAL);
 	this->tempoPulsoEnter = -1;
@@ -62,7 +62,7 @@ void PantallaInicial::moverObxectos(float tempoTranscurrido) {
 
 		if (tempoTrans <= SEGUNDOS_PAUSA_FIN_PANTALLA_INICIAL) {
 
-			this->personaxePrincipal->angulo = anguloPulsoEnter + (ANGULO_PAUSA_FIN_PANTALLA_INICIAL - anguloPulsoEnter) * (1 - tempoTrans);
+			this->personaxePrincipal->angulo = anguloPulsoEnter + (ANGULO_PAUSA_FIN_PANTALLA_INICIAL - anguloPulsoEnter) * (tempoTrans);
 
 		} else if (tempoTrans - SEGUNDOS_PAUSA_FIN_PANTALLA_INICIAL > 1) {
 			this->mundoFinalizado = true;

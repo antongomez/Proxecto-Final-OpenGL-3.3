@@ -90,11 +90,21 @@ void PersonaxePrincipal::renderizarBalas() {
 }
 
 void PersonaxePrincipal::cambiarPersonaxe(bool seguinte) {
-	if (fgActual == (nPersonaxes - 1)){
-		fgActual = 0;
+	if (seguinte) {
+		if (fgActual == (nPersonaxes - 1)) {
+			fgActual = 0;
+		}
+		else {
+			fgActual++;
+		}
 	}
 	else {
-		fgActual++;
+		if (fgActual == 0) {
+			fgActual = (nPersonaxes - 1);
+		}
+		else {
+			fgActual--;
+		}
 	}
 
 	fg = fgPersonaxes[fgActual];

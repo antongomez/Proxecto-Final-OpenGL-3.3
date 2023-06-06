@@ -172,6 +172,9 @@ void Mundo::finalizarMundo() {
 		inimigo->estado = 1;
 		inimigo->instantes_animacion = 0;
 	}
+
+	musica_reproducida = false;
+	instantes_pausa = 0;
 }
 
 void Mundo::establecerCamara() {

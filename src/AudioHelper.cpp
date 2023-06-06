@@ -1,4 +1,5 @@
 #include "encabezados/AudioHelper.hpp"
+#include "encabezados/definicions.h"
 
 static AudioHelper* ah = nullptr;
 
@@ -20,6 +21,15 @@ void AudioHelper::DeleteInstance() {
 	ah->soundEngine->drop();
 }
 
-void AudioHelper::reproducir2D(std::string rutaAudio, bool repetir) {
-	soundEngine->play2D(rutaAudio.c_str(), repetir);
+void AudioHelper::reproducirSon(std::string rutaAudio) {
+	soundEngine->play2D(rutaAudio.c_str());
 }
+
+void AudioHelper::reproducirMelodiaInicial() {
+	melodiaInicial = soundEngine->play2D(MELODIA_INICIAL, true);
+}
+
+void AudioHelper::reproducirMelodiaMundos() {
+	melodiaMundos = soundEngine->play2D(MELODIA_MUNDOS, true);
+}
+

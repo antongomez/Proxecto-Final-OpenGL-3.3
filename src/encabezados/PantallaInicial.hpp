@@ -28,6 +28,7 @@ public:
 	GLuint shaderProgramTex;
 	GLuint shaderProgramBasico;
 
+	bool musica_reproducida;
 	int instantes_pausa;
 
 	PantallaInicial(PersonaxePrincipal* personaxe, GLuint shaderProgram, GLuint shaderProgramTex, GLuint shaderProgramBasico,

@@ -117,8 +117,8 @@ void Partida::iniciarPartida() {
 	elementosDecorativos[ID_PEDRA1] = 15;
 	elementosDecorativos[ID_PEDRA2] = 20;
 	elementosDecorativos[ID_PEDRA3] = 30;
-	elementosDecorativos[ID_ARBORE1] = 55;
-	elementosDecorativos[ID_ARBORE2] = 30;
+	elementosDecorativos[ID_ARBORE1] = 50;
+	elementosDecorativos[ID_ARBORE2] = 25;
 	elementosDecorativos[ID_ARBORE3] = 0;
 	elementosDecorativos[ID_HERBA] = 200;
 
@@ -168,7 +168,7 @@ void Partida::iniciarPartida() {
 }
 
 void Partida::iniciarMusica() {
-	AudioHelper::GetInstance()->reproducir2D("recursos/audio/musica-fondo.ogg", true);
+	AudioHelper::GetInstance()->reproducirMelodiaInicial();
 }
 
 void Partida::moverObxectos(float tempoTranscurrido) {
@@ -178,7 +178,10 @@ void Partida::moverObxectos(float tempoTranscurrido) {
 	// Comprobamos se xa matamos a todos os inimigos deste mundo
 	if (mundos[idMundoActual]->mundoCompletado()) {
 
-		AudioHelper::GetInstance()->reproducir2D("recursos/audio/game-level-completed.ogg", false);
+		if (!mundos[idMundoActual]->musica_reproducida) {
+			AudioHelper::GetInstance()->reproducirSon("recursos/audio/game-level-completed.ogg");
+			mundos[idMundoActual]->musica_reproducida = true;
+		}
 
 		if (mundos[idMundoActual]->instantes_pausa >= INSTANTES_PAUSA_NIVEL_COMPLETADO) {
 			seguinteMundo();

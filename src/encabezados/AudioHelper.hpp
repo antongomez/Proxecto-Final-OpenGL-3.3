@@ -10,13 +10,17 @@ public:
 	// -------------- Metodos ----------------- //
 	static AudioHelper* GetInstance();
 	static void DeleteInstance();
-	void reproducir2D(std::string rutaAudio, bool repetir);
+	void reproducirSon(std::string rutaAudio);
+	void reproducirMelodiaInicial();
+	void reproducirMelodiaMundos();
 
 
 private:
 
 	// --------------- Atributos ------------------- //
 	irrklang::ISoundEngine* soundEngine;
+	irrklang::ISound* melodiaInicial;
+	irrklang::ISound* melodiaMundos;
 
 
 	// -------------- Construtores ----------------- //

@@ -83,7 +83,7 @@ void PersonaxePrincipal::disparar() {
 	balas.push_back(new Bala(posicionBala, glm::vec3(1), 0, shaderProgram, "recursos/modelos/bala.obj", direccion));
 
 	// Emitimos o sonido do disparo
-	AudioHelper::GetInstance()->reproducir2D("recursos/audio/shotgun-firing.ogg", false);
+	AudioHelper::GetInstance()->reproducirSon("recursos/audio/shotgun-firing.ogg");
 }
 
 void PersonaxePrincipal::renderizarBalas() {

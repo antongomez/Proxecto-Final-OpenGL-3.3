@@ -13,7 +13,7 @@ PantallaInicial::PantallaInicial(PersonaxePrincipal* personaxePrincipal, GLuint 
 	this->shaderProgramTex = shaderProgramTex;
 	this->shaderProgramBasico = shaderProgramBasico;
 	this->luces = luces;
-	this->musicaReproducida = false;
+	this->musica_reproducida = false;
 	this->instantes_pausa = 0;
 
 	xerarSuelo(limites, rutaTexturaSuelo);
@@ -30,7 +30,7 @@ PantallaInicial::PantallaInicial(PersonaxePrincipal* personaxePrincipal, GLuint 
 	this->shaderProgramTex = shaderProgramTex;
 	this->shaderProgramBasico = shaderProgramBasico;
 	this->luces = luces;
-	this->musicaReproducida = false;
+	this->musica_reproducida = false;
 	this->instantes_pausa = 0;
 }
 
@@ -259,7 +259,7 @@ void PantallaInicial::renderizarEscena() {
 
 void PantallaInicial::eventoTeclado(GLFWwindow* window, int tecla, int accion) {
 	if ((tecla == 262 || tecla == 263) && accion != GLFW_RELEASE) {
-		AudioHelper::GetInstance()->reproducir2D("recursos/audio/open-doors.ogg", false);
+		AudioHelper::GetInstance()->reproducirSon("recursos/audio/open-doors.ogg");
 		personaxePrincipal->cambiarPersonaxe(tecla == 262);
 	}
 
@@ -273,12 +273,12 @@ void PantallaInicial::eventoTeclado(GLFWwindow* window, int tecla, int accion) {
 		{
 			if ((xpos > camaraSecundaria->width / 2.0f + 142)
 				&& (xpos <= camaraSecundaria->width / 2.0f + 198)) {
-				AudioHelper::GetInstance()->reproducir2D("recursos/audio/open-doors.ogg", false);
+				AudioHelper::GetInstance()->reproducirSon("recursos/audio/open-doors.ogg");
 				personaxePrincipal->cambiarPersonaxe(true);
 			}
 			else if ((xpos < camaraSecundaria->width / 2.0f - 142)
 				&& (xpos >= camaraSecundaria->width / 2.0f - 198)) {
-				AudioHelper::GetInstance()->reproducir2D("recursos/audio/open-doors.ogg", false);
+				AudioHelper::GetInstance()->reproducirSon("recursos/audio/open-doors.ogg");
 				personaxePrincipal->cambiarPersonaxe(false);
 			}
 		}
@@ -293,7 +293,8 @@ void PantallaInicial::reescalarVenta(GLFWwindow* window, int width, int height) 
 }
 
 void PantallaInicial::finalizarMundo() {
-
+	musica_reproducida = false;
+	instantes_pausa = 0;
 }
 
 

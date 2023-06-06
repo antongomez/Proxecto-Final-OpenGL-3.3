@@ -79,3 +79,6 @@
 
 // ---------------- Definicions MINIPAUSA -------------------------- //
 #define INSTANTES_PAUSA_NIVEL_COMPLETADO 200
+
+#define MELODIA_INICIAL "recursos/audio/musica-fondo.ogg"
+#define MELODIA_MUNDOS "recursos/audio/musica-fondo.ogg"

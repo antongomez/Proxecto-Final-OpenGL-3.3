@@ -31,6 +31,8 @@ public:
 	void eventoTeclado(GLFWwindow* window, int tecla, int accion);
 	void seguinteMundo();
 
+	bool reiniciarPartida;
+
 private:
 	double tempoInicioPartida;
 	double tempoPartida;

@@ -89,6 +89,7 @@
 #define SON_CAMBIO_PERSONAXE "recursos/audio/open-doors.ogg"
 #define SON_XOGO_ARRANQUE "recursos/audio/reload.ogg"
 #define SON_NIVEL_COMPLETADO "recursos/audio/game-level-complete-2.ogg"
+#define SON_XOGO_COMPLETADO "recursos/audio/game-level-complete-2.ogg"
 #define SON_BEEP_BAIXO "recursos/audio/short-beep-tone.ogg"
 #define SON_BEEP_ALTO "recursos/audio/beep3.ogg"
 

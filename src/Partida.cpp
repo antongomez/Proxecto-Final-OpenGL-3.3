@@ -173,6 +173,7 @@ void Partida::iniciarPartida() {
 
 	iniciarMusica();
 
+	this->reiniciarPartida = false;
 	this->tempoPartida = 0;
 }
 
@@ -200,17 +201,32 @@ void Partida::moverObxectos(float tempoTranscurrido) {
 
 			if (!mundos[idMundoActual]->musica_reproducida) {
 				AudioHelper* ah = AudioHelper::GetInstance();
-				ah->reproducirSon(SON_NIVEL_COMPLETADO);
+				if (idMundoActual == 4) {
+					ah->reproducirSon(SON_XOGO_COMPLETADO);
+				}
+				else {
+					ah->reproducirSon(SON_NIVEL_COMPLETADO);
+				}
 				ah->pausarMelodiaMundo(idMundoActual);
 				mundos[idMundoActual]->musica_reproducida = true;
 			}
 
-			if (mundos[idMundoActual]->instantes_pausa >= INSTANTES_PAUSA_NIVEL_COMPLETADO) {
-				seguinteMundo();
+			if (idMundoActual == 4) {
+				if (reiniciarPartida) {
+					reiniciarPartida = false;
+					seguinteMundo();
+				}
 			}
 			else {
-				mundos[idMundoActual]->instantes_pausa++;
+				if (mundos[idMundoActual]->instantes_pausa >= INSTANTES_PAUSA_NIVEL_COMPLETADO) {
+					seguinteMundo();
+				}
+				else {
+					mundos[idMundoActual]->instantes_pausa++;
+				}
 			}
+
+
 		}
 	}
 }
@@ -233,9 +249,12 @@ void Partida::eventoTeclado(GLFWwindow* window, int tecla, int accion) {
 				mundos[0]->anguloPulsoEnter = personaxePrincipal->angulo;
 			}
 			else {
-				mundos[0]->anguloPulsoEnter = personaxePrincipal->angulo - 2.0f*PI;
+				mundos[0]->anguloPulsoEnter = personaxePrincipal->angulo - 2.0f * PI;
 			}
-			
+
+		}
+		else if (idMundoActual == 4) {
+			reiniciarPartida = true;
 		}
 		else {
 			seguinteMundo();

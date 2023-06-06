@@ -7,6 +7,7 @@
 #include <random>
 #include <iostream>
 #include "encabezados/PantallaInicial.hpp"
+#include "encabezados/AudioHelper.hpp"
 
 Mundo::Mundo(PersonaxePrincipal* personaxePrincipal, GLuint shaderProgram, GLuint shaderProgramTex, GLuint shaderProgramBasico,
 	float alturaMundo, float* limites,
@@ -148,7 +149,7 @@ void Mundo::recolocarInimigos() {
 	std::uniform_real_distribution<float> distribucionRadio(8, suelo->limites[1]);
 	std::uniform_real_distribution<float> distribucionAngulo(0, 2 * PI);
 
-	for (const auto& inimigo: inimigos) {
+	for (const auto& inimigo : inimigos) {
 		float radio = distribucionRadio(generator);
 		float angulo = distribucionAngulo(generator);
 
@@ -193,7 +194,7 @@ void Mundo::moverObxectos(float tempoTranscurrido) {
 	for (int i = 0; i < inimigos.size(); i++) {
 		inimigos[i]->moverEnemigo(tempoTranscurrido);
 	}
-	
+
 	// Comprobamos as posibles colisions
 	colisionsBalas();
 	colisionsTanqueInimigo();
@@ -214,12 +215,15 @@ void Mundo::colisionsBalas() {
 	for (int i = 0; i < personaxePrincipal->balas.size(); i++) {
 		for (int j = 0; j < inimigos.size(); j++) {
 			if (glm::distance((personaxePrincipal->balas)[i]->posicion, inimigos[j]->posicion) <= DIST_COLISION_BALA) {
-				inimigos[j]->estado = 2;
-				personaxePrincipal->balas[i]->estado = 0;
+				if (inimigos[j]->estado == 1) {
+					inimigos[j]->estado = 2;
+					AudioHelper::GetInstance()->reproducirSon(SON_INIMIGO_MATADO, 0.25f);
+					personaxePrincipal->balas[i]->estado = 0;
+				}
 			}
 		}
 	}
-	
+
 }
 
 void Mundo::colisionsTanqueInimigo() {
@@ -319,7 +323,7 @@ void Mundo::renderizarEscena() {
 		else if (inimigos[i]->estado == 2) {
 			// Calculamos o valor do canal alpha para este instante
 			float alpha = (INSTANTES_TOTAL_ANIMACION - inimigos[i]->instantes_animacion / 2) / (float)INSTANTES_TOTAL_ANIMACION;
-			//std::cout << alpha << std::endl;
+
 			glUniform1f(alphaLoc, alpha);
 			inimigos[i]->renderizarObxecto();
 			// Devolvemos el canal alpha a su valor por defecto

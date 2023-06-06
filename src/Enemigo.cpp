@@ -51,7 +51,9 @@ void Enemigo::calcularMatrizModelo() {
 	matrizModelo = glm::rotate(matrizModelo, -angulo, glm::vec3(0, 1, 0));
 
 	// Rotacion de la animacion de muerte
-	matrizModelo = glm::rotate(matrizModelo, ((float)PI/2) * instantes_animacion / (float) INSTANTES_TOTAL_ANIMACION, glm::vec3(0, 0, 1));
+	if (estado == 2) {
+		matrizModelo = glm::rotate(matrizModelo, ((float)PI / 2) * instantes_animacion / (float)INSTANTES_TOTAL_ANIMACION, glm::vec3(0, 0, 1));
+	}
 
 	matrizModelo = glm::scale(matrizModelo, escalado);
 }

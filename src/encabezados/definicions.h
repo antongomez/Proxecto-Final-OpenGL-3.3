@@ -80,3 +80,16 @@
 
 // ---------------- Definicions MINIPAUSA -------------------------- //
 #define INSTANTES_PAUSA_NIVEL_COMPLETADO 160
+
+// ---------------- Definicions SONS -------------------------- //
+#define SON_DISPARO "recursos/audio/shotgun-firing.ogg"
+#define SON_INIMIGO_MATADO "recursos/audio/interface.ogg"
+#define SON_CAMBIO_PERSONAXE "recursos/audio/open-doors.ogg"
+#define SON_XOGO_ARRANQUE "recursos/audio/reload.ogg"
+#define SON_NIVEL_COMPLETADO "recursos/audio/game-level-completed.ogg"
+
+#define MUSICA_MUNDO_0 "recursos/audio/musica-fondo.ogg"
+#define MUSICA_MUNDO_1 "recursos/audio/game-music-loop-3.ogg"
+#define MUSICA_MUNDO_2 "recursos/audio/lifelike.ogg"
+#define MUSICA_MUNDO_3 "recursos/audio/game-music-loop-4.ogg"
+#define MUSICA_MUNDO_4 "recursos/audio/game-music-loop-5.ogg"

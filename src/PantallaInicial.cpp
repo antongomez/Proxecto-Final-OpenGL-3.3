@@ -261,7 +261,7 @@ void PantallaInicial::eventoTeclado(GLFWwindow* window, int tecla, int accion) {
 
 	// Fechas
 	if ((tecla == 262 || tecla == 263) && accion != GLFW_RELEASE) {
-		AudioHelper::GetInstance()->reproducirSon("recursos/audio/open-doors.ogg");
+		AudioHelper::GetInstance()->reproducirSon(SON_CAMBIO_PERSONAXE);
 		personaxePrincipal->cambiarPersonaxe(tecla == 262);
 	}
 
@@ -275,12 +275,12 @@ void PantallaInicial::eventoTeclado(GLFWwindow* window, int tecla, int accion) {
 		{
 			if ((xpos > camaraSecundaria->width / 2.0f + 142)
 				&& (xpos <= camaraSecundaria->width / 2.0f + 198)) {
-				AudioHelper::GetInstance()->reproducirSon("recursos/audio/open-doors.ogg");
+				AudioHelper::GetInstance()->reproducirSon(SON_CAMBIO_PERSONAXE);
 				personaxePrincipal->cambiarPersonaxe(true);
 			}
 			else if ((xpos < camaraSecundaria->width / 2.0f - 142)
 				&& (xpos >= camaraSecundaria->width / 2.0f - 198)) {
-				AudioHelper::GetInstance()->reproducirSon("recursos/audio/open-doors.ogg");
+				AudioHelper::GetInstance()->reproducirSon(SON_CAMBIO_PERSONAXE);
 				personaxePrincipal->cambiarPersonaxe(false);
 			}
 		}

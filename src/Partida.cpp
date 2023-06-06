@@ -182,7 +182,7 @@ void Partida::moverObxectos(float tempoTranscurrido) {
 
 		if (!mundos[idMundoActual]->musica_reproducida) {
 			AudioHelper* ah = AudioHelper::GetInstance();
-			ah->reproducirSon("recursos/audio/game-level-completed.ogg");
+			ah->reproducirSon(SON_NIVEL_COMPLETADO);
 			ah->pausarMelodiaMundo(idMundoActual);
 			mundos[idMundoActual]->musica_reproducida = true;
 		}

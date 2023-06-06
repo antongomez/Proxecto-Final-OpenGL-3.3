@@ -6,11 +6,11 @@ static AudioHelper* ah = nullptr;
 AudioHelper::AudioHelper() {
 	this->soundEngine = irrklang::createIrrKlangDevice();
 	// Cragamos as melodias dos mundos
-	rutasMelodiasMundos.push_back("recursos/audio/musica-fondo.ogg");
-	rutasMelodiasMundos.push_back("recursos/audio/game-music-loop-3.ogg");
-	rutasMelodiasMundos.push_back("recursos/audio/lifelike.ogg");
-	rutasMelodiasMundos.push_back("recursos/audio/game-music-loop-4.ogg");
-	rutasMelodiasMundos.push_back("recursos/audio/game-music-loop-5.ogg");
+	rutasMelodiasMundos.push_back(MUSICA_MUNDO_0);
+	rutasMelodiasMundos.push_back(MUSICA_MUNDO_1);
+	rutasMelodiasMundos.push_back(MUSICA_MUNDO_2);
+	rutasMelodiasMundos.push_back(MUSICA_MUNDO_3);
+	rutasMelodiasMundos.push_back(MUSICA_MUNDO_4);
 	for (int i = 0; i < rutasMelodiasMundos.size();i++) {
 		melodiasMundos.push_back(soundEngine->play2D(rutasMelodiasMundos[i].c_str(), true, true));
 	}

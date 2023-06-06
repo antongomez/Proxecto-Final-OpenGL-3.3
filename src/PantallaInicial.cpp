@@ -51,6 +51,8 @@ void PantallaInicial::iniciar(float width, float height) {
 	this->mundoFinalizado = false;
 	this->win = false;
 	this->defeat = false;
+
+	personaxePrincipal->vidas = 3;
 }
 
 bool PantallaInicial::mundoCompletado() {

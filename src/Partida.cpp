@@ -266,9 +266,8 @@ void Partida::eventoTeclado(GLFWwindow* window, int tecla, int accion) {
 
 		}
 		else if (mundos[idMundoActual]->defeat) {
-			idMundoActual = mundos.size() - 1;
 			ah->pausarMelodiaVictoria();
-			seguinteMundo();
+			reiniciarXogo();
 		}
 	}
 	if (tecla == 80 && accion == GLFW_RELEASE) {
@@ -321,8 +320,6 @@ void Partida::reiniciarXogo() {
 	float height = mundos[idMundoActual]->camara->height;
 
 	idMundoActual = 0;
-
-	personaxePrincipal->vidas = 3;
 
 	AudioHelper::GetInstance()->reproducirMelodiaMundo(idMundoActual);
 	mundos[idMundoActual]->iniciar(width, height);

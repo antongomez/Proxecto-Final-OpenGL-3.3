@@ -282,8 +282,8 @@ void PantallaInicial::renderizarEscena(float tempoTranscurrido) {
 	t->setTexto(personaxePrincipal->nomeTanqueActual());
 	t->escribir(camaraSecundaria->width / 2.0f, camaraSecundaria->height / 2.0f, 3.0f, 1, 1);
 
-	t->setTexto("Press ENTER to start");
-	t->escribir(camaraSecundaria->width / 2.0f, camaraSecundaria->height - camaraSecundaria->height / 6.0f, 1.0f, 1, 1);
+	t->setTexto("Pulsa ENTER para comezar");
+	t->escribir(camaraSecundaria->width / 2.0f, camaraSecundaria->height - camaraSecundaria->height / 6.0f, 1.5f, 1, 1);
 
 }
 

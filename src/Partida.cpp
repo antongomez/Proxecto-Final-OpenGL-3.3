@@ -186,7 +186,7 @@ void Partida::moverObxectos(float tempoTranscurrido) {
 	mundos[idMundoActual]->moverObxectos(tempoTranscurrido);
 
 	// Actualizamos o tempo da partida. Non o actualizamos cando xa gañou
-	if (!mundos[idMundoActual]->win) {
+	if (!mundos[idMundoActual]->win && !mundos[idMundoActual]->defeat) {
 		double tempoActual = glfwGetTime();
 		tempoPartida = tempoActual - tempoInicioPartida;
 	}

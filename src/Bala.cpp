@@ -16,10 +16,6 @@ bool Bala::moverBala(double tempoTranscurrido, float* limites) {
 	float desprazamento = (float)tempoTranscurrido * VELOCIDADE_BASE_BALA;
 	posicion += desprazamento * direccion;
 
-	if (!(posicion.x >= limites[0] && posicion.x <= limites[1] &&
-		posicion.z >= limites[0] && posicion.z <= limites[1])) {
-	}
-
 	// Comprobamos que non saia do muro
 	return !(posicion.x >= limites[0] && posicion.x <= limites[1] &&
 		posicion.z >= limites[0] && posicion.z <= limites[1]);

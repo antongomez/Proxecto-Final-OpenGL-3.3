@@ -286,8 +286,6 @@ void Mundo::ataqueProducido() {
 	personaxePrincipal->vidas--;
 	AudioHelper* ah = AudioHelper::GetInstance();
 
-
-
 	ah->reproducirSon(SON_NIVEL_FALLIDO, 0.25f);
 	ah->pausarMelodiaMundo(nivelMundo);
 

@@ -56,10 +56,10 @@ void PersonaxePrincipal::moverPersonaxe(double tempoTranscurrido, std::vector<Ob
 
 	}
 
-		if (colisionArbol(obxectosDecorativos)) {
-			 //Si hay colision rectificamos
-			angulo = viejo_angulo;
-		}
+	if (colisionArbol(obxectosDecorativos)) {
+		//Si hay colision rectificamos
+		angulo = viejo_angulo;
+	}
 
 	if (moverse || marcha_atras) {
 		// Calculamos a direccion de desprazamento (normalizada)
@@ -84,8 +84,6 @@ void PersonaxePrincipal::moverPersonaxe(double tempoTranscurrido, std::vector<Ob
 			// Si hay colision rectificamos
 			posicion.x = vieja_posicion.x;
 			posicion.z = vieja_posicion.z;
-
-			//angulo = viejo_angulo;
 		}
 
 

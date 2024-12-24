@@ -152,8 +152,6 @@ void Suelo::renderizarParteArribaMuro() {
 	fg->renderizar();
 
 
-
-
 	// Debuxamos a parte de atras do muro
 	matrizModelo = glm::mat4();
 	matrizModelo = glm::translate(matrizModelo, glm::vec3(limites[1], 0.1f, 0) + posicion);

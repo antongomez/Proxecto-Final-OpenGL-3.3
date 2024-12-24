@@ -16,7 +16,6 @@ static std::map<std::string, Figura*> fgCadrados;
 static Figura* fgCubo = nullptr;
 static std::map<std::string, Figura*> fgCargadas;
 
-// Construtor para as figuras cargadas
 Figura::Figura(int tipo, unsigned int shaderProgram, std::string ruta) {
 	this->tipo = tipo;
 	this->shaderProgram = shaderProgram;
@@ -334,7 +333,7 @@ void Figura::debuxaFiguraCargada() {
 		int idMaterial = iterador->first;
 
 		std::vector<glm::vec3> verticesMaterial = iterador->second;
-		std::vector<glm::vec3>normaisMaterial = normais[idMaterial];
+		std::vector<glm::vec3> normaisMaterial = normais[idMaterial];
 
 		glGenVertexArrays(1, &VAO[idMaterial]);
 		glBindVertexArray(VAO[idMaterial]);
